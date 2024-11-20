@@ -21,7 +21,7 @@ import { inject } from 'vue'
       <!-- Container para os Botões organizados verticalmente -->
       <div class="flex flex-col space-y-5 w-1/3"> <!-- Ajuste de largura para os botões -->
         <div class="bg-gray-800 text-white p-4 rounded hover:bg-gray-700 transition-all w-full">
-          <RouterLink to="/single-player" class="block text-center text-lg">Single Player</RouterLink>
+          <RouterLink to="/singleplayer" class="block text-center text-lg">Single Player</RouterLink>
         </div>
         <div class="bg-gray-800 text-white p-4 rounded hover:bg-gray-700 transition-all w-full">
           <RouterLink to="/multiplayer" class="block text-center text-lg">Multiplayer</RouterLink>
