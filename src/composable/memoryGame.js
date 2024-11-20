@@ -5,36 +5,72 @@ export function useMemoryGame() {
     const status = ref(null)
 
     let board = ref([])
-    const numRows = 2
-    const numCol = 6
+    const numRows = ref(4)
+    const numCols = ref(6)
+    let numPars = 0;
+
+    let startTime = 0
+    const gameTimer = ref(0)
+    const gameTime = ref(0)
 
     let firstCard = null
     let matched = ref(false)
 
     const shuffle = (array) => {
-        let currentIndex = array.length;
+        let currentIndex = array.length
 
         while (currentIndex != 0) {
 
-            let randomIndex = Math.floor(Math.random() * currentIndex);
-            currentIndex--;
+            let randomIndex = Math.floor(Math.random() * currentIndex)
+            currentIndex--
 
             [array[currentIndex], array[randomIndex]] = [
-                array[randomIndex], array[currentIndex]];
+                array[randomIndex], array[currentIndex]]
         }
+    }
+    var id = null;
+    const timer = () => {
+        startTime = Date.now();
+        if (id) {
+            clearInterval(id);
+            startTime = 0;
+            gameTimer.value = 0;
+            id = null;
+            return
+        }
+        id = setInterval(function () {
+            status.value = 2
+            var delta = Date.now() - startTime
+            gameTimer.value = delta / 1000
+        }, 100)
     }
 
     const start = () => {
 
         status.value = null
+        gameTime.value = 0
 
+        clearInterval(id);
+        startTime = 0;
+        gameTimer.value = 0;
+        id = null;
+
+        board.value = []
+
+        let allCards = []
         let cards = []
+        
+        numPars = numRows.value * numCols.value / 2
 
-        let numCards = numRows * numCol / 2
+        for (let i = 1; i <= 40; i++) {
+            allCards.push(i)
+        }
+        
+        shuffle(allCards)
 
-        for (let i = 1; i <= numCards; i++) {
-            cards.push(i)
-            cards.push(i)
+        for (let i = 1; i <= numPars; i++) {
+            cards.push(allCards[i])
+            cards.push(allCards[i])
         }
 
         shuffle(cards)
@@ -51,7 +87,7 @@ export function useMemoryGame() {
         //     board.value.push(row)
         // }
 
-        for (let i = 0; i < numRows * numCol; i++) {
+        for (let i = 0; i < numRows.value * numCols.value; i++) {
             board.value.push({
                 value: cards[i],
                 isRevealed: false,
@@ -65,6 +101,9 @@ export function useMemoryGame() {
     }
 
     const move = (card) => {
+        if (gameTimer.value == 0) {
+            timer()
+        }
         if (!firstCard) {
             firstCard = card
             card.isRevealed = true
@@ -73,10 +112,18 @@ export function useMemoryGame() {
             matched.value = true
             if (firstCard.value === card.value) {
                 setTimeout(() => {
+                    numPars--; 
                     firstCard.isMatched = true
                     card.isMatched = true
                     firstCard = null
                     matched.value = false
+
+                    if (numPars == 0) {
+                        status.value = 1
+                        gameTime.value = (Date.now() - startTime) / 1000
+                        timer()
+                    }
+
                 }, 1000)
             } else {
                 setTimeout(() => {
@@ -90,5 +137,5 @@ export function useMemoryGame() {
     }
 
 
-    return { status, board, matched ,start, move }
+    return { status, board, matched, gameTimer, gameTime, numCols, numRows, start, move }
 }
