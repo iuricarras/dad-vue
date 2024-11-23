@@ -5,8 +5,8 @@ export function useMemoryGame() {
     const status = ref(null)
 
     let board = ref([])
-    const numRows = ref(4)
-    const numCols = ref(6)
+    const numRows = ref(5)
+    const numCols = ref(8)
     let numPars = 0;
 
     let startTime = 0

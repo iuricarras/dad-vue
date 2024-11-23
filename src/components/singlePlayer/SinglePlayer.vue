@@ -41,7 +41,7 @@ console.log("board", board)
                 <span class="ps-2 text-base" @click="start">Restart</span>
             </button>
         </div>
-        <div class="grid grid-cols-6 border divide-x divide-y" >
+        <div class="grid grid-cols-8 border divide-x divide-y" >
             <Cell v-for="cell in board" :matched="matched" :cell="cell" @card="move">
             </Cell>
         </div>
