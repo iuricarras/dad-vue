@@ -1,4 +1,5 @@
 <script setup>
+import { inject } from 'vue'
 import { useMemoryGame } from '@/composable/memoryGame.js'
 import Cell from './Cell.vue'
 
