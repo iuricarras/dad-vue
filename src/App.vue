@@ -1,10 +1,11 @@
 <script setup>
 import { onMounted, useTemplateRef, provide } from 'vue'
 import { RouterView } from 'vue-router'
-
+import Toaster from '@/components/ui/toast/Toaster.vue'
 </script>
 
 <template>
+    <Toaster />
   <nav class="flex justify-between items-center bg-gray-800 p-3 text-white">
     <!-- Memory Game como um link interativo para Home -->
     <RouterLink
