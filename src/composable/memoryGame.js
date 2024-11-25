@@ -5,14 +5,16 @@ export function useMemoryGame() {
     const status = ref(null)
 
     let board = ref([])
-    const numRows = ref(5)
-    const numCols = ref(8)
+    const numRows = ref(3)
+    const numCols = ref(4)
     let numPars = 0;
 
     let startTime = 0
     const gameTimer = ref(0)
     const gameTime = ref(0)
 
+
+    let numMoves = 0;
     let firstCard = null
     let matched = ref(false)
 
