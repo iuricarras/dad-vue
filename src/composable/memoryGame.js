@@ -1,6 +1,9 @@
+import { useGameStore } from '@/stores/games'
 import { ref } from 'vue'
 
 export function useMemoryGame() {
+
+    const gameStore = useGameStore()
 
     const status = ref(null)
 
@@ -12,8 +15,8 @@ export function useMemoryGame() {
     let startTime = 0
     const gameTimer = ref(0)
     const gameTime = ref(0)
-
-
+    let game = ref({});
+    
     let numMoves = 0;
     let firstCard = null
     let matched = ref(false)
@@ -77,18 +80,6 @@ export function useMemoryGame() {
 
         shuffle(cards)
 
-        // for(let i = 0; i < numRows; i++){
-        //     let row = []
-        //     for(let j = 0; j < numCol; j++){
-        //         row.push({
-        //             value: cards[i * numCol + j],
-        //             isRevealed: false,
-        //             isMatched: false
-        //         })
-        //     }
-        //     board.value.push(row)
-        // }
-
         for (let i = 0; i < numRows.value * numCols.value; i++) {
             board.value.push({
                 value: cards[i],
@@ -97,14 +88,18 @@ export function useMemoryGame() {
             })
 
         }
-
-
-        console.log(board.value)
+        game.value = {}
+        game.value.type = "S";
+        game.value.status = "PL"
+        game.value.board_id = 1
     }
 
-    const move = (card) => {
+    const move = async (card) => {
         if (gameTimer.value == 0) {
+            game.value.began_at = new Date(Date.now()).toISOString();
             timer()
+            await gameStore.insertGame(game.value)
+            console.log(gameStore.games)
         }
         if (!firstCard) {
             firstCard = card
@@ -119,11 +114,15 @@ export function useMemoryGame() {
                     card.isMatched = true
                     firstCard = null
                     matched.value = false
-
                     if (numPars == 0) {
                         status.value = 1
                         gameTime.value = (Date.now() - startTime) / 1000
-                        timer()
+                        timer()             
+                        game.value = gameStore.gamesPlaying[gameStore.gamesPlaying.length - 1];
+                        game.value.status = "E"
+                        game.value.ended_at = new Date(Date.now()).toISOString();
+                        game.value.total_time = gameTime.value
+                        gameStore.updateGame(game.value)
                     }
 
                 }, 1000)

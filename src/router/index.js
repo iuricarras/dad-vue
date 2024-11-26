@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Home from '@/components/mainPage/Home.vue'   
 import SinglePlayer from '@/components/singlePlayer/SinglePlayer.vue'
 import Statistics from '@/components/statistics/Statistics.vue'
-import Transactions from '@/components/transaction/transactions.vue'
+import Transactions from '@/components/transaction/Transactions.vue'
 import Users from '@/components/user/Users.vue'
 
 const router = createRouter({
@@ -28,7 +28,7 @@ const router = createRouter({
       component: Statistics,
     },{
       path: '/transactions',
-      name: 'transactions',
+      name: 'Transactions',
       component: Transactions 
     },
     {
@@ -36,7 +36,6 @@ const router = createRouter({
       name: 'users',
       component: Users 
     }
-
   ]
 })
 

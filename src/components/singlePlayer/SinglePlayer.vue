@@ -36,7 +36,7 @@ onMounted(() => {
 
 
 <div class="p-8 mx-auto max-w-3xl min-w-96">
-    <div :v-if="numCol">
+    <div>
         <div class="my-4 p-3 flex items-center bg-green-200 rounded-xl">
             <div class="grow flex-col">
                 <p class="text-center text-xl font-bold">Game Time: {{ gameTimer || gameTime}}</p>
