@@ -26,7 +26,7 @@ const router = createRouter({
       path: '/statistics',
       name: 'Statistics',
       component: Statistics,
-    },
+    },{
       path: '/transactions',
       name: 'transactions',
       component: Transactions 
