@@ -2,6 +2,15 @@
 import { inject } from 'vue'
 import { useMemoryGame } from '@/composable/memoryGame.js'
 import Cell from './Cell.vue'
+import { computed, onMounted, ref } from 'vue';
+
+
+const gridClass = computed(() => {
+    return {
+        'grid-cols-4': numCols.value == 4,
+        'grid-cols-6': numCols.value == 6,
+    }
+})
 
 const {
     status,
@@ -15,9 +24,11 @@ const {
     move
 } = useMemoryGame()
 
-start()
-
 console.log("board", board)
+
+onMounted(() => {
+    start()
+})
 
 </script>
 
@@ -42,7 +53,7 @@ console.log("board", board)
                 <span class="ps-2 text-base" @click="start">Restart</span>
             </button>
         </div>
-        <div class="grid grid-cols-8 border divide-x divide-y" >
+        <div class="grid border divide-x divide-y" :class="gridClass">
             <Cell v-for="cell in board" :matched="matched" :cell="cell" @card="move">
             </Cell>
         </div>

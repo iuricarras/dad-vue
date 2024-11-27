@@ -18,16 +18,19 @@ export const useErrorStore = defineStore('error', () => {
         return _statusCode.value
     })
 
-    const title = computed(() => {
+    const title = computed(() => {  
         return _title.value.trim()
     })    
 
     const fieldMessage = (fieldName) => {
+        console.log('fieldMessage:', fieldName)
         const errorsOfField = _fieldErrorMessages.value ? _fieldErrorMessages.value[fieldName] : ''
+        console.log('errorsOfField:', _fieldErrorMessages.value)
         return errorsOfField ? errorsOfField[0] : '';
     }
 
     const resetMessages = () => {
+        
         _message.value = ''
         _fieldErrorMessages.value = [];
         _statusCode.value = 0
@@ -64,7 +67,7 @@ export const useErrorStore = defineStore('error', () => {
             })
     }
     return {
-        message, statusCode, title,
+        _message,message, statusCode, title,_fieldErrorMessages,
         fieldMessage, resetMessages, setErrorMessages
     }
 })
