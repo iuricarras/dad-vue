@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, useTemplateRef, provide } from 'vue';
 import { RouterView } from 'vue-router';
 import Toaster from '@/components/ui/toast/Toaster.vue';
 import { useAuthStore } from '@/stores/auth.js';
@@ -13,8 +13,6 @@ const showDropdown = ref(false); // Gerencia a visibilidade do dropdown
 const toggleDropdown = () => {
   showDropdown.value = !showDropdown.value;
 };
-
-
 
 
 const alertDialog = useTemplateRef('alert-dialog')
