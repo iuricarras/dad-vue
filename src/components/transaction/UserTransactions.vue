@@ -1,35 +1,33 @@
 <script setup>
 import { onMounted, ref, computed } from 'vue'
-import { useUserStore } from '@/stores/user'  // Importando o store
-import { useAuthStore } from '@/stores/auth';
-const storeAuth = useAuthStore()
+import { useUserStore } from '@/stores/user'  
+
+
 const props = defineProps({
-  user: Object, // Recebe o usuário cujas transações serão exibidas
+  id: 0, 
 })
 const emit = defineEmits(['close'])
 
-const userStore = useUserStore()  // Usando o store user.js
-const transactions = ref([])  // Todas as transações do usuário
-const filteredTransactions = ref([]) // Transações filtradas
-const currentPage = ref(1)  // Página atual
-const itemsPerPage = ref(10)  // Quantidade de transações por página
-const selectedType = ref('')  // Tipo de transação selecionado
+const userStore = useUserStore()  
+const transactions = ref([])  
+const filteredTransactions = ref([]) 
+const currentPage = ref(1) 
+const itemsPerPage = ref(10)  
+const selectedType = ref('')  
 
-// Computa o total de páginas com base no total de transações
+
 const totalPages = computed(() => {
   return Math.ceil(filteredTransactions.value.length / itemsPerPage.value)
 })
 
-// Função para pegar as transações da página atual
+
 const paginatedTransactions = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage.value
   const end = start + itemsPerPage.value
   return filteredTransactions.value.slice(start, end)
 })
 
-// Filtra as transações com base no tipo selecionado
 const filterTransactions = () => {
-  // Quando o filtro mudar, resetar a página para a primeira
   currentPage.value = 1
 
   if (selectedType.value) {
@@ -39,30 +37,23 @@ const filterTransactions = () => {
   }
 }
 
-// Busca as transações do usuário ao montar o componente
+
 onMounted(async () => {
-  console.log('UserTransactions mounted', storeAuth.user.id)
-  transactions.value = await userStore.fetchUserTransactions(storeAuth.user.id)  // Chama a função do store
-  filteredTransactions.value = transactions.value // Inicializa com todas as transações
+  transactions.value = await userStore.fetchUserTransactions(props.id) 
+  filteredTransactions.value = transactions.value 
 })
 
-// Função para ir para a página anterior
+
 const prevPage = () => {
   if (currentPage.value > 1) {
     currentPage.value--
   }
 }
 
-// Função para ir para a próxima página
 const nextPage = () => {
   if (currentPage.value < totalPages.value) {
     currentPage.value++
   }
-}
-
-// Fecha o modal
-const close = () => {
-  emit('close')
 }
 </script>
 

@@ -11,6 +11,9 @@ export const useAuthStore = defineStore('auth', () => {
 
     const user = ref(null)
     const token = ref('')
+    const id = computed(() => {
+        return user.value ? user.value.id : ''
+    })
 
     const userName = computed(() => {
         return user.value ? user.value.name : ''
@@ -33,6 +36,9 @@ export const useAuthStore = defineStore('auth', () => {
 
     const userGender = computed(() => {
         return user.value ? user.value.gender : ''
+    })
+    const brain_coins_balance = computed(() => {
+        return user.value ? user.value.brain_coins_balance : ''
     })
 
     const userPhotoUrl = computed(() => {
@@ -60,11 +66,9 @@ export const useAuthStore = defineStore('auth', () => {
             token.value = responseLogin.data.token
             localStorage.setItem('token', token.value)
             axios.defaults.headers.common.Authorization = 'Bearer ' + token.value
-            //const responseUser = await axios.get('users/me')
-            //user.value = responseUser.data.data
-
+           
             user.value = responseLogin.data.user
-            
+             console.log("aaaaaaa",user.value.id)
             repeatRefreshToken()
             router.push({ name:'home' })
             //router.push({ name:'tasks' })
@@ -90,7 +94,6 @@ export const useAuthStore = defineStore('auth', () => {
         }
     }
 
-    // These 2 functions and intervalToRefreshToken variable are "private" - not exported by the store
     let intervalToRefreshToken = null
 
     const resetIntervalToRefreshToken = () => {
@@ -116,12 +119,7 @@ export const useAuthStore = defineStore('auth', () => {
                 storeError.setErrorMessages(e.response.data.message, e.response.data.errors, e.response.status, 'Authentication Error!')
                 return false
             }
-        }, 1000 * 60 * 110)  // repeat every 110 minutes
-
-        // To test the refresh token, replace previous line with the following code
-        // This will repeat the refreshtoken endpoint every 10 seconds:
-        //}, 1000 * 10)
-
+        }, 1000 * 60 * 110) 
         return intervalToRefreshToken
     }
 
@@ -152,7 +150,7 @@ export const useAuthStore = defineStore('auth', () => {
     }
 
     return {
-        user, userName, userFirstLastName, userEmail, userType, userGender, userPhotoUrl,
+        brain_coins_balance,id,user, userName, userFirstLastName, userEmail, userType, userGender, userPhotoUrl,
         login, logout, restoreToken, canUpdateDeleteProject
     }
 })

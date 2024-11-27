@@ -50,10 +50,10 @@ const logout = () => {
       {{ storeAuth.userFirstLastName ? storeAuth.userFirstLastName : '' }}
     </h1>
 
-    <div class="flex items-center mr-10 space-x-2 bg-gray-600 text-white px-4 py-2 rounded-full">
+    <div v-if="storeAuth.user?storeAuth.user.type=='P':false" class="flex items-center mr-10 space-x-2 bg-gray-600 text-white px-4 py-2 rounded-full">
       <span class="text-sm font-medium">
         
-        <span class="text-lg">{{ storeAuth.userBrainCoins }} 💰</span>
+        <span class="text-lg">{{ storeAuth.user.brain_coins_balance }} 💰</span>
       </span>
       <RouterLink to="/shop">
         <button class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-3 rounded-full">

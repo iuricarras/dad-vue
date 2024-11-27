@@ -29,7 +29,7 @@ const handleViewTransactions = (user) => {
             Close
           </button>
         </div>
-        <UserTransactions v-if="selectedUser" :user="selectedUser"/>
+        <UserTransactions v-if="selectedUser" :id="selectedUser.id"/>
       </div>
     </div>
   </div>
