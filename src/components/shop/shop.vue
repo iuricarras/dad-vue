@@ -55,7 +55,7 @@ const buyItem = (item) => {
         <p class="text-gray-700 mb-4">{{ item.description }}</p>
         <div class="flex justify-between items-center">
           <span class="text-lg font-semibold">{{ item.price }} $</span>
-          <button v-show="storeAuth.user.type=='P'"
+          <button v-if="storeAuth.user?storeAuth.user.type=='P': false"
             @click="buyItem(item)" 
             class="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-700 transition-colors">
             Buy

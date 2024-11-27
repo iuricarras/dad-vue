@@ -1,7 +1,8 @@
 <script setup>
 import { onMounted, ref, computed } from 'vue'
 import { useUserStore } from '@/stores/user'  // Importando o store
-
+import { useAuthStore } from '@/stores/auth';
+const storeAuth = useAuthStore()
 const props = defineProps({
   user: Object, // Recebe o usuário cujas transações serão exibidas
 })
@@ -40,9 +41,9 @@ const filterTransactions = () => {
 
 // Busca as transações do usuário ao montar o componente
 onMounted(async () => {
-  transactions.value = await userStore.fetchUserTransactions(props.user.id)  // Chama a função do store
+  console.log('UserTransactions mounted', storeAuth.user.id)
+  transactions.value = await userStore.fetchUserTransactions(storeAuth.user.id)  // Chama a função do store
   filteredTransactions.value = transactions.value // Inicializa com todas as transações
-  console.log('Transactions fetched:', transactions.value) // Para debug
 })
 
 // Função para ir para a página anterior
