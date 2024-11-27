@@ -147,7 +147,33 @@ export const useUserStore = defineStore('user', () => {
     } catch (e) {
       storeError.setErrorMessages(e.response?.data?.message, e.response?.data?.errors, e.response?.status,"Error updating user's blocked field!");
     }
+  }
+
+  const deleteUser = async (userId) => {
+    storeError.resetMessages(); 
+    try {
+      const response = await axios.delete(`/users/${userId}`);
+      const userIndex = users.value.findIndex((user) => user.id === userId);
+      if (userIndex >= 0) {
+        users.value.splice(userIndex, 1);
+      }
+  
+      const message = response.status === 204 
+        ? 'User permanently deleted successfully.' 
+        : 'User has transactions or games, soft deleted.';
+        
+      toast({
+        title: 'Success!',
+        description: message,
+      });
+  
+      return true;
+    } catch (e) {
+      storeError.setErrorMessages(e.response?.data?.message, e.response?.data?.errors, e.response?.status,"Error updating user's blocked field!");
+      return false;
+    }
   };
+  
   
   return {
     users,
@@ -160,5 +186,6 @@ export const useUserStore = defineStore('user', () => {
     fetchUserMultiplayerGames,
     updateUser,
     toggleBlockStatus,
+    deleteUser,
   }
 })

@@ -3,6 +3,7 @@ import Home from '@/components/mainPage/Home.vue'
 import SinglePlayer from '@/components/singlePlayer/SinglePlayer.vue'
 import Statistics from '@/components/statistics/Statistics.vue'
 import Transactions from '@/components/transaction/transactions.vue'
+import Shop from '@/components/shop/shop.vue'
 import Users from '@/components/user/Users.vue'
 
 const router = createRouter({
@@ -35,6 +36,11 @@ const router = createRouter({
       path: '/users',
       name: 'users',
       component: Users 
+    },
+    {
+      path: '/shop',
+      name: 'shop',
+      component: Shop 
     }
 
   ]
