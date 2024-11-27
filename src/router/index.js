@@ -8,6 +8,7 @@ import GameHistory from '@/components/game/GameHistory.vue'
 import Shop from '@/components/shop/shop.vue'
 import Transactions from '@/components/transaction/Transactions.vue'
 import Users from '@/components/user/Users.vue'
+import { useAuthStore } from '@/stores/auth'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -63,4 +64,24 @@ const router = createRouter({
   ]
 })
 
+let handlingFirstRoute = true
+
+router.beforeEach(async (to, from, next) => {
+    const storeAuth = useAuthStore()
+    if (handlingFirstRoute) {
+        handlingFirstRoute = false
+        await storeAuth.restoreToken()
+    }
+    // routes "updateTask" and "updateProject" are only accessible when user is logged in
+    if (((to.name == 'users') || (to.name == 'Transactions')) && (!storeAuth.user)) {
+        next({ name: 'login' })
+        return
+    }
+    if(((to.name=='users')&&(storeAuth.user.type!='A'))){
+        next({ name: 'home' })
+        return
+    }
+    // all other routes are accessible to everyone, including anonymous users
+    next()
+})
 export default router

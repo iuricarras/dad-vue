@@ -46,8 +46,8 @@ const logout = () => {
 
     <div class="flex items-center mr-10 space-x-2 bg-gray-600 text-white px-4 py-2 rounded-full">
       <span class="text-sm font-medium">
-        {{ storeAuth.userBrainCoins }} 
-        <span class="text-lg">5💰</span>
+        
+        <span class="text-lg">{{ storeAuth.userBrainCoins }} 💰</span>
       </span>
       <RouterLink to="/shop">
         <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full">
@@ -90,11 +90,17 @@ const logout = () => {
             >
               Logout
             </button>
-            <RouterLink
+            <RouterLink v-show="storeAuth.user.type=='P'"
               to="/transactions"
               class="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
             >
               Transactions
+            </RouterLink>
+            <RouterLink v-show="storeAuth.user.type=='A'"
+              to="/users"
+              class="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+            >
+              Users
             </RouterLink>
           </div>
         </transition>
