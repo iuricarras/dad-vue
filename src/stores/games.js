@@ -13,6 +13,7 @@ export const useGameStore = defineStore('game', () => {
     const storeError = useErrorStore();
 
     const games = ref([]);
+    const gamesPlaying = ref([]);
     const boards = ref([]);
 
     const totalGames = computed(() => {
@@ -64,7 +65,7 @@ export const useGameStore = defineStore('game', () => {
             console.error('Erro ao buscar top Single Player para a board:', error);
         }
     };
-    
+
     const fetchTopMultiplayerGames = async (boardId) => {
         try {
             const response = await axios.get('/games/topMultiplayer', {
@@ -80,28 +81,37 @@ export const useGameStore = defineStore('game', () => {
     const insertGame = async (game) => {
         storeError.resetMessages();
         try {
-            const response = await axios.post('games', game);
-            games.value.push(response.data.data);
+            const response = await axios.post('/games', game);  
+            gamesPlaying.value.push(response.data.data)
             toast({
-                description: `Game #${response.data.data.id} created successfully!`,
-                action: h(ToastAction, {
-                    altText: `Open new game`,
-                    onclick: () => {
-                        router.push({ name: 'showGame', params: { id: response.data.data.id } });
-                    },
-                }, {
-                    default: () => `Open new game`,
-                }),
-            });
-            return response.data.data;
+                description: `Game #${response.data.data.id} created successfully!`
+            })
+            return response.data.data
         } catch (e) {
             storeError.setErrorMessages(e.response.data.message, e.response.data.errors, e.response.status, 'Error creating game!');
             return false;
         }
     };
-    
+
+    const updateGame = async (game) => {
+        storeError.resetMessages();
+        try {
+            const response = await axios.put(`games/${game.id}`, game);
+            const index = gamesPlaying.value.findIndex(g => g.id === game.id);
+            gamesPlaying.value[index] = response.data.data;
+            toast({
+                description: `Game #${game.id} updated successfully!`
+            })
+            return response.data.data;
+        } catch (e) {
+            storeError.setErrorMessages(e.response.data.message, e.response.data.errors, e.response.status, 'Error updating game!');
+            return false;
+        }
+    }
+
     return {
         games,
+        gamesPlaying,
         boards,
         totalGames,
         fetchBoards,
@@ -110,5 +120,6 @@ export const useGameStore = defineStore('game', () => {
         fetchTopSinglePlayerGames,
         fetchTopMultiplayerGames,
         insertGame,
+        updateGame
     };
 });

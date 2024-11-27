@@ -12,15 +12,29 @@ const toggleDropdown = () => {
   showDropdown.value = !showDropdown.value;
 };
 
-const handleLogout = () => {
-  storeAuth.logout(); // Ação para logout (assumindo que você tenha isso implementado)
-};
+import Toaster from '@/components/ui/toast/Toaster.vue'
+import GlobalAlertDialog from '@/components/common/GlobalAlertDialog.vue'
+
+
+const alertDialog = useTemplateRef('alert-dialog')
+provide('alertDialog', alertDialog)
+
+const logoutConfirmed = () => {
+    storeAuth.logout()
+}
+
+const logout = () => {
+  alertDialog.value.open(logoutConfirmed, 'Logout confirmation?', 'Cancel', `Yes, I want to log out`,
+       `Are you sure you want to log out? You can still access your account later with your credentials.`)
+}
+
 </script>
 
 <template>
   <Toaster />
   <nav class="relative flex justify-between items-center bg-gray-800 p-3 text-white">
-    
+  <GlobalAlertDialog ref="alert-dialog"></GlobalAlertDialog>
+    <!-- Memory Game como um link interativo para Home -->
     <RouterLink
       to="/home"
       class="text-lg font-medium hover:text-blue-500 px-3 py-2 rounded-md transition-colors">
@@ -50,8 +64,8 @@ const handleLogout = () => {
         v-slot="{ isActive }">
         <span :class="{ 'text-blue-500': isActive }">Register</span>
       </RouterLink>
-      <RouterLink
-        to="/login"
+
+      <RouterLink v-show="!storeAuth.user" to="/login"
         class="text-sm font-medium hover:text-blue-500 px-3 py-2 rounded-md transition-colors"
         v-slot="{ isActive }">
         <span :class="{ 'text-blue-500': isActive }">Login</span>
@@ -73,7 +87,7 @@ const handleLogout = () => {
           >
             <button
               class="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
-              @click="handleLogout"
+              v-show="storeAuth.user" @click="logout"
             >
               Logout
             </button>
@@ -86,6 +100,7 @@ const handleLogout = () => {
           </div>
         </transition>
       </div>
+    
     </div>
   </nav>
   <RouterView></RouterView>
