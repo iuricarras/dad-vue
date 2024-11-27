@@ -50,7 +50,7 @@ const buyItem = (item) => {
       <div 
         v-for="item in items" 
         :key="item.id" 
-        class="bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition-all">
+        class="bg-gray-300 rounded-lg shadow-md p-4 hover:shadow-lg transition-all">
         <h2 class="text-xl font-semibold mb-2">{{ item.name }}</h2>
         <p class="text-gray-700 mb-4">{{ item.description }}</p>
         <div class="flex justify-between items-center">
