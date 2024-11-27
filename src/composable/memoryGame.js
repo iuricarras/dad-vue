@@ -13,8 +13,9 @@ export function useMemoryGame() {
     let gameInformation = {}
     let moves = [];
 
-    const numRows = ref(3)
-    const numCols = ref(4)
+    const boardId = ref(1)
+    const numRows = ref(4)
+    const numCols = ref(3)
     let numPars = 0;
 
     let startTime = 0
@@ -104,7 +105,8 @@ export function useMemoryGame() {
         game.value = {}
         game.value.type = "S";
         game.value.status = "PL"
-        game.value.board_id = 1
+        game.value.board_id = boardId.value
+        console.log(game.value.board_id)
     }
 
     const move = async (card) => {
@@ -170,6 +172,6 @@ export function useMemoryGame() {
         }
     }
 
-
-    return { status, board, matched, gameTimer, gameTime, numCols, numRows, start, move }
+    return { status, board, matched, gameTimer, gameTime, numCols, numRows, boardId, start, move
+     }
 }
