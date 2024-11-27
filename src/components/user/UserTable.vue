@@ -62,10 +62,9 @@ const handleViewTransactions = (user) => {
 </script>
 
 <template>
-  <div class="bg-gray-800 text-black p-7 rounded-lg w-full max-w-screen-lg shadow-lg mt-12">
-    <h2 class="text-xl mb-6 text-center font-semibold text-white">Users</h2>
+  <div class="bg-gray-800 text-black p-4 rounded-lg w-full max-w-screen-lg shadow-lg">
 
-    <div class="mb-4 flex justify-between items-center">
+    <div class="mb-2 flex justify-between items-center">
       <div>
         <label for="filterType" class="block text-white mb-1">User Type</label>
         <select id="filterType" v-model="filterType" class="px-3 py-2 border rounded-lg" >
@@ -74,7 +73,7 @@ const handleViewTransactions = (user) => {
           <option value="P">Player</option>
         </select>
       </div>
-
+      <h2 class="text-xl text-center font-semibold text-white">Users</h2>
       <div>
         <label for="filterBlocked" class="block text-white mb-1">Blocked</label>
         <select id="filterBlocked" v-model="filterBlocked" class="px-3 py-2 border rounded-lg" >
@@ -105,13 +104,13 @@ const handleViewTransactions = (user) => {
     </table>
 
     <div class="flex justify-center mt-4">
-      <button class="px-4 py-2 mx-1 bg-gray-800 text-white rounded hover:bg-gray-300" @click="prevPage" :disabled="currentPage === 1">
+      <button class="px-4 py-2 mx-1 bg-gray-700 text-white rounded hover:bg-gray-600" @click="prevPage" :disabled="currentPage === 1">
         Prev
       </button>
-      <span class="px-4 py-2 mx-1 text-white">
+      <span class="px-3 py-2 mx-1 text-white">
         Page {{ currentPage }} of {{ totalPages }}
       </span>
-      <button class="px-4 py-2 mx-1 bg-gray-800 text-white rounded hover:bg-gray-300" @click="nextPage" :disabled="currentPage === totalPages">
+      <button class="px-4 py-2 mx-1 bg-gray-700 text-white rounded hover:bg-gray-600" @click="nextPage" :disabled="currentPage === totalPages">
         Next
       </button>
     </div>
