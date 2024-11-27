@@ -105,6 +105,7 @@ export const useGameStore = defineStore('game', () => {
             return response.data.data;
         } catch (e) {
             storeError.setErrorMessages(e.response.data.message, e.response.data.errors, e.response.status, 'Error updating game!');
+            console.log(e.response.data);
             return false;
         }
     }

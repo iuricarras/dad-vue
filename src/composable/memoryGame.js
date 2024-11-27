@@ -1,5 +1,5 @@
 import { useGameStore } from '@/stores/games'
-import { ref } from 'vue'
+import { ref, toRaw } from 'vue'
 
 export function useMemoryGame() {
 
@@ -8,6 +8,10 @@ export function useMemoryGame() {
     const status = ref(null)
 
     let board = ref([])
+
+    let gameInformation = {}
+    let moves = [];
+
     const numRows = ref(3)
     const numCols = ref(4)
     let numPars = 0;
@@ -80,6 +84,8 @@ export function useMemoryGame() {
 
         shuffle(cards)
 
+        gameInformation.board = []
+        
         for (let i = 0; i < numRows.value * numCols.value; i++) {
             board.value.push({
                 value: cards[i],
@@ -87,7 +93,13 @@ export function useMemoryGame() {
                 isMatched: false
             })
 
+            gameInformation.board.push({
+                value: cards[i],
+                isRevealed: false,
+                isMatched: false
+            })
         }
+
         game.value = {}
         game.value.type = "S";
         game.value.status = "PL"
@@ -104,14 +116,21 @@ export function useMemoryGame() {
         if (!firstCard) {
             firstCard = card
             card.isRevealed = true
+            moves.push({"user_id": 7, "first_card": toRaw(card)})
         } else {
             card.isRevealed = true
             matched.value = true
+
+
             if (firstCard.value === card.value) {
                 setTimeout(() => {
                     numPars--; 
                     firstCard.isMatched = true
                     card.isMatched = true
+
+                    moves.pop()
+                    moves.push({"user_id": 7, "first_card": toRaw(firstCard),"second_card": toRaw(card)})
+
                     firstCard = null
                     matched.value = false
                     if (numPars == 0) {
@@ -122,6 +141,10 @@ export function useMemoryGame() {
                         game.value.status = "E"
                         game.value.ended_at = new Date(Date.now()).toISOString();
                         game.value.total_time = gameTime.value
+                        gameInformation.moves = moves
+                        console.log(gameInformation);
+                        game.value.custom = JSON.stringify(gameInformation)
+                        console.log(game.value)
                         gameStore.updateGame(game.value)
                     }
 
@@ -130,8 +153,13 @@ export function useMemoryGame() {
                 setTimeout(() => {
                     firstCard.isRevealed = false
                     card.isRevealed = false
+
+                    moves.pop()
+                    moves.push({"user_id": 7, "first_card": toRaw(firstCard),"second_card": toRaw(card)})
+
                     firstCard = null
                     matched.value = false
+
                 }, 1000)
             }
         }
