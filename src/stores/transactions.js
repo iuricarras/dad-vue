@@ -6,12 +6,13 @@ import { useRouter } from 'vue-router'
 import { useToast } from '@/components/ui/toast/use-toast'
 import { ToastAction } from '@/components/ui/toast'
 import { h } from 'vue'
+import { useAuthStore } from '@/stores/auth';
 
 export const useTransactionStore = defineStore('transaction', () => {
     const router = useRouter()
     const { toast } = useToast()
     const storeError = useErrorStore()
-
+    const storeAuth = useAuthStore()
     const transactions = ref([])
 
     const totalTransactions = computed(() => {
@@ -37,8 +38,9 @@ export const useTransactionStore = defineStore('transaction', () => {
       
 
       const fetchTransaction = async (userId) => {
+        console.log(storeAuth.user.id)
         try {
-          const response = await axios.get(`transactions/${userId}`);
+          const response = await axios.get(`transactions/${storeAuth.user.id}`);
           if (Array.isArray(response.data)) {
             return response.data;
           } else {

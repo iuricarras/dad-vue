@@ -5,7 +5,6 @@ import {ref, onMounted } from 'vue';
 import { useAuthStore } from '@/stores/auth';
 const storeAuth = useAuthStore()
 
-const userStore = useUserStore() 
 
 </script>
 

@@ -62,6 +62,7 @@ export const useUserStore = defineStore('user', () => {
   
   const fetchUser = async (userId) => {
     storeError.resetMessages()
+    
     try {
       const response = await axios.get(`/users/${userId}`)
       const userIndex = users.value.findIndex(user => user.id === userId);
