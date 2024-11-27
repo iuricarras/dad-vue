@@ -46,8 +46,8 @@ const logout = () => {
 
     <div class="flex items-center mr-10 space-x-2 bg-gray-600 text-white px-4 py-2 rounded-full">
       <span class="text-sm font-medium">
-        {{ storeAuth.userBrainCoins }} 
-        <span class="text-lg">5💰</span>
+        
+        <span class="text-lg">{{ storeAuth.userBrainCoins }} 💰</span>
       </span>
       <RouterLink to="/shop">
         <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full">
@@ -57,8 +57,7 @@ const logout = () => {
     </div>
     
     <div class="flex items-center space-x-10 ml-auto pr-10">
-      <RouterLink
-        to="/register"
+      <RouterLink v-show="!storeAuth.user" to="/register"
         class="text-sm font-medium hover:text-blue-500 px-3 py-2 rounded-md transition-colors"
         v-slot="{ isActive }">
         <span :class="{ 'text-blue-500': isActive }">Register</span>
@@ -70,11 +69,12 @@ const logout = () => {
         <span :class="{ 'text-blue-500': isActive }">Login</span>
       </RouterLink>
 
-      
-      <div class="relative">
+
+      <!-- aparece após o login user/logout/transactions -->
+      <div v-show="storeAuth.user" class="relative">
         <img 
           class="w-10 h-10 rounded-full cursor-pointer" 
-          :src="avatarNoneAssetURL" 
+          :src="storeAuth.userPhotoUrl" 
           alt="Rounded avatar" 
           @click="toggleDropdown"
         />
@@ -90,11 +90,17 @@ const logout = () => {
             >
               Logout
             </button>
-            <RouterLink
+            <RouterLink v-show="storeAuth.user.type=='P'"
               to="/transactions"
               class="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
             >
               Transactions
+            </RouterLink>
+            <RouterLink v-show="storeAuth.user.type=='A'"
+              to="/users"
+              class="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+            >
+              Users
             </RouterLink>
           </div>
         </transition>
