@@ -1,28 +1,29 @@
 <script setup>
-import { inject } from 'vue'
-import TopList from '@/components/mainPage/TopList.vue'
-
+import { inject } from 'vue';
+import TopList from '@/components/mainPage/TopList.vue';
 </script>
 
 <template>
-  <div class="flex h-screen items-center justify-center px-10 -mt-10">
-    <div class="flex justify-between items-start w-full max-w-screen-xl px-10">
-      <div>
-        <TopList />
+  <div class="flex items-center justify-center mt-1">
+    <div class="w-full max-w-2xl mr-48">
+      <TopList />
+    </div>
+
+    <div class="flex flex-col space-y-5 w-1/4">
+      <div class="bg-blue-600 text-white p-6 rounded hover:bg-blue-500 transition-all w-full">
+        <RouterLink to="/singleplayer" class="block text-center">
+          <p class="text-3xl font-bold">Single-Player</p>
+          <p class="text-lg mt-2">Joga agora e desafia a tua memória!</p>
+        </RouterLink>
       </div>
-      <div class="flex flex-col space-y-5 w-1/3">
-        <div class="bg-gray-800 text-white p-4 rounded hover:bg-gray-700 transition-all w-full">
-          <RouterLink to="/singleplayer" class="block text-center text-lg">Single Player</RouterLink>
-        </div>
-        <div class="bg-gray-800 text-white p-4 rounded hover:bg-gray-700 transition-all w-full">
-          <RouterLink to="/multiplayer" class="block text-center text-lg">Multiplayer</RouterLink>
-        </div>
-        <div class="bg-gray-800 text-white p-4 rounded hover:bg-gray-700 transition-all w-full">
-          <RouterLink to="/statistics" class="block text-center text-lg">Statistics</RouterLink>
-        </div>
-        <div class="bg-gray-800 text-white p-4 rounded hover:bg-gray-700 transition-all w-full">
-          <RouterLink to="/shop" class="block text-center text-lg">Shop</RouterLink>
-        </div>
+      <div class="bg-gray-600 text-white p-6 rounded w-full cursor-not-allowed">
+        <p class="text-3xl font-bold text-center">Multiplayer</p>
+        <p class="text-lg text-center mt-2">Faz login para desbloquear este modo de jogo!</p>
+      </div>
+      <div class="bg-emerald-700 text-white p-4 rounded hover:bg-emerald-600 transition-all w-full">
+        <RouterLink to="/statistics" class="block text-center">
+          <p class="text-3xl font-bold">Estatísticas</p>
+        </RouterLink>
       </div>
     </div>
   </div>
