@@ -116,20 +116,16 @@ export const useGameStore = defineStore('game', () => {
             return false;
         }
     };
-
-    const fetchGameHistory = async (userId, page = 1) => {
+    
+    const fetchGameHistory = async () => {
         try {
-            const response = await axios.get(`/games-history/${userId}`, {
-                params: { page },
-            });
+            const response = await axios.get('/games-history');
             return response.data;
         } catch (error) {
-            console.error('Error fetching game history:', error);
-            return { data: [], current_page: 1, last_page: 1 };
+            console.error('Error fetching authenticated game history:', error);
+            return [];
         }
     };
-    
-    
     
     const updateGame = async (game) => {
         storeError.resetMessages();

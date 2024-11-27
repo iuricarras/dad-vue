@@ -25,6 +25,11 @@ import TopList from '@/components/mainPage/TopList.vue';
           <p class="text-3xl font-bold">Estatísticas</p>
         </RouterLink>
       </div>
+      <div class="bg-yellow-600 text-white p-4 rounded hover:bg-yellow-500 transition-all w-full">
+        <RouterLink to="/shop" class="block text-center">
+          <p class="text-3xl font-bold">Shop</p>
+        </RouterLink>
+      </div>
     </div>
   </div>
 </template>

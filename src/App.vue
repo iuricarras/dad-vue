@@ -4,8 +4,7 @@ import { RouterView } from 'vue-router';
 import Toaster from '@/components/ui/toast/Toaster.vue';
 import { useAuthStore } from '@/stores/auth.js';
 import avatarNoneAssetURL from '@/assets/avatar-none.png';
-import GlobalAlertDialog from '@/components/common/GlobalAlertDialog.vue'
-
+import GlobalAlertDialog from '@/components/common/GlobalAlertDialog.vue';
 
 const storeAuth = useAuthStore();
 const showDropdown = ref(false); // Gerencia a visibilidade do dropdown
@@ -14,25 +13,32 @@ const toggleDropdown = () => {
   showDropdown.value = !showDropdown.value;
 };
 
+const closeDropdown = () => {
+  showDropdown.value = false; // Fecha o dropdown
+};
 
-const alertDialog = useTemplateRef('alert-dialog')
-provide('alertDialog', alertDialog)
+const alertDialog = useTemplateRef('alert-dialog');
+provide('alertDialog', alertDialog);
 
 const logoutConfirmed = () => {
-    storeAuth.logout()
-}
+  storeAuth.logout();
+};
 
 const logout = () => {
-  alertDialog.value.open(logoutConfirmed, 'Logout confirmation?', 'Cancel', `Yes, I want to log out`,
-       `Are you sure you want to log out? You can still access your account later with your credentials.`)
-}
-
+  alertDialog.value.open(
+    logoutConfirmed,
+    'Logout confirmation?',
+    'Cancel',
+    `Yes, I want to log out`,
+    `Are you sure you want to log out? You can still access your account later with your credentials.`
+  );
+};
 </script>
 
 <template>
   <Toaster />
   <nav class="relative flex justify-between items-center bg-gray-800 p-3 text-white">
-  <GlobalAlertDialog ref="alert-dialog"></GlobalAlertDialog>
+    <GlobalAlertDialog ref="alert-dialog"></GlobalAlertDialog>
     <!-- Memory Game como um link interativo para Home -->
     <RouterLink
       to="/home"
@@ -50,14 +56,14 @@ const logout = () => {
         <span class="text-lg">5💰</span>
       </span>
       <RouterLink to="/shop">
-        <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full">
+        <button class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-3 rounded-full">
           +
         </button>
       </RouterLink>
     </div>
     
     <div class="flex items-center space-x-10 ml-auto pr-10">
-      <RouterLink
+      <RouterLink v-show="!storeAuth.user" 
         to="/register"
         class="text-sm font-medium hover:text-blue-500 px-3 py-2 rounded-md transition-colors"
         v-slot="{ isActive }">
@@ -70,7 +76,6 @@ const logout = () => {
         <span :class="{ 'text-blue-500': isActive }">Login</span>
       </RouterLink>
 
-      
       <div class="relative">
         <img 
           class="w-10 h-10 rounded-full cursor-pointer" 
@@ -84,22 +89,36 @@ const logout = () => {
             v-if="showDropdown" 
             class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 z-10 text-gray-800"
           >
-            <button
+            <RouterLink
+              to="/gameHistory"
               class="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
-              v-show="storeAuth.user" @click="logout"
+              @click="closeDropdown"
             >
-              Logout
-            </button>
+              Game History
+            </RouterLink>
+            <RouterLink
+              to="/scoreboard"
+              class="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+              @click="closeDropdown"
+            >
+              Scoreboard
+            </RouterLink>
             <RouterLink
               to="/transactions"
               class="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+              @click="closeDropdown"
             >
               Transactions
             </RouterLink>
+            <button
+              class="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+              v-show="storeAuth.user" @click="() => { logout(); closeDropdown(); }"
+            >
+              Logout
+            </button>
           </div>
         </transition>
       </div>
-    
     </div>
   </nav>
   <RouterView></RouterView>

@@ -174,21 +174,28 @@ export const useUserStore = defineStore('user', () => {
     }
   };
 
-  const fetchPersonalScoreboard = async (userId) => {
+  const fetchPersonalScoreboard = async () => {
     try {
-        const response = await axios.get(`/games/scoreboard/${userId}`);
-        return response.data;
+      const response = await axios.get('/scoreboard');
+      return response.data;
     } catch (error) {
-        console.error('Error fetching personal scoreboard:', error);
-        return {
-            single_player: [],
-            multiplayer: { total_victories: 0, total_losses: 0 },
-        };
+      console.error('Error fetching personal scoreboard:', error);
+      return {
+        single_player: [],
+        multiplayer: { total_victories: 0, total_losses: 0 },
+      };
     }
   };
 
-  
-  
+  const fetchAuthenticatedGameHistory = async () => {
+    try {
+        const response = await axios.get('/games-history'); 
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching authenticated game history:', error);
+        return [];
+    }
+};
   
   return {
     users,
@@ -202,6 +209,7 @@ export const useUserStore = defineStore('user', () => {
     updateUser,
     toggleBlockStatus,
     fetchPersonalScoreboard,
+    fetchAuthenticatedGameHistory,
     deleteUser,
   }
 })

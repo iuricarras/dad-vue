@@ -2,9 +2,11 @@
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { useUserStore } from '@/stores/user';
+import { useAuthStore } from '@/stores/auth';
 
 const route = useRoute(); 
 const userStore = useUserStore();
+const authStore = useAuthStore();
 const selectedUser = ref(null); 
 
 const scoreboard = ref({
@@ -13,9 +15,7 @@ const scoreboard = ref({
 });
 
 const fetchScoreboard = async () => {
-    await userStore.fetchUsers(); 
-  selectedUser.value = userStore.users[8]; 
-  scoreboard.value = await userStore.fetchPersonalScoreboard(selectedUser.value.id);
+  scoreboard.value = await userStore.fetchPersonalScoreboard();
 };
 
 onMounted(async () => {
