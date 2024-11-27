@@ -43,7 +43,7 @@ const logout = () => {
     </RouterLink>
 
     <h1 class="flex-grow text-center">
-      Nome{{ storeAuth.userFirstLastName ? 'of ' + storeAuth.userFirstLastName : '' }}
+      {{ storeAuth.userFirstLastName ? 'of ' + storeAuth.userFirstLastName : '' }}
     </h1>
 
     <div class="flex items-center mr-10 space-x-2 bg-gray-600 text-white px-4 py-2 rounded-full">
