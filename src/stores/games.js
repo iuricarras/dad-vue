@@ -134,6 +134,7 @@ export const useGameStore = defineStore('game', () => {
     const updateGame = async (game) => {
         storeError.resetMessages();
         try {
+
             const response = await axios.put(`games/${game.id}`, game);
             const index = gamesPlaying.value.findIndex(g => g.id === game.id);
             gamesPlaying.value[index] = response.data.data;
