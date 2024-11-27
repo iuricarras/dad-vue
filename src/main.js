@@ -20,6 +20,3 @@ axios.defaults.baseURL = 'http://localhost/api'
 app.component('ErrorMessage', ErrorMessage)
 
 app.mount('#app')
-
-// Default Axios configuration
-axios.defaults.baseURL = 'http://dad-laravel.test:8080/api'
