@@ -4,6 +4,8 @@ import { RouterView } from 'vue-router';
 import Toaster from '@/components/ui/toast/Toaster.vue';
 import { useAuthStore } from '@/stores/auth.js';
 import avatarNoneAssetURL from '@/assets/avatar-none.png';
+import GlobalAlertDialog from '@/components/common/GlobalAlertDialog.vue'
+
 
 const storeAuth = useAuthStore();
 const showDropdown = ref(false); // Gerencia a visibilidade do dropdown
@@ -12,8 +14,7 @@ const toggleDropdown = () => {
   showDropdown.value = !showDropdown.value;
 };
 
-import Toaster from '@/components/ui/toast/Toaster.vue'
-import GlobalAlertDialog from '@/components/common/GlobalAlertDialog.vue'
+
 
 
 const alertDialog = useTemplateRef('alert-dialog')
