@@ -57,8 +57,7 @@ const logout = () => {
     </div>
     
     <div class="flex items-center space-x-10 ml-auto pr-10">
-      <RouterLink
-        to="/register"
+      <RouterLink v-show="!storeAuth.user" to="/register"
         class="text-sm font-medium hover:text-blue-500 px-3 py-2 rounded-md transition-colors"
         v-slot="{ isActive }">
         <span :class="{ 'text-blue-500': isActive }">Register</span>
@@ -70,11 +69,12 @@ const logout = () => {
         <span :class="{ 'text-blue-500': isActive }">Login</span>
       </RouterLink>
 
-      
-      <div class="relative">
+
+      <!-- aparece após o login user/logout/transactions -->
+      <div v-show="storeAuth.user" class="relative">
         <img 
           class="w-10 h-10 rounded-full cursor-pointer" 
-          :src="avatarNoneAssetURL" 
+          :src="storeAuth.userPhotoUrl" 
           alt="Rounded avatar" 
           @click="toggleDropdown"
         />
