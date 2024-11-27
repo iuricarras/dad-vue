@@ -25,7 +25,9 @@ export const useGameStore = defineStore('game', () => {
             const response = await axios.get('/boards');
             boards.value = response.data.map(board => ({
                 id: board.id,
-                label: `${board.board_cols}x${board.board_rows}`
+                label: `${board.board_cols}x${board.board_rows}`,
+                numCols: board.board_cols,
+                numRows: board.board_rows
             }));
             console.log('Boards disponíveis:', boards.value);
         } catch (error) {
@@ -130,6 +132,7 @@ export const useGameStore = defineStore('game', () => {
     const updateGame = async (game) => {
         storeError.resetMessages();
         try {
+
             const response = await axios.put(`games/${game.id}`, game);
             const index = gamesPlaying.value.findIndex(g => g.id === game.id);
             gamesPlaying.value[index] = response.data.data;

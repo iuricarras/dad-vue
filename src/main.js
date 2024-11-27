@@ -16,6 +16,7 @@ app.use(router)
 
 // Default Axios configuration
 axios.defaults.baseURL = 'http://localhost/api'
+//axios.defaults.baseURL = 'http://dad-laravel.test:8080/api'
 
 app.component('ErrorMessage', ErrorMessage)
 

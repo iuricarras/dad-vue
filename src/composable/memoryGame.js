@@ -1,10 +1,11 @@
 import { useGameStore } from '@/stores/games'
+import { useAuthStore } from '@/stores/auth'
 import { ref, toRaw } from 'vue'
 
 export function useMemoryGame() {
 
     const gameStore = useGameStore()
-
+    const authStore = useAuthStore()
     const status = ref(null)
 
     let board = ref([])
@@ -12,15 +13,16 @@ export function useMemoryGame() {
     let gameInformation = {}
     let moves = [];
 
-    const numRows = ref(3)
-    const numCols = ref(4)
+    const boardId = ref(1)
+    const numRows = ref(4)
+    const numCols = ref(3)
     let numPars = 0;
 
     let startTime = 0
     const gameTimer = ref(0)
     const gameTime = ref(0)
     let game = ref({});
-    
+
     let numMoves = 0;
     let firstCard = null
     let matched = ref(false)
@@ -68,13 +70,13 @@ export function useMemoryGame() {
 
         let allCards = []
         let cards = []
-        
+
         numPars = numRows.value * numCols.value / 2
 
         for (let i = 1; i <= 40; i++) {
             allCards.push(i)
         }
-        
+
         shuffle(allCards)
 
         for (let i = 1; i <= numPars; i++) {
@@ -85,7 +87,7 @@ export function useMemoryGame() {
         shuffle(cards)
 
         gameInformation.board = []
-        
+
         for (let i = 0; i < numRows.value * numCols.value; i++) {
             board.value.push({
                 value: cards[i],
@@ -103,20 +105,24 @@ export function useMemoryGame() {
         game.value = {}
         game.value.type = "S";
         game.value.status = "PL"
-        game.value.board_id = 1
+        game.value.board_id = boardId.value
+        console.log(game.value.board_id)
     }
 
     const move = async (card) => {
         if (gameTimer.value == 0) {
             game.value.began_at = new Date(Date.now()).toISOString();
             timer()
-            await gameStore.insertGame(game.value)
-            console.log(gameStore.games)
+            if (authStore.user) {
+                await gameStore.insertGame(game.value)
+                console.log(gameStore.games)
+            }
+
         }
         if (!firstCard) {
             firstCard = card
             card.isRevealed = true
-            moves.push({"user_id": 7, "first_card": toRaw(card)})
+            moves.push({ "user_id": 7, "first_card": toRaw(card) })
         } else {
             card.isRevealed = true
             matched.value = true
@@ -124,28 +130,29 @@ export function useMemoryGame() {
 
             if (firstCard.value === card.value) {
                 setTimeout(() => {
-                    numPars--; 
+                    numPars--;
                     firstCard.isMatched = true
                     card.isMatched = true
 
                     moves.pop()
-                    moves.push({"user_id": 7, "first_card": toRaw(firstCard),"second_card": toRaw(card)})
+                    moves.push({ "user_id": 7, "first_card": toRaw(firstCard), "second_card": toRaw(card) })
 
                     firstCard = null
                     matched.value = false
                     if (numPars == 0) {
                         status.value = 1
                         gameTime.value = (Date.now() - startTime) / 1000
-                        timer()             
-                        game.value = gameStore.gamesPlaying[gameStore.gamesPlaying.length - 1];
-                        game.value.status = "E"
-                        game.value.ended_at = new Date(Date.now()).toISOString();
-                        game.value.total_time = gameTime.value
-                        gameInformation.moves = moves
-                        console.log(gameInformation);
-                        game.value.custom = JSON.stringify(gameInformation)
-                        console.log(game.value)
-                        gameStore.updateGame(game.value)
+                        timer()
+                        if (authStore.user) {
+                            game.value = gameStore.gamesPlaying[gameStore.gamesPlaying.length - 1];
+                            game.value.status = "E"
+                            game.value.ended_at = new Date(Date.now()).toISOString();
+                            game.value.total_time = gameTime.value
+                            gameInformation.moves = moves
+                            console.log(gameInformation);
+                            game.value.custom = JSON.stringify(gameInformation)
+                            gameStore.updateGame(game.value)
+                        }
                     }
 
                 }, 1000)
@@ -155,7 +162,7 @@ export function useMemoryGame() {
                     card.isRevealed = false
 
                     moves.pop()
-                    moves.push({"user_id": 7, "first_card": toRaw(firstCard),"second_card": toRaw(card)})
+                    moves.push({ "user_id": 7, "first_card": toRaw(firstCard), "second_card": toRaw(card) })
 
                     firstCard = null
                     matched.value = false
@@ -165,6 +172,6 @@ export function useMemoryGame() {
         }
     }
 
-
-    return { status, board, matched, gameTimer, gameTime, numCols, numRows, start, move }
+    return { status, board, matched, gameTimer, gameTime, numCols, numRows, boardId, start, move
+     }
 }

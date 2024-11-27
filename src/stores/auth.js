@@ -36,12 +36,13 @@ export const useAuthStore = defineStore('auth', () => {
     })
 
     const userPhotoUrl = computed(() => {
-        const photoFile = user.value ? user.value.photoFileName ?? '' : ''
+        const photoFile = user.value ? user.value.photo_filename ?? '' : ''
         if (photoFile) {
-            return axios.defaults.baseURL.replaceAll("/api", photoFile)
+            return axios.defaults.baseURL.replaceAll('/api', '/storage/photos/' + photoFile);
         }
         return avatarNoneAssetURL
     })
+
 
     // This function is "private" - not exported by the store
     const clearUser = () => {
@@ -80,6 +81,7 @@ export const useAuthStore = defineStore('auth', () => {
         try {
             await axios.post('auth/logout')
             clearUser()
+            router.push({ name:'home' })
             return true
         } catch (e) {
             clearUser()
@@ -131,6 +133,10 @@ export const useAuthStore = defineStore('auth', () => {
                     axios.defaults.headers.common.Authorization = 'Bearer ' + token.value
                     const responseUser = await axios.get('users/me')
                     user.value = responseUser.data.data
+                    //user.value = responseUser.data.user
+                    
+                    
+                    
                     repeatRefreshToken()
                     return true
                 } catch {
