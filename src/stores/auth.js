@@ -81,6 +81,7 @@ export const useAuthStore = defineStore('auth', () => {
         try {
             await axios.post('auth/logout')
             clearUser()
+            router.push({ name:'home' })
             return true
         } catch (e) {
             clearUser()

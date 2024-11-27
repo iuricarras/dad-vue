@@ -71,7 +71,7 @@ const logout = () => {
 
 
       <!-- aparece após o login user/logout/transactions -->
-      <div v-show="storeAuth.user" class="relative">
+      <div v-if="storeAuth.user" class="relative">
         <img 
           class="w-10 h-10 rounded-full cursor-pointer" 
           :src="storeAuth.userPhotoUrl" 
