@@ -5,14 +5,13 @@ import Cell from './Cell.vue'
 import { computed, onMounted, ref } from 'vue';
 import { useGameStore } from '@/stores/games';
 
-// Opções para tamanhos de tabuleiro
 const boardOptions = ref([
 { label: '3x4', cols: 3, rows: 4 },
   { label: '4x4', cols: 4, rows: 4 },
   { label: '6x6', cols: 6, rows: 6 },
 ]);
 
-const selectedBoard = ref(boardOptions.value[0]); // Seleção padrão
+const selectedBoard = ref(boardOptions.value[0]);
 
 const gridClass = computed(() => {
   return {
@@ -33,11 +32,11 @@ const {
   move,
 } = useMemoryGame();
 
-// Atualiza o tamanho do tabuleiro com base na seleção e reinicia o jogo
+
 const updateBoard = () => {
   numCols.value = selectedBoard.value.cols;
   numRows.value = selectedBoard.value.rows;
-  start(); // Reinicia o jogo com o novo tamanho de tabuleiro
+  start(); 
 };
 
 onMounted(() => {
