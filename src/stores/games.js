@@ -59,7 +59,11 @@ export const useGameStore = defineStore('game', () => {
             const response = await axios.get('/games/topSinglePlayer', {
                 params: { board_id: boardId },
             });
-            games.value = response.data.slice(0, 5);
+            games.value = response.data.slice(0, 5).map((game) => ({
+                nickname: game.user.nickname,
+                total_time: game.total_time,
+                board: `${game.board.board_cols}x${game.board.board_rows}`,
+            }));
             console.log('Top 5 Single Player Games for board:', boardId, games.value);
         } catch (error) {
             console.error('Erro ao buscar top Single Player para a board:', error);
@@ -71,13 +75,33 @@ export const useGameStore = defineStore('game', () => {
             const response = await axios.get('/games/topMultiplayer', {
                 params: { board_id: boardId },
             });
-            games.value = response.data.slice(0, 5);
+            games.value = response.data.map((game) => ({
+                nickname: game.winner.nickname,
+                wins: game.wins,
+                board: `${game.board.board_cols}x${game.board.board_rows}`,
+            }));
             console.log('Top 5 Multiplayer Games for board:', boardId, games.value);
         } catch (error) {
             console.error('Erro ao buscar top Multiplayer para a board:', error);
         }
     };
 
+    const fetchAllMultiplayerGames = async () => {
+        try {
+            const response = await axios.get('/games/allMultiplayer');
+            games.value = response.data.map((game) => ({
+                id: game.id,
+                winner: game.winner.nickname,
+                total_time: game.total_time,
+                board: `${game.board.board_cols}x${game.board.board_rows}`,
+            }));
+            console.log('All Multiplayer Games:', games.value);
+        } catch (error) {
+            console.error('Error fetching all multiplayer games:', error);
+        }
+    };
+    
+    
     const insertGame = async (game) => {
         storeError.resetMessages();
         try {
@@ -93,6 +117,20 @@ export const useGameStore = defineStore('game', () => {
         }
     };
 
+    const fetchGameHistory = async (userId, page = 1) => {
+        try {
+            const response = await axios.get(`/games-history/${userId}`, {
+                params: { page },
+            });
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching game history:', error);
+            return { data: [], current_page: 1, last_page: 1 };
+        }
+    };
+    
+    
+    
     const updateGame = async (game) => {
         storeError.resetMessages();
         try {
@@ -120,6 +158,8 @@ export const useGameStore = defineStore('game', () => {
         fetchGame,
         fetchTopSinglePlayerGames,
         fetchTopMultiplayerGames,
+        fetchAllMultiplayerGames,
+        fetchGameHistory,
         insertGame,
         updateGame
     };
