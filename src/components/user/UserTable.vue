@@ -9,7 +9,7 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits([ 'viewTransactions']);
+const emit = defineEmits([ 'viewTransactions','viewGames']);
 
 const currentPage = ref(1);
 const itemsPerPage = ref(10);
@@ -59,6 +59,9 @@ const prevPage = () => {
 const handleViewTransactions = (user) => {
   emit('viewTransactions', user);
 };
+const handleViewGame = (user) => {
+  emit('viewGames', user);
+};
 </script>
 
 <template>
@@ -96,7 +99,7 @@ const handleViewTransactions = (user) => {
         </tr>
       </thead>
       <tbody>
-        <User v-for="user in paginatedUsers" :key="user.nickname" :user="user" @viewTransactions="handleViewTransactions"/>
+        <User v-for="user in paginatedUsers" :key="user.nickname" :user="user" @viewTransactions="handleViewTransactions" @viewGames="handleViewGame"/>
         <tr v-if="paginatedUsers.length === 0">
           <td colspan="6" class="text-center text-gray-500 p-4">No users found.</td>
         </tr>

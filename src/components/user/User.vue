@@ -9,7 +9,7 @@ const props = defineProps({
   user: Object,
 });
 
-const emit = defineEmits(['blockStatusChanged', 'viewTransactions', 'userDeleted']);
+const emit = defineEmits(['blockStatusChanged', 'viewTransactions', 'userDeleted','viewGames']);
 
 const userPhotoUrl = (user) => {
   const photoFile = user?.photo_filename ?? '';
@@ -35,6 +35,8 @@ const deleteUser = async () => {
   userStore.deleteUser(props.user.id);
   
 };
+const game =()=>{
+  emit('viewGames', props.user)}
 </script>
 
 <template>
@@ -58,6 +60,9 @@ const deleteUser = async () => {
       </button>
       <button v-if="user.type !== 'A'" class="px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700" @click="showTransactions">
         View Transactions
+      </button>
+      <button v-if="user.type !== 'A'" class="px-2 py-1 bg-blue-900 text-white rounded hover:bg-blue-800" @click="game">
+        Games
       </button>
       <button class="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700" @click="deleteUser" v-if="storeAuth.user.id != user.id">
         Delete

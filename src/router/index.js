@@ -86,6 +86,10 @@ router.beforeEach(async (to, from, next) => {
         next({ name: 'home' })
         return
     }
+    if(((to.name=='Transactions')&&(storeAuth.user.type=='A'))){
+        next({ name: 'home' })
+        return
+    }
     // all other routes are accessible to everyone, including anonymous users
     next()
 })
