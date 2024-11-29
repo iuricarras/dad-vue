@@ -46,12 +46,10 @@ export const useUserStore = defineStore('user', () => {
     try {
       updatedData.blocked = updatedData.blocked === true || updatedData.blocked === 'true'; 
       const response = await axios.put(`/users/${userId}`, updatedData);
-      console.log('Response data:', response.data);
       const updatedUser = response.data;
-      const userIndex = users.value.findIndex(user => user.id === userId);
       toast({
         title: 'Success!',
-        description: 'User: ' + users.value[userIndex].nickname + ' updated successfully.',
+        description: updatedUser.data.nickname + ' : updated successfully.',
       });
       return updatedUser;
     } catch (e) {

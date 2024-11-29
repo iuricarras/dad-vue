@@ -26,7 +26,7 @@ paymentInfo.value.value = props.selectedItem.price;
 
 const handlePayment = async () => {
   // Chama a função processPayment do arquivo payment.js
-  await usePayment.processPayment(paymentInfo);
+  await usePayment.processPayment(paymentInfo, props.selectedItem.amount,"P");
   
 };
 </script>

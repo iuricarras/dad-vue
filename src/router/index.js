@@ -81,6 +81,7 @@ router.beforeEach(async (to, from, next) => {
         next({ name: 'login' })
         return
     }
+
     if(((to.name=='users')&&(storeAuth.user.type!='A'))){
         next({ name: 'home' })
         return

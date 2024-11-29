@@ -53,29 +53,51 @@ export const useTransactionStore = defineStore('transaction', () => {
         }
       }
 
-    const insertTransaction = async (transaction) => {
-        storeError.resetMessages()
+      const insertTransaction = async (transaction) => {
+        // Reiniciar mensagens de erro
+        storeError.resetMessages();
+    
         try {
-            const response = await axios.post('transactions', transaction)
-            transactions.value.push(response.data.data)
+            // Enviar transação para a API
+            const response = await axios.post('/transactions', transaction);
+    
+            // Adicionar a nova transação ao estado local
+            transactions.value.push(response.data.data);
+    
+            // Exibir notificação de sucesso
             toast({
-                description: `Transaction #${response.data.data.id} 
-                              has been created successfully!`,
-                action: h(ToastAction, {
-                    altText: `View transaction`,
-                    onclick: () => {
-                        router.push({ name: 'transactionDetail', params: { id: response.data.data.id } })
+                description: `Transaction #${response.data.data.id} has been created successfully!`,
+                action: h(
+                    ToastAction,
+                    {
+                        altText: `View transaction`,
+                        onclick: () => {
+                            router.push({
+                                name: 'transactionDetail',
+                                params: { id: response.data.data.id },
+                            });
+                        },
+                    },
+                    {
+                        default: () => `View transaction`,
                     }
-                }, {
-                    default: () => `View transaction`,
-                })
-            })
-            return response.data.data
+                ),
+            });
+    
+            return response.data.data;
         } catch (e) {
-            storeError.setErrorMessages(e.response?.data?.message,e.response?.data?.errors,e.response?.status,'Error creating transaction!')
-            return false
+            // Capturar erros e configurar mensagens
+            storeError.setErrorMessages(
+                e.response?.data?.message || 'An unexpected error occurred.',
+                e.response?.data?.errors || null,
+                e.response?.status || 500,
+                'Error creating transaction!'
+            );
+    
+            // Retornar falso em caso de erro
+            return false;
         }
-    }
+    };
     return {
         transactions, totalTransactions,
         fetchTransactions, fetchTransaction,

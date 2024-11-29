@@ -2,7 +2,8 @@
 import axios from 'axios';
 import avatarNoneAssetURL from '@/assets/avatar-none.png';
 import { useUserStore } from '@/stores/user';
-
+import { useAuthStore } from '@/stores/auth';
+const storeAuth = useAuthStore()
 const userStore = useUserStore();
 const props = defineProps({
   user: Object,
@@ -46,7 +47,7 @@ const deleteUser = async () => {
     </td>
     <td class="border border-gray-300 px-4 py-2">{{ user.brain_coins_balance }}</td>
     <td class="border border-gray-300 px-4 py-2 flex items-center gap-2">
-      <button
+      <button v-if="storeAuth.user.id != user.id"
         :class="{
           'px-2 py-1 rounded text-white w-24': true, 
           'bg-green-600 hover:bg-green-700': !user.blocked,
@@ -58,7 +59,7 @@ const deleteUser = async () => {
       <button v-if="user.type !== 'A'" class="px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700" @click="showTransactions">
         View Transactions
       </button>
-      <button class="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700" @click="deleteUser">
+      <button class="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700" @click="deleteUser" v-if="storeAuth.user.id != user.id">
         Delete
       </button>
     </td>

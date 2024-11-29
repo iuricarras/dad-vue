@@ -94,23 +94,23 @@ const nextPage = () => {
           :key="transaction.id"
           class="odd:bg-gray-800 even:bg-gray-700"
         >
-          <td class="border border-gray-700 px-4 py-2 capitalize">
+          <td class="border border-gray-700 px-2 py-1 capitalize">
             {{ transaction.type === 'B' ? 'Bonus' : transaction.type === 'P' ? 'Purchase' : 'Internal' }}
           </td>
-          <td class="border border-gray-700 px-4 py-2">
+          <td class="border border-gray-700 px-2 py-1">
             {{ new Date(transaction.transaction_datetime).toLocaleString() }}
           </td>
-          <td class="border border-gray-700 px-4 py-2">{{ transaction.game_id || 'N/A' }}</td>
-          <td class="border border-gray-700 px-4 py-2">
+          <td class="border border-gray-700 px-2 py-1">{{ transaction.game_id || 'N/A' }}</td>
+          <td class="border border-gray-700 px-2 py-1">
             {{ transaction.type === 'P' ? transaction.euros : 'N/A' }}
           </td>
-          <td class="border border-gray-700 px-4 py-2">
+          <td class="border border-gray-700 px-2 py-1">
             {{ transaction.type === 'P' ? transaction.payment_type || 'N/A' : 'N/A' }}
           </td>
-          <td class="border border-gray-700 px-4 py-2">
+          <td class="border border-gray-700 px-2 py-1">
             {{ transaction.type === 'P' ? transaction.payment_reference || 'N/A' : 'N/A' }}
           </td>
-          <td class="border border-gray-700 px-4 py-2">{{ transaction.brain_coins }}</td>
+          <td class="border border-gray-700 px-2 py-1">{{ transaction.brain_coins }}</td>
         </tr>
         <tr v-if="filteredTransactions.length === 0">
           <td colspan="7" class="text-center text-gray-500 p-4">
