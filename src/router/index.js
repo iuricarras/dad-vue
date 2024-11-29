@@ -71,29 +71,32 @@ const router = createRouter({
 let handlingFirstRoute = true
 
 router.beforeEach(async (to, from, next) => {
-    const storeAuth = useAuthStore()
-    if (handlingFirstRoute) {
-        handlingFirstRoute = false
-        await storeAuth.restoreToken()
-    }
-    // routes "updateTask" and "updateProject" are only accessible when user is logged in
-    if (((to.name == 'users') || (to.name == 'Transactions') || (to.name == 'Scoreboard') || (to.name == 'GameHistory')) && (!storeAuth.user)) {
-        next({ name: 'login' })
-        return
-    }
-    if(((to.name == 'Scoreboard') || (to.name == 'GameHistory') && (storeAuth.user.type=='A'))){
-      next({ name: 'home' })
-      return
-    }
-    if(((to.name =='users') && (storeAuth.user.type!='A'))){
-        next({ name: 'home' })
-        return
-    }
-    if(((to.name=='Transactions')&&(storeAuth.user.type=='A'))){
-        next({ name: 'home' })
-        return
-    }
-    // all other routes are accessible to everyone, including anonymous users
-    next()
-})
+  const storeAuth = useAuthStore()
+  if (handlingFirstRoute) {
+      handlingFirstRoute = false
+      await storeAuth.restoreToken()
+  }
+  
+  const requiresAuth = ['users', 'Transactions', 'Scoreboard', 'GameHistory'];
+  const admin = ['users'];
+  const player = ['Scoreboard','Transactions','GameHistory','Singleplayer']; 
+
+  if (requiresAuth.includes(to.name) && !storeAuth.user) {
+      next({ name: 'login' });
+      return;
+  }
+
+  if (admin.includes(to.name) && storeAuth.user.type !== 'A') {
+      next({ name: 'home' });
+      return;
+  }
+
+  if (player.includes(to.name) && storeAuth.user.type === 'A') {
+      next({ name: 'home' });
+      return;
+  }
+
+  next();
+});
+
 export default router
