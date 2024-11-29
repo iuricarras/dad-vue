@@ -77,12 +77,15 @@ router.beforeEach(async (to, from, next) => {
         await storeAuth.restoreToken()
     }
     // routes "updateTask" and "updateProject" are only accessible when user is logged in
-    if (((to.name == 'users') || (to.name == 'Transactions')) && (!storeAuth.user)) {
+    if (((to.name == 'users') || (to.name == 'Transactions') || (to.name == 'Scoreboard') || (to.name == 'GameHistory')) && (!storeAuth.user)) {
         next({ name: 'login' })
         return
     }
-
-    if(((to.name=='users')&&(storeAuth.user.type!='A'))){
+    if(((to.name == 'Scoreboard') || (to.name == 'GameHistory') && (storeAuth.user.type=='A'))){
+      next({ name: 'home' })
+      return
+    }
+    if(((to.name =='users') && (storeAuth.user.type!='A'))){
         next({ name: 'home' })
         return
     }

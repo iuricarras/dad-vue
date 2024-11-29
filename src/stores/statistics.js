@@ -3,7 +3,6 @@ import { defineStore } from 'pinia';
 import axios from 'axios';
 
 export const useStatisticsStore = defineStore('statistics', () => {
-    
     const totalUsers = ref(0);
     const totalGames = ref(0);
     const mostPlayedBoard = ref('');
@@ -11,6 +10,9 @@ export const useStatisticsStore = defineStore('statistics', () => {
 
     const gamesPerMonthData = ref([]);
     const purchasesPerMonthData = ref([]);
+    const gamesPerWeekData = ref([]);
+    const purchasesPerWeekData = ref([]);
+    const playerPurchases = ref(null);
 
     const statisticsLoaded = computed(() => {
         return totalUsers.value > 0 && totalGames.value > 0;
@@ -46,6 +48,36 @@ export const useStatisticsStore = defineStore('statistics', () => {
         }
     };
 
+    const fetchGamesPerWeek = async () => {
+        try {
+            const response = await axios.get('/statistics/games-per-week');
+            gamesPerWeekData.value = response.data;
+        } catch (error) {
+            console.error('Erro ao buscar jogos por semana:', error);
+        }
+    };
+
+    const fetchPurchasesPerWeek = async () => {
+        try {
+            const response = await axios.get('/statistics/purchases-per-week');
+            purchasesPerWeekData.value = response.data;
+        } catch (error) {
+            console.error('Erro ao buscar compras por semana:', error);
+        }
+    };
+
+    const fetchPurchasesByPlayer = async (nickname) => {
+        try {
+          const response = await axios.get('/statistics/purchases-by-player', {
+            params: { nickname },
+          });
+          playerPurchases.value = response.data.total_purchases;
+        } catch (error) {
+          console.error('Erro ao buscar compras por jogador:', error);
+          playerPurchases.value = null; // Caso ocorra um erro, define como null
+        }
+      };
+
     return {
         totalUsers,
         totalGames,
@@ -53,9 +85,15 @@ export const useStatisticsStore = defineStore('statistics', () => {
         totalPurchases,
         gamesPerMonthData,
         purchasesPerMonthData,
+        gamesPerWeekData,
+        purchasesPerWeekData,
         statisticsLoaded,
+        playerPurchases, 
         fetchStatistics,
         fetchGamesPerMonth,
         fetchPurchasesPerMonth,
+        fetchGamesPerWeek,
+        fetchPurchasesPerWeek,
+        fetchPurchasesByPlayer,
     };
 });

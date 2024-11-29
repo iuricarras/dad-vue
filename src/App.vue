@@ -90,14 +90,14 @@ const logout = () => {
             v-if="showDropdown" 
             class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 z-10 text-gray-800"
           >
-            <RouterLink
+            <RouterLink v-show="storeAuth.user.type=='P'"
               to="/gameHistory"
               class="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
               @click="closeDropdown"
             >
               Game History
             </RouterLink>
-            <RouterLink
+            <RouterLink v-show="storeAuth.user.type=='P'"
               to="/scoreboard"
               class="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
               @click="closeDropdown"
