@@ -92,6 +92,22 @@ export const useUserStore = defineStore('user', () => {
       return []
     }
   }
+  const fetchUserGames = async (userId) => {
+    storeError.resetMessages()
+    try {
+      const response = await axios.get(`/users/${userId}/games`)
+      console.log(response.data)
+      return response.data 
+    } catch (e) {
+      storeError.setErrorMessages(
+        e.response?.data?.message,
+        e.response?.data?.errors,
+        e.response?.status,
+        'Error fetching user transactions!'
+      )
+      return []
+    }
+  }
 
 
   const fetchUserSingleplayerGames = async (userId) => {
@@ -210,5 +226,6 @@ export const useUserStore = defineStore('user', () => {
     fetchPersonalScoreboard,
     fetchAuthenticatedGameHistory,
     deleteUser,
+    fetchUserGames,
   }
 })
