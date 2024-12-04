@@ -23,7 +23,6 @@ export function useMemoryGame() {
     const gameTime = ref(0)
     let game = ref({});
 
-    let numMoves = 0;
     let firstCard = null
     let matched = ref(false)
 
@@ -66,6 +65,9 @@ export function useMemoryGame() {
         gameTimer.value = 0;
         id = null;
 
+        console.log(numCols.value);
+        console.log(numRows.value);
+        
         board.value = []
 
         let allCards = []
@@ -149,7 +151,7 @@ export function useMemoryGame() {
                             game.value.ended_at = new Date(Date.now()).toISOString();
                             game.value.total_time = gameTime.value
                             gameInformation.moves = moves
-                            console.log(gameInformation);
+                            game.value.total_turns_winner = moves.length;
                             game.value.custom = JSON.stringify(gameInformation)
                             gameStore.updateGame(game.value)
                         }
