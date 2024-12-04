@@ -168,7 +168,7 @@ const renderPurchasesByWeekChart = () => {
         <h3 class="text-lg font-bold text-center mb-4">Total de Compras por Semana</h3>
         <canvas id="purchasesByWeekChart" width="400" height="200"></canvas>
       </div>
-      <div class="bg-gray-300 text-black rounded-lg p-6 shadow-md">
+      <div class="bg-gray-300 text-black rounded-lg p-6 shadow-md mb-8">
         <h3 class="text-lg font-bold text-center mb-4">Total de Jogos Jogados por Mês</h3>
         <canvas id="gamesChart" width="400" height="200"></canvas>
       </div>

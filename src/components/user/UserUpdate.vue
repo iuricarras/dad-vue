@@ -16,6 +16,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 
 const router = useRouter()
+const storeAuth = useAuthStore();
 const storeError = useErrorStore()
 
 const credentials = ref({
@@ -38,7 +39,7 @@ const update = () => {
 
 <template>
   <div> email, nickname, name, photo , password </div>
-  <Card class="w-[450px] mx-auto my-8 p-4 px-8">
+  <Card v-show="storeAuth.user.type=='P' || 'A'" class="w-[450px] mx-auto my-8 p-4 px-8">
     <CardHeader>
       <CardTitle>Atualizar dados</CardTitle>
       <CardDescription>Atulize os seus dados da sua conta.</CardDescription>

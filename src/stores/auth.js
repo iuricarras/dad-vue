@@ -69,12 +69,24 @@ export const useAuthStore = defineStore('auth', () => {
             token.value = responseLogin.data.token
             localStorage.setItem('token', token.value)
             axios.defaults.headers.common.Authorization = 'Bearer ' + token.value
-           
             user.value = responseLogin.data.user
-             console.log("aaaaaaa",user.value.id)
+            console.log("aaaaaaa",user.value.id)
+
+            console.log("!!!!!!!!!!!!!", user.value.blocked)
+
+            // deteta se o utilizador esta bloqueado, melhorar a mensagem de erro
+            if(user.value.blocked == 1){
+                status = 403
+                storeError.setErrorMessages(status, 'Aut44hentication Error!')
+                console.log("!aqui!", storeError.setErrorMessages(status, 'Authentication Error!'))
+                clearUser()
+            }
+
+
+
+
             repeatRefreshToken()
             router.push({ name:'home' })
-            //router.push({ name:'tasks' })
             return user.value
         } catch (e) {
             clearUser()
