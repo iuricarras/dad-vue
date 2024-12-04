@@ -12,9 +12,9 @@ const selectedBoard = ref(gameStore.boards[0]);
 
 const gridClass = computed(() => {
   return {
-    'grid-cols-3': numCols.value == 3,
-    'grid-cols-4': numCols.value == 4,
-    'grid-cols-6': numCols.value == 6,
+    'grid-cols-3 grid-cols-[120px_120px_120px]': numCols.value == 3,
+    'grid-cols-4 grid-cols-[120px_120px_120px_120px]': numCols.value == 4,
+    'grid-cols-6 grid-cols-[84px_84px_84px_84px_84px_84px]': numCols.value == 6,
   };
 });
 
@@ -72,20 +72,16 @@ const updateBoard = () => {
           You win!
         </p>
       </div>
+    </div>
+  </div>
+  <div class="grid  justify-center" :class="gridClass">
+      <Cell
+        v-for="cell in board"
+        :key="cell.id"
+        :matched="matched"
+        :cell="cell"
+        @card="move"
+      >
+      </Cell>
     </div>  
-
-  </div>
-  <div
-    class="grid grid-cols-[120px_120px_120px] justify-center "
-    :class="gridClass"
-  >
-    <Cell
-      v-for="cell in board"
-      :key="cell.id"
-      :matched="matched"
-      :cell="cell"
-      @card="move"
-    />
-  </div>
-
 </template>
