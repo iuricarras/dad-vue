@@ -13,7 +13,7 @@ const userStore = useUserStore();
 const games = ref([]);
 const filteredGames = ref([]);
 const currentPage = ref(1);
-const itemsPerPage = ref(10);
+const itemsPerPage = ref(6);
 const selectedType = ref('');
 const selectedStatus = ref('');
 
@@ -58,11 +58,8 @@ const nextPage = () => {
 </script>
 
 <template>
-  <div class="p-6 bg-gray-800 text-white rounded-lg mx-auto max-w-6xl mt-10">
-    <h2 class="text-xl mb-4">Games Played</h2>
-
-    <!-- Filtros -->
-    <div class="flex space-x-4 mb-4">
+  <div class="p-6 bg-gray-800 text-white rounded-lg mx-auto max-w-6xl mt-1 overflow-x-auto">
+    <div class="flex space-x-4 mb-1">
       <div>
         <label for="game-type" class="block text-sm mb-1">Filter by Type:</label>
         <select
@@ -94,7 +91,7 @@ const nextPage = () => {
       </div>
     </div>
 
-    <!-- Tabela -->
+    
     <table class="w-full text-left border-collapse border border-gray-700 mb-4">
       <thead>
         <tr class="bg-gray-700">

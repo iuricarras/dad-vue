@@ -12,7 +12,7 @@ const userStore = useUserStore()
 const transactions = ref([])  
 const filteredTransactions = ref([]) 
 const currentPage = ref(1) 
-const itemsPerPage = ref(10)  
+const itemsPerPage = ref(6)  
 const selectedType = ref('')  
 
 
@@ -58,10 +58,8 @@ const nextPage = () => {
 </script>
 
 <template>
-  <div class="p-6 bg-gray-800 text-white rounded-lg mx-auto max-w-6xl mt-10">
-    <h2 class="text-xl mb-4">Your Transactions</h2>
-
-    <div class="mb-4">
+  <div class=" overflow-x-auto p-6 bg-gray-800 text-white rounded-lg mx-auto max-w-6xl mt-2 ">
+    <div class="mb-1">
       <label for="transaction-type" class="mr-2">Filter by Type:</label>
       <select
         id="transaction-type"
@@ -76,7 +74,7 @@ const nextPage = () => {
       </select>
     </div>
     
-    <table class="w-full text-left border-collapse border border-gray-700 mb-4 ">
+    <table class="w-full text-left border-collapse border border-gray-700 mb-4">
       <thead>
         <tr class="bg-gray-700">
           <th class="border border-gray-700 px-4 py-2">Type</th>
