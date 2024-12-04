@@ -118,6 +118,17 @@ const logout = () => {
             >
               Users
             </RouterLink>
+
+            <RouterLink v-show="storeAuth.user.type=='P' || 'A'"
+              to="/update"
+              class="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+               @click="closeDropdown"
+            >
+              User-Update
+            </RouterLink>
+
+
+
             <button
               class="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
               v-show="storeAuth.user" @click="() => { logout(); closeDropdown(); }"

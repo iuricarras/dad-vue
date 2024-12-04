@@ -8,6 +8,7 @@ import GameHistory from '@/components/game/GameHistory.vue'
 import Shop from '@/components/shop/shop.vue'
 import Transactions from '@/components/transaction/Transactions.vue'
 import Users from '@/components/user/Users.vue'
+import UserUpdate from '@/components/user/UserUpdate.vue'
 import { useAuthStore } from '@/stores/auth'
 
 
@@ -64,7 +65,12 @@ const router = createRouter({
       path: '/shop',
       name: 'shop',
       component: Shop 
-    }
+    },
+    {
+      path: '/update',
+      name: 'update',
+      component: UserUpdate,
+    },
   ]
 })
 
