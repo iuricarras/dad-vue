@@ -65,6 +65,9 @@ export function useMemoryGame() {
         gameTimer.value = 0;
         id = null;
 
+        console.log(numCols.value);
+        console.log(numRows.value);
+        
         board.value = []
 
         let allCards = []

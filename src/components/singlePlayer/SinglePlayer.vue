@@ -4,8 +4,10 @@ import { useMemoryGame } from '@/composable/memoryGame.js'
 import Cell from './Cell.vue'
 import { computed, onMounted, ref } from 'vue';
 import { useGameStore } from '@/stores/games';
+import { useAuthStore } from '@/stores/auth';
 
 const gameStore = useGameStore();
+const authStore = useAuthStore();
 gameStore.fetchBoards();
 
 const selectedBoard = ref(gameStore.boards[0]);
@@ -40,18 +42,20 @@ const updateBoard = () => {
   start(); 
 };
 
+start();
+
 </script>
 
 <template>
   <div class="p-4 mx-auto max-w-3xl min-w-96">
     <div class="my-4 p-3 flex items-center bg-gray-700 rounded-xl justify-between">
-        <p class="text-center text-white text-xl px-2" v-show="!status"> 
+        <p class="text-center text-white text-xl px-2" v-show="authStore.user && !status "> 
             Select Board: 
         </p>
         <select
         v-model="selectedBoard"
         @change="updateBoard"
-        class="px-4 py-2 rounded bg-gray-800 text-white " v-show="!status"
+        class="px-4 py-2 rounded bg-gray-800 text-white " v-show="!status && authStore.user"
       >
         <option
           v-for="option in gameStore.boards"
