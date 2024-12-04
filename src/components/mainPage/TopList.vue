@@ -70,7 +70,7 @@ const handleBoardChangeMP = async () => {
 </script>
 
 <template>
-  <div class="p-8 text-white rounded-lg mx-auto w-full max-w-screen-2xl space-y-10">
+  <div class="p-8 text-white rounded-lg mx-auto w-full max-w-screen-2xl space-y-10 overflow-x-auto">
     <div class="bg-gray-700 p-4 rounded-lg shadow-lg">
       <div class="flex justify-between items-center mb-4">
         <h2 class="text-lg font-bold">Top Single-Player</h2>

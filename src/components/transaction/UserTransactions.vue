@@ -75,8 +75,8 @@ const nextPage = () => {
         <option value="I">Internal Spending/Earnings</option>
       </select>
     </div>
-
-    <table class="w-full text-left border-collapse border border-gray-700 mb-4">
+    
+    <table class="w-full text-left border-collapse border border-gray-700 mb-4 ">
       <thead>
         <tr class="bg-gray-700">
           <th class="border border-gray-700 px-4 py-2">Type</th>
