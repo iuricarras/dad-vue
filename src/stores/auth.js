@@ -44,6 +44,10 @@ export const useAuthStore = defineStore('auth', () => {
         return user.value ? user.value.blocked : ''
     })
 
+    const userNick = computed(() => {
+        return user.value ? user.value.nickname : ''
+    })
+
     const userPhotoUrl = computed(() => {
         const photoFile = user.value ? user.value.photo_filename ?? '' : ''
         if (photoFile) {
@@ -165,7 +169,7 @@ export const useAuthStore = defineStore('auth', () => {
     }
 
     return {
-        userBlocked,brain_coins_balance,id,user, userName, userFirstLastName, userEmail, userType, userGender, userPhotoUrl,
+        userBlocked,brain_coins_balance,id,user, userName, userFirstLastName, userEmail, userType, userGender, userPhotoUrl, userNick,
         login, logout, restoreToken, canUpdateDeleteProject
     }
 })
