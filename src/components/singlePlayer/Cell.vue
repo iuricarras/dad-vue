@@ -11,6 +11,8 @@ const clicked = () => {
     // setTimeout(() => {
     //     props.cell.isMatched = true
     // }, 2000);
+
+    //w-32
 }
 
 const srcImg = computed(() => {
@@ -24,6 +26,6 @@ const srcImg = computed(() => {
 
 <template>
     <div class="grow" :class="{'opacity-25': cell.isMatched}">
-        <img :src="srcImg" alt="Tictactoe piece" @click="clicked" class="w-full h-auto max-w-full">
+        <img :src="srcImg" alt="Tictactoe piece" @click="clicked" class="w-32"> 
     </div>
 </template>
