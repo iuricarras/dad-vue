@@ -23,14 +23,11 @@ export const useErrorStore = defineStore('error', () => {
     })    
 
     const fieldMessage = (fieldName) => {
-        console.log('fieldMessage:', fieldName)
         const errorsOfField = _fieldErrorMessages.value ? _fieldErrorMessages.value[fieldName] : ''
-        console.log('errorsOfField:', _fieldErrorMessages.value)
         return errorsOfField ? errorsOfField[0] : '';
     }
 
     const resetMessages = () => {
-        
         _message.value = ''
         _fieldErrorMessages.value = [];
         _statusCode.value = 0
