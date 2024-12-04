@@ -16,6 +16,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 
 const router = useRouter()
+const storeAuth = useAuthStore();
 const storeError = useErrorStore()
 
 const credentials = ref({
