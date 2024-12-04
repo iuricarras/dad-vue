@@ -5,6 +5,7 @@ import { useTransactionStore } from '@/stores/transactions';
 import { useAuthStore } from '@/stores/auth';
 import { useUserStore } from '@/stores/user';
 import { useRouter } from 'vue-router'
+import User from '@/components/user/User.vue';
 
 export const usePaymentStore = defineStore('payment', () => {
   const useUser=useUserStore()
@@ -20,6 +21,7 @@ export const usePaymentStore = defineStore('payment', () => {
       reference: info.value.reference,
       value: info.value.value,
     }
+    console.log(amount)
     if (!validatePayment(paymentPayload)) return
     try {
       const response = await sendPaymentRequest(paymentPayload)
@@ -27,7 +29,7 @@ export const usePaymentStore = defineStore('payment', () => {
       if (response.status === 201) {
         await handleSuccessfulPayment(paymentPayload, amount, type)
       } else if (response.status === 422) {
-        await handlePaymentError(response, paymentPayload)
+        toast({ title: 'Invalid Payment Method', variant: 'destructive' });
       }
     } catch (error) {
       handleUnexpectedError(error);
@@ -45,7 +47,6 @@ export const usePaymentStore = defineStore('payment', () => {
   const handleSuccessfulPayment = async (paymentPayload, amount, type) => {
     const transaction = {
       type,
-      user_id: storeAuth.user.id,
       euros: paymentPayload.value,
       payment_type: paymentPayload.type,
       payment_reference: paymentPayload.reference,
@@ -57,19 +58,11 @@ export const usePaymentStore = defineStore('payment', () => {
       const createdTransaction = await useTransaction.insertTransaction(transaction);
   
       if (createdTransaction) {
-        const updatedData = {
-          name: storeAuth.user.name,
-          email: storeAuth.user.email,
-          nickname: storeAuth.user.nickname,
-          blocked: storeAuth.user.blocked,
-          brain_coins_balance: storeAuth.user.brain_coins_balance + amount,
-        }
-        const updatedUser = await useUser.updateUser(storeAuth.user.id, updatedData);
-        if (updatedUser?.data?.brain_coins_balance !== undefined) {
-          storeAuth.user.brain_coins_balance = updatedUser.data.brain_coins_balance;
-          router.push({ name: 'home' })
-        }
+        storeAuth.user.brain_coins_balance += amount;
+        toast({ title: 'Payment Successful', description: 'Transaction completed successfully' });
+        router.push({ name: 'home' })
       }
+
     } catch (error) {
       storeError.setErrorMessages(
         error.response?.data?.message || 'Unexpected error occurred',
@@ -78,29 +71,6 @@ export const usePaymentStore = defineStore('payment', () => {
         'Payment Successful, but Transaction Failed'
       )
     }
-  }
-
-  const handlePaymentError = async (response, paymentPayload) => {
-    const errorData = await response.json();
-    let message = errorData.message;
-    switch (paymentPayload.type) {
-      case 'MBWAY':
-        message += ': MbWay account funds are limited to 5€';
-        break;
-      case 'PAYPAL':
-        message += ': Paypal account funds are limited to 10€';
-        break;
-      case 'IBAN':
-        message += ': IBAN account funds are limited to 50€';
-        break;
-      case 'MB':
-        message += ': MB account funds are limited to 20€';
-        break;
-      case 'VISA':
-        message += ': VISA account funds are limited to 30€';
-        break;
-    }
-    toast({ title: 'Invalid Payment Method', description: message, variant: 'destructive' });
   }
 
   const handleUnexpectedError = (error) => {
@@ -116,6 +86,7 @@ export const usePaymentStore = defineStore('payment', () => {
 
   const validatePayment = (paymentInfo) => {
     const validTypes = ["MBWAY", "PAYPAL", "IBAN", "MB", "VISA"];
+    console.log(paymentInfo)
     if (!validTypes.includes(paymentInfo.type)) {
       toast({
         title: 'Fill in the fields',

@@ -63,27 +63,6 @@ export const useTransactionStore = defineStore('transaction', () => {
     
             // Adicionar a nova transação ao estado local
             transactions.value.push(response.data.data);
-    
-            // Exibir notificação de sucesso
-            toast({
-                description: `Transaction #${response.data.data.id} has been created successfully!`,
-                action: h(
-                    ToastAction,
-                    {
-                        altText: `View transaction`,
-                        onclick: () => {
-                            router.push({
-                                name: 'transactionDetail',
-                                params: { id: response.data.data.id },
-                            });
-                        },
-                    },
-                    {
-                        default: () => `View transaction`,
-                    }
-                ),
-            });
-    
             return response.data.data;
         } catch (e) {
             // Capturar erros e configurar mensagens
