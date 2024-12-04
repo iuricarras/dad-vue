@@ -17,6 +17,8 @@ const itemsPerPage = ref(10);
 const selectedType = ref('');
 const selectedStatus = ref('');
 
+
+
 const totalPages = computed(() => {
   return Math.ceil(filteredGames.value.length / itemsPerPage.value);
 });
