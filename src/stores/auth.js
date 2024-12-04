@@ -4,6 +4,7 @@ import axios from 'axios'
 import { useErrorStore } from '@/stores/error'
 import { useRouter } from 'vue-router'
 import avatarNoneAssetURL from '@/assets/avatar-none.png'
+import { toast } from '@/components/ui/toast'
 
 export const useAuthStore = defineStore('auth', () => {
     const router = useRouter()
@@ -76,15 +77,13 @@ export const useAuthStore = defineStore('auth', () => {
 
             // deteta se o utilizador esta bloqueado, melhorar a mensagem de erro
             if(user.value.blocked == 1){
-                status = 403
-                storeError.setErrorMessages(status, 'Aut44hentication Error!')
-                console.log("!aqui!", storeError.setErrorMessages(status, 'Authentication Error!'))
+                toast({
+                    title: 'User Blocked',
+                    description: 'You are blocked, contact the administrator',
+                    variant: 'destructive'  
+                })
                 clearUser()
             }
-
-
-
-
             repeatRefreshToken()
             router.push({ name:'home' })
             return user.value

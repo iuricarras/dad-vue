@@ -7,14 +7,14 @@ import avatarNoneAssetURL from '@/assets/avatar-none.png';
 import GlobalAlertDialog from '@/components/common/GlobalAlertDialog.vue';
 
 const storeAuth = useAuthStore();
-const showDropdown = ref(false); // Gerencia a visibilidade do dropdown
+const showDropdown = ref(false); 
 
 const toggleDropdown = () => {
   showDropdown.value = !showDropdown.value;
 };
 
 const closeDropdown = () => {
-  showDropdown.value = false; // Fecha o dropdown
+  showDropdown.value = false;
 };
 
 const alertDialog = useTemplateRef('alert-dialog');
@@ -39,7 +39,6 @@ const logout = () => {
   <Toaster />
   <nav class="relative flex justify-between items-center bg-gray-800 p-3 text-white">
     <GlobalAlertDialog ref="alert-dialog"></GlobalAlertDialog>
-    <!-- Memory Game como um link interativo para Home -->
     <RouterLink
       to="/home"
       class="text-lg font-medium hover:text-blue-500 px-3 py-2 rounded-md transition-colors">
@@ -75,8 +74,6 @@ const logout = () => {
         <span :class="{ 'text-blue-500': isActive }">Login</span>
       </RouterLink>
 
-
-      <!-- aparece após o login user/logout/transactions -->
       <div v-if="storeAuth.user" class="relative">
         <img 
           class="w-10 h-10 rounded-full cursor-pointer" 
