@@ -12,9 +12,9 @@ const selectedBoard = ref(gameStore.boards[0]);
 
 const gridClass = computed(() => {
   return {
-    'grid-cols-3': numCols.value == 3,
-    'grid-cols-4': numCols.value == 4,
-    'grid-cols-6': numCols.value == 6,
+    'grid-cols-3 grid-cols-[120px_120px_120px]': numCols.value == 3,
+    'grid-cols-4 grid-cols-[120px_120px_120px_120px]': numCols.value == 4,
+    'grid-cols-6 grid-cols-[84px_84px_84px_84px_84px_84px]': numCols.value == 6,
   };
 });
 
@@ -43,7 +43,7 @@ const updateBoard = () => {
 </script>
 
 <template>
-  <div class="p-8 mx-auto max-w-3xl min-w-96">
+  <div class="p-4 mx-auto max-w-3xl min-w-96">
     <div class="my-4 p-3 flex items-center bg-gray-700 rounded-xl justify-between">
         <p class="text-center text-white text-xl px-2" v-show="!status"> 
             Select Board: 
@@ -73,7 +73,8 @@ const updateBoard = () => {
         </p>
       </div>
     </div>
-    <div class="grid border divide-x divide-y" :class="gridClass">
+  </div>
+  <div class="grid  justify-center" :class="gridClass">
       <Cell
         v-for="cell in board"
         :key="cell.id"
@@ -82,7 +83,5 @@ const updateBoard = () => {
         @card="move"
       >
       </Cell>
-    </div>    
-  </div>
-
+    </div>  
 </template>

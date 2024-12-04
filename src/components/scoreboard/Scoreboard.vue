@@ -27,6 +27,7 @@ onMounted(async () => {
   <div class="p-6 bg-gray-800 text-white rounded-lg mx-auto max-w-4xl mt-10">
     <h2 class="text-xl mb-4">Personal Scoreboard</h2>
 
+    <!-- Tabela Singleplayer -->
     <h3 class="text-lg mb-2">Singleplayer</h3>
     <table class="w-full text-left border-collapse border border-gray-700 table-fixed mb-4">
       <thead>
@@ -46,7 +47,7 @@ onMounted(async () => {
             {{ data.board.board_cols }}x{{ data.board.board_rows }}
           </td>
           <td class="border border-gray-700 px-4 py-2">{{ data.best_time }}s</td>
-          <td class="border border-gray-700 px-4 py-2">{{ data.min_turns }}</td>
+          <td class="border border-gray-700 px-4 py-2">{{ data.min_turns || 'N/A' }}</td>
         </tr>
         <tr v-if="scoreboard.single_player.length === 0">
           <td colspan="3" class="text-center text-gray-500 p-4">
@@ -56,6 +57,7 @@ onMounted(async () => {
       </tbody>
     </table>
 
+    <!-- Tabela Multiplayer -->
     <h3 class="text-lg mb-2">Multiplayer</h3>
     <table class="w-full text-left border-collapse border border-gray-700 table-fixed">
       <thead>

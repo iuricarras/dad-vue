@@ -15,6 +15,9 @@ export const useGameStore = defineStore('game', () => {
     const games = ref([]);
     const gamesPlaying = ref([]);
     const boards = ref([]);
+    const minTurns = ref(null); // Novo estado para armazenar o mínimo de turnos
+
+    
 
     const totalGames = computed(() => {
         return games.value ? games.value.length : 0;
@@ -58,19 +61,23 @@ export const useGameStore = defineStore('game', () => {
 
     const fetchTopSinglePlayerGames = async (boardId) => {
         try {
-            const response = await axios.get('/games/topSinglePlayer', {
-                params: { board_id: boardId },
-            });
-            games.value = response.data.slice(0, 5).map((game) => ({
-                nickname: game.user.nickname,
-                total_time: game.total_time,
-                board: `${game.board.board_cols}x${game.board.board_rows}`,
-            }));
-            console.log('Top 5 Single Player Games for board:', boardId, games.value);
+          const response = await axios.get('/games/topSinglePlayer', {
+            params: { board_id: boardId },
+          });
+      
+          games.value = response.data.top_games.map((game) => ({
+            nickname: game.user.nickname,
+            total_time: game.total_time,
+            board: `${game.board.board_cols}x${game.board.board_rows}`,
+          }));
+      
+          minTurns.value = response.data.min_turns;
+          console.log('Min Turns no fetchTopSinglePlayerGames:', minTurns.value);
         } catch (error) {
-            console.error('Erro ao buscar top Single Player para a board:', error);
+          console.error('Erro ao buscar top Single Player para a board:', error);
         }
-    };
+      };
+    
 
     const fetchTopMultiplayerGames = async (boardId) => {
         try {
@@ -103,7 +110,6 @@ export const useGameStore = defineStore('game', () => {
         }
     };
     
-    
     const insertGame = async (game) => {
         storeError.resetMessages();
         try {
@@ -116,16 +122,6 @@ export const useGameStore = defineStore('game', () => {
         } catch (e) {
             storeError.setErrorMessages(e.response.data.message, e.response.data.errors, e.response.status, 'Error creating game!');
             return false;
-        }
-    };
-    
-    const fetchGameHistory = async () => {
-        try {
-            const response = await axios.get('/games-history');
-            return response.data;
-        } catch (error) {
-            console.error('Error fetching authenticated game history:', error);
-            return [];
         }
     };
     
@@ -152,13 +148,13 @@ export const useGameStore = defineStore('game', () => {
         gamesPlaying,
         boards,
         totalGames,
+        minTurns,
         fetchBoards,
         fetchGames,
         fetchGame,
         fetchTopSinglePlayerGames,
         fetchTopMultiplayerGames,
         fetchAllMultiplayerGames,
-        fetchGameHistory,
         insertGame,
         updateGame
     };

@@ -16,7 +16,7 @@ const storeAuth = useAuthStore();
     </div>
 
     <div class="flex flex-col space-y-5 w-1/4">
-      <div v-if="!storeAuth.user || (storeAuth.user && storeAuth.user.type !== 'A')" class="bg-blue-600 text-white p-6 rounded hover:bg-blue-500 transition-all w-full">
+      <div v-if= "!storeAuth.user || storeAuth.user.type !== 'A'" class="bg-blue-600 text-white p-6 rounded hover:bg-blue-500 transition-all w-full">
         <RouterLink to="/singleplayer" class="block text-center">
           <p class="text-3xl font-bold">Single-Player</p>
           <p class="text-lg mt-2">Joga agora e desafia a tua memória!</p>

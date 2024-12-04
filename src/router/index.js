@@ -29,7 +29,7 @@ const router = createRouter({
     },
     {
       path: '/singleplayer',
-      name: 'Singleplayer',
+      name: 'SinglePlayer',
       component: SinglePlayer
     },
     {
@@ -85,7 +85,9 @@ router.beforeEach(async (to, from, next) => {
   
   const requiresAuth = ['users', 'Transactions', 'Scoreboard', 'GameHistory'];
   const admin = ['users'];
-  const player = ['Scoreboard','Transactions','GameHistory','Singleplayer']; 
+  const player = ['Scoreboard','Transactions','GameHistory']; 
+  const adminRestricted = ['SinglePlayer'];
+  
 
   if (requiresAuth.includes(to.name) && !storeAuth.user) {
       next({ name: 'login' });
@@ -100,6 +102,11 @@ router.beforeEach(async (to, from, next) => {
   if (player.includes(to.name) && storeAuth.user.type === 'A') {
       next({ name: 'home' });
       return;
+  }
+
+  if (adminRestricted.includes(to.name) && storeAuth.user && storeAuth.user.type === 'A') {
+    next({ name: 'home' });
+    return;
   }
 
   next();

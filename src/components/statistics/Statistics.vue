@@ -28,12 +28,11 @@ onMounted(async () => {
 
 const searchPlayerPurchases = async () => {
   if (!nickname.value.trim()) {
-    playerPurchases.value = null; // Limpa o resultado se o campo estiver vazio
+    playerPurchases.value = null;
     return;
   }
   await statisticsStore.fetchPurchasesByPlayer(nickname.value);
   playerPurchases.value = statisticsStore.playerPurchases;
-  console.log(playerPurchases.value);
 };
 
 const renderGamesChart = () => {
@@ -185,7 +184,7 @@ const renderPurchasesByWeekChart = () => {
           v-model="nickname"
           @input="searchPlayerPurchases"
           type="text"
-          placeholder="Digite o nickname"
+          placeholder="Escreva  o nickname"
           class="px-4 py-2 border border-gray-400 rounded-lg w-full"
         />
       </div>

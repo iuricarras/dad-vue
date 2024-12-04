@@ -8,6 +8,7 @@ const selectedBoardMP = ref(null);
 const boards = ref([]);
 const singlePlayerGames = ref([]);
 const multiplayerGames = ref([]);
+const minTurns = ref(null);
 
 const fetchBoards = async () => {
   await gameStore.fetchBoards();
@@ -19,9 +20,15 @@ const fetchBoards = async () => {
 const fetchGamesSP = async () => {
   if (selectedBoardSP.value) {
     await gameStore.fetchTopSinglePlayerGames(selectedBoardSP.value.id || null);
+
     singlePlayerGames.value = gameStore.games;
+    minTurns.value = gameStore.minTurns; 
+    console.log('Game store no fetchGamesSP:', gameStore.minTurns);
+    console.log('Min Turns no fetchGamesSP:', minTurns.value);
   }
 };
+
+
 
 const fetchGamesMP = async () => {
   if (selectedBoardMP.value) {
@@ -50,19 +57,24 @@ const handleBoardChangeMP = async () => {
     <div class="bg-gray-700 p-4 rounded-lg shadow-lg">
       <div class="flex justify-between items-center mb-4">
         <h2 class="text-lg font-bold">Top Single-Player</h2>
-        <select
-          v-model="selectedBoardSP"
-          @change="handleBoardChangeSP"
-          class="px-3 py-2 bg-gray-600 text-white rounded text-sm"
-        >
-          <option
-            v-for="board in boards"
-            :key="board.id"
-            :value="board"
-          >
-            {{ board.label }}
-          </option>
-        </select>
+        <div class="flex items-center">
+            <select
+                v-model="selectedBoardSP"
+                @change="handleBoardChangeSP"
+                class="px-3 py-2 bg-gray-600 text-white rounded text-sm"
+            >
+                <option
+                    v-for="board in boards"
+                    :key="board.id"
+                    :value="board"
+                >
+                    {{ board.label }}
+                </option>
+            </select>
+            <span class="ml-4 text-lg">
+                Min Turns: {{ minTurns || 'N/A' }}
+            </span>   
+        </div>
       </div>
 
       <div class="overflow-x-auto mx-auto w-full">

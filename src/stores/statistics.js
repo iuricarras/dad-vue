@@ -74,7 +74,7 @@ export const useStatisticsStore = defineStore('statistics', () => {
           playerPurchases.value = response.data.total_purchases;
         } catch (error) {
           console.error('Erro ao buscar compras por jogador:', error);
-          playerPurchases.value = null; // Caso ocorra um erro, define como null
+          playerPurchases.value = null;
         }
       };
 
