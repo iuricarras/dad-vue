@@ -64,7 +64,7 @@ const logout = () => {
       class="flex items-center text-lg font-bold hover:text-blue-500 px-3 py-2 rounded-md transition-colors">
       <span>Memory Game</span>
       <img
-        src="/public/memory.png" alt="Memory Game Icon" class="ml-2 w-10 h-10"/>
+        src="/src/assets/memory.png" alt="Memory Game Icon" class="ml-2 w-10 h-10"/>
     </RouterLink>
 
 
