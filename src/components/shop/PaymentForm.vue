@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue';
-import { usePaymentStore } from '@/stores/payment.js'; // Importa as funções
+import { usePaymentStore } from '@/stores/payment.js'; 
 import { useErrorStore } from '@/stores/error';
 
 const storeError = useErrorStore();
@@ -20,10 +20,10 @@ const paymentInfo = ref({
   value: 0,
 });
 
-// Inicializa o valor do pagamento com o preço do item selecionado
+
 paymentInfo.value.value = props.selectedItem.price;
 
-// Lista de métodos de pagamento com limites
+
 const paymentMethods = ref([
   { type: 'MBWAY', label: 'MBWAY', limit: 5 },
   { type: 'PAYPAL', label: 'PayPal', limit: 10 },
@@ -32,7 +32,7 @@ const paymentMethods = ref([
   { type: 'VISA', label: 'VISA', limit: 30 },
 ]);
 
-// Computed para filtrar os métodos de pagamento baseados no valor permitido
+
 const filteredPaymentMethods = computed(() => {
   return paymentMethods.value.filter(
     (method) => props.selectedItem.price <= method.limit
@@ -40,7 +40,6 @@ const filteredPaymentMethods = computed(() => {
 });
 
 const handlePayment = async () => {
-  // Chama a função processPayment do arquivo payment.js
   await usePayment.processPayment(paymentInfo, props.selectedItem.amount, 'P');
 };
 </script>
@@ -50,7 +49,6 @@ const handlePayment = async () => {
     <h1 class="text-3xl font-semibold text-center mb-8">Complete your Payment</h1>
 
     <div class="grid grid-cols-3 gap-4">
-      <!-- Payment Form Section -->
       <div class="col-span-2">
         <div v-if="props.selectedItem">
           <div class="mt-8 text-center">
@@ -86,16 +84,17 @@ const handlePayment = async () => {
               readonly 
             />
 
-            <button 
-              @click="handlePayment" 
-              class="mt-4 bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-700 transition-colors">
-              Confirm Payment
-            </button>
+            <div class="mt-4">
+              <button 
+                @click="handlePayment" 
+                class="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-700 transition-colors">
+                Confirm Payment
+              </button>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- Payment Limits Section -->
       <div class="bg-gray-100 border p-4 rounded shadow-lg">
         <h2 class="text-lg font-semibold mb-2">Payment Limits</h2>
         <ul class="list-disc pl-4 text-sm">
