@@ -94,6 +94,11 @@ export const useAuthStore = defineStore('auth', () => {
         } catch (e) {
             clearUser()
             storeError.setErrorMessages(e.response.data.message, e.response.data.errors, e.response.status, 'Authentication Error!')
+            toast({
+                title: 'Not Authorized',
+                description: 'Access denied, check your credentials',
+                variant: 'destructive'  
+            })
             return false
         }
     }
