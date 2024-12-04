@@ -57,7 +57,7 @@ const logout = () => {
 
 <template>
   <Toaster />
-  <nav class="relative flex justify-between items-center bg-gray-800 p-1 text-white ">
+  <nav class="relative flex justify-between items-center bg-gray-800 p-1 text-white">
     <GlobalAlertDialog ref="alert-dialog"></GlobalAlertDialog>
     <RouterLink
       to="/home"
