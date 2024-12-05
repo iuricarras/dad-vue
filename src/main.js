@@ -9,10 +9,14 @@ import router from './router'
 
 import ErrorMessage from './components/common/ErrorMessage.vue'
 
+import { io } from "socket.io-client"
+
 const app = createApp(App)
 
 app.use(createPinia())
 app.use(router)
+
+app.provide('socket', io("http://localhost:8081"))
 
 // Default Axios configuration
 axios.defaults.baseURL = 'http://localhost/api'
