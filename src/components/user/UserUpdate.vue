@@ -16,7 +16,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 
 const router = useRouter()
-const storeAuth = useAuthStore();
+const storeAuth = useAuthStore()
 const storeError = useErrorStore()
 
 const credentials = ref({
@@ -38,13 +38,17 @@ const update = () => {
 </script>
 
 <template>
-  <div> email, nickname, name, photo , password </div>
-  <Card v-show="storeAuth.user.type=='P' || 'A'" class="w-[450px] mx-auto my-8 p-4 px-8">
+  <div v-if ="!storeAuth.user">
+    <h1> O utilizador deve autenticar-se! </h1>
+  </div>
+  <h1> email, nickname, name, photo , password </h1>
+  <Card v-show="storeAuth.user" class="w-[450px] mx-auto my-8 p-4 px-8">
     <CardHeader>
       <CardTitle>Atualizar dados</CardTitle>
       <CardDescription>Atulize os seus dados da sua conta.</CardDescription>
     </CardHeader>
     <CardContent>
+
       <form>
         <div class="grid items-center w-full gap-4">
           <div class="flex flex-col space-y-1.5">
@@ -62,11 +66,15 @@ const update = () => {
             <Input id="name" type="name" placeholder="Name" v-model="credentials.name" />
             <ErrorMessage :errorMessage="storeError.fieldMessage('name')"></ErrorMessage>
           </div>
+
+
           <div class="flex flex-col space-y-1.5">
             <Label for="photo">Photo</Label>
             <Input id="photo" type="photo" v-model="credentials.photo" />
             <ErrorMessage :errorMessage="storeError.fieldMessage('photo')"></ErrorMessage>
           </div>
+          
+          
           <div class="flex flex-col space-y-1.5">
             <Label for="password">Password</Label>
             <Input id="password" type="password" placeholder="Password" v-model="credentials.password" />
