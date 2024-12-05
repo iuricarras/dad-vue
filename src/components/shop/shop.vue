@@ -10,7 +10,7 @@ const items = ref([
     id: 1,
     name: 'Small Pack of BrainCoins',
     description: 'Get 50 BrainCoins.',
-    price: 5, // Preço real em dinheiro
+    price: 5, 
     amount: 50,
   },
   {
@@ -27,30 +27,38 @@ const items = ref([
     price: 15,
     amount: 300,
   },
+  // Novo item de Natal
+  {
+    id: 4,
+    name: 'Christmas Special Pack of BrainCoins',
+    description: 'Get 400 BrainCoins with a festive touch! 🎄',
+    price: 12,
+    amount: 400,
+  },
 ]);
 
 const selectedItem = ref(null);
 const showPaymentForm = ref(false);
 
-
-
 const buyItem = (item) => {
-  selectedItem.value = item; 
-  showPaymentForm.value = true; 
+  selectedItem.value = item;
+  showPaymentForm.value = true;
 };
-
 </script>
 
 <template>
   <div class="max-w-7xl mx-auto p-6">
     <h1 class="text-3xl font-semibold text-center mb-8">Welcome to the Coin Shop</h1>
 
-    <!-- Lista de pacotes de moedas para compra -->
     <div class="mt-20 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
       <div 
         v-for="item in items" 
         :key="item.id" 
-        class="bg-gray-300 rounded-lg shadow-md p-4 hover:shadow-lg transition-all">
+        :class="{
+          'bg-gray-300': item.id !== 4,
+          'bg-red-500 text-white': item.id === 4,
+          'rounded-lg shadow-md p-4 hover:shadow-lg transition-all': true
+        }">
         <h2 class="text-xl font-semibold mb-2">{{ item.name }}</h2>
         <p class="text-gray-700 mb-4">{{ item.description }}</p>
         <div class="flex justify-between items-center">
@@ -79,3 +87,4 @@ const buyItem = (item) => {
     </div>
   </div>
 </template>
+

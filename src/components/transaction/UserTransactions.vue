@@ -58,16 +58,14 @@ const nextPage = () => {
 </script>
 
 <template>
-  <div class="p-6 bg-gray-800 text-white rounded-lg mx-auto max-w-6xl mt-10">
-    <h2 class="text-xl mb-4">Your Transactions</h2>
-
-    <div class="mb-4">
-      <label for="transaction-type" class="mr-2">Filter by Type:</label>
+  <div class="overflow-x-auto p-6 bg-gray-800 text-white rounded-lg mx-auto max-w-6xl mt-2">
+    <div class="mb-1">
+      <label for="transaction-type" class="mr-2 text-sm">Filter by Type:</label>
       <select
         id="transaction-type"
         v-model="selectedType"
         @change="filterTransactions"
-        class="border p-2 bg-gray-700 text-white rounded"
+        class="border p-1 text-sm bg-gray-700 text-white rounded"
       >
         <option value="">All</option>
         <option value="B">Bonus</option>
@@ -75,17 +73,17 @@ const nextPage = () => {
         <option value="I">Internal Spending/Earnings</option>
       </select>
     </div>
-
-    <table class="w-full text-left border-collapse border border-gray-700 mb-4">
+    
+    <table class="w-full text-left border-collapse border border-gray-700 mb-4 text-sm">
       <thead>
         <tr class="bg-gray-700">
-          <th class="border border-gray-700 px-4 py-2">Type</th>
-          <th class="border border-gray-700 px-4 py-2">Date</th>
-          <th class="border border-gray-700 px-4 py-2">Game ID</th>
-          <th class="border border-gray-700 px-4 py-2">Euros</th>
-          <th class="border border-gray-700 px-4 py-2">Payment Type</th>
-          <th class="border border-gray-700 px-4 py-2">Payment Reference</th>
-          <th class="border border-gray-700 px-4 py-2">Brain Coins</th>
+          <th class="border border-gray-700 px-2 py-2">Type</th>
+          <th class="border border-gray-700 px-2 py-2">Date</th>
+          <th class="border border-gray-700 px-2 py-2">Game ID</th>
+          <th class="border border-gray-700 px-2 py-2">Euros</th>
+          <th class="border border-gray-700 px-2 py-2">Payment Type</th>
+          <th class="border border-gray-700 px-2 py-2">Payment Reference</th>
+          <th class="border border-gray-700 px-2 py-2">Brain Coins</th>
         </tr>
       </thead>
       <tbody>
@@ -94,23 +92,23 @@ const nextPage = () => {
           :key="transaction.id"
           class="odd:bg-gray-800 even:bg-gray-700"
         >
-          <td class="border border-gray-700 px-2 py-1 capitalize">
+          <td class="border border-gray-700 px-2 py-2 capitalize text-xs">
             {{ transaction.type === 'B' ? 'Bonus' : transaction.type === 'P' ? 'Purchase' : 'Internal' }}
           </td>
-          <td class="border border-gray-700 px-2 py-1">
+          <td class="border border-gray-700 px-2 py-2 text-xs">
             {{ new Date(transaction.transaction_datetime).toLocaleString() }}
           </td>
-          <td class="border border-gray-700 px-2 py-1">{{ transaction.game_id || 'N/A' }}</td>
-          <td class="border border-gray-700 px-2 py-1">
+          <td class="border border-gray-700 px-2 py-2 text-xs">{{ transaction.game_id || 'N/A' }}</td>
+          <td class="border border-gray-700 px-2 py-2 text-xs">
             {{ transaction.type === 'P' ? transaction.euros : 'N/A' }}
           </td>
-          <td class="border border-gray-700 px-2 py-1">
+          <td class="border border-gray-700 px-2 py-2 text-xs">
             {{ transaction.type === 'P' ? transaction.payment_type || 'N/A' : 'N/A' }}
           </td>
-          <td class="border border-gray-700 px-2 py-1">
+          <td class="border border-gray-700 px-2 py-2 text-xs">
             {{ transaction.type === 'P' ? transaction.payment_reference || 'N/A' : 'N/A' }}
           </td>
-          <td class="border border-gray-700 px-2 py-1">{{ transaction.brain_coins }}</td>
+          <td class="border border-gray-700 px-2 py-2 text-xs">{{ transaction.brain_coins }}</td>
         </tr>
         <tr v-if="filteredTransactions.length === 0">
           <td colspan="7" class="text-center text-gray-500 p-4">
@@ -122,17 +120,17 @@ const nextPage = () => {
 
     <div class="flex justify-center mt-4">
       <button
-        class="px-4 py-2 mx-1 bg-gray-700 text-white rounded hover:bg-gray-600"
+        class="px-4 py-1 mx-1 bg-gray-700 text-white rounded hover:bg-gray-600 text-xs"
         :disabled="currentPage === 1"
         @click="prevPage"
       >
         Prev
       </button>
-      <span class="px-4 py-2 mx-1 text-gray-300">
+      <span class="px-4 py-2 mx-1 text-gray-300 text-xs">
         Page {{ currentPage }} of {{ totalPages }}
       </span>
       <button
-        class="px-4 py-2 mx-1 bg-gray-700 text-white rounded hover:bg-gray-600"
+        class="px-4 py-2 mx-1 bg-gray-700 text-white rounded hover:bg-gray-600 text-xs"
         :disabled="currentPage === totalPages"
         @click="nextPage"
       >
@@ -141,3 +139,4 @@ const nextPage = () => {
     </div>
   </div>
 </template>
+

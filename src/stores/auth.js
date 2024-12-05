@@ -1,13 +1,15 @@
-import { ref, computed } from 'vue'
+import { ref, computed, inject } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
 import { useErrorStore } from '@/stores/error'
 import { useRouter } from 'vue-router'
 import avatarNoneAssetURL from '@/assets/avatar-none.png'
+import { toast } from '@/components/ui/toast'
 
 export const useAuthStore = defineStore('auth', () => {
     const router = useRouter()
     const storeError = useErrorStore()
+    const socket = inject('socket')
 
     const user = ref(null)
     const token = ref('')
@@ -44,6 +46,10 @@ export const useAuthStore = defineStore('auth', () => {
         return user.value ? user.value.blocked : ''
     })
 
+    const userNick = computed(() => {
+        return user.value ? user.value.nickname : ''
+    })
+
     const userPhotoUrl = computed(() => {
         const photoFile = user.value ? user.value.photo_filename ?? '' : ''
         if (photoFile) {
@@ -52,10 +58,20 @@ export const useAuthStore = defineStore('auth', () => {
         return avatarNoneAssetURL
     })
 
+    const getFirstLastName = (fullName) => {
+        const names = fullName.trim().split(' ')
+        const firstName = names[0] ?? ''
+        const lastName = names.length > 1 ? names[names.length -1 ] : ''
+        return (firstName + ' ' + lastName).trim()
+    }
+
 
     // This function is "private" - not exported by the store
     const clearUser = () => {
         resetIntervalToRefreshToken()
+        if (user.value) {
+            socket.emit('logout', user.value)
+        }
         user.value = null
         token.value = ''
         localStorage.removeItem('token')
@@ -70,27 +86,32 @@ export const useAuthStore = defineStore('auth', () => {
             localStorage.setItem('token', token.value)
             axios.defaults.headers.common.Authorization = 'Bearer ' + token.value
             user.value = responseLogin.data.user
+            socket.emit('login', user.value)
+
             console.log("aaaaaaa",user.value.id)
 
             console.log("!!!!!!!!!!!!!", user.value.blocked)
 
             // deteta se o utilizador esta bloqueado, melhorar a mensagem de erro
             if(user.value.blocked == 1){
-                status = 403
-                storeError.setErrorMessages(status, 'Aut44hentication Error!')
-                console.log("!aqui!", storeError.setErrorMessages(status, 'Authentication Error!'))
+                toast({
+                    title: 'User Blocked',
+                    description: 'You are blocked, contact the administrator',
+                    variant: 'destructive'  
+                })
                 clearUser()
             }
-
-
-
-
             repeatRefreshToken()
             router.push({ name:'home' })
             return user.value
         } catch (e) {
             clearUser()
             storeError.setErrorMessages(e.response.data.message, e.response.data.errors, e.response.status, 'Authentication Error!')
+            toast({
+                title: 'Not Authorized',
+                description: 'Access denied, check your credentials',
+                variant: 'destructive'  
+            })
             return false
         }
     }
@@ -146,6 +167,7 @@ export const useAuthStore = defineStore('auth', () => {
                     axios.defaults.headers.common.Authorization = 'Bearer ' + token.value
                     const responseUser = await axios.get('users/me')
                     user.value = responseUser.data.data
+                    socket.emit('login', user.value)
                     //user.value = responseUser.data.user
                     
                     
@@ -165,7 +187,7 @@ export const useAuthStore = defineStore('auth', () => {
     }
 
     return {
-        userBlocked,brain_coins_balance,id,user, userName, userFirstLastName, userEmail, userType, userGender, userPhotoUrl,
-        login, logout, restoreToken, canUpdateDeleteProject
+        userBlocked,brain_coins_balance,id,user, userName, userFirstLastName, userEmail, userType, userGender, userPhotoUrl, userNick,
+        getFirstLastName, login, logout, restoreToken, canUpdateDeleteProject
     }
 })

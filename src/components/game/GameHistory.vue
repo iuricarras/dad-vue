@@ -11,7 +11,7 @@ const filteredGameHistory = ref([]);
 const isLoading = ref(false);
 const errorMessage = ref('');
 const currentPage = ref(1);
-const itemsPerPage = ref(12);
+const itemsPerPage = ref(10);
 const selectedType = ref('');
 const selectedBoard = ref('');
 const boards = ref([]);
@@ -115,8 +115,8 @@ onMounted(async () => {
       {{ errorMessage }}
     </div>
 
-    <div v-else>
-      <table class="w-full text-left border-collapse border border-gray-700  mb-4">
+    <div v-else class="overflow-x-auto">
+      <table class="w-full text-left border-collapse border border-gray-700  mb-4 ">
         <thead>
           <tr>
             <th class="border border-gray-700 px-2 py-2">Created By</th>

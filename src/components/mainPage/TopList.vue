@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useGameStore } from '@/stores/games';
+import axios from 'axios';
 
 const gameStore = useGameStore();
 const selectedBoardSP = ref(null);
@@ -9,6 +10,8 @@ const boards = ref([]);
 const singlePlayerGames = ref([]);
 const multiplayerGames = ref([]);
 const minTurns = ref(null);
+const sortBy = ref('total_time');
+
 
 const fetchBoards = async () => {
   await gameStore.fetchBoards();
@@ -19,16 +22,26 @@ const fetchBoards = async () => {
 
 const fetchGamesSP = async () => {
   if (selectedBoardSP.value) {
-    await gameStore.fetchTopSinglePlayerGames(selectedBoardSP.value.id || null);
+    try {
+      const response = await axios.get('/games/topSinglePlayer', {
+        params: {
+          board_id: selectedBoardSP.value.id || null,
+          sort_by: sortBy.value,
+        },
+      });
 
-    singlePlayerGames.value = gameStore.games;
-    minTurns.value = gameStore.minTurns; 
-    console.log('Game store no fetchGamesSP:', gameStore.minTurns);
-    console.log('Min Turns no fetchGamesSP:', minTurns.value);
+      singlePlayerGames.value = response.data.top_games.map((game) => ({
+        nickname: game.user.nickname,
+        value: sortBy.value === 'total_time' ? `${game.total_time}s` : game.total_turns_winner,
+        board: `${game.board.board_cols}x${game.board.board_rows}`,
+      }));
+
+      minTurns.value = response.data.min_turns;
+    } catch (error) {
+      console.error('Erro ao buscar top Single Player:', error);
+    }
   }
 };
-
-
 
 const fetchGamesMP = async () => {
   if (selectedBoardMP.value) {
@@ -47,33 +60,44 @@ const handleBoardChangeSP = async () => {
   await fetchGamesSP();
 };
 
+const handleSortChangeSP = async () => {
+  await fetchGamesSP();
+};
+
 const handleBoardChangeMP = async () => {
   await fetchGamesMP();
 };
 </script>
 
 <template>
-  <div class="p-8 text-white rounded-lg mx-auto w-full max-w-screen-2xl space-y-10">
+  <div class="p-8 text-white rounded-lg mx-auto w-full max-w-screen-2xl space-y-10 overflow-x-auto">
     <div class="bg-gray-700 p-4 rounded-lg shadow-lg">
       <div class="flex justify-between items-center mb-4">
         <h2 class="text-lg font-bold">Top Single-Player</h2>
-        <div class="flex items-center">
-            <select
-                v-model="selectedBoardSP"
-                @change="handleBoardChangeSP"
-                class="px-3 py-2 bg-gray-600 text-white rounded text-sm"
+        <div class="flex items-center space-x-4">
+          <select
+            v-model="sortBy"
+            @change="handleSortChangeSP"
+            class="px-3 py-2 bg-gray-600 text-white rounded text-sm"
+          >
+            <option value="total_time">Time</option>
+            <option value="total_turns_winner">Turns</option>
+          </select>
+          <select
+            v-model="selectedBoardSP"
+            @change="handleBoardChangeSP"
+            class="px-3 py-2 bg-gray-600 text-white rounded text-sm"
+          >
+            <option
+              v-for="board in boards"
+              :key="board.id"
+              :value="board"
             >
-                <option
-                    v-for="board in boards"
-                    :key="board.id"
-                    :value="board"
-                >
-                    {{ board.label }}
-                </option>
-            </select>
-            <span class="ml-4 text-lg">
-                Min Turns: {{ minTurns || 'N/A' }}
-            </span>   
+              {{ board.label }}
+            </option>
+          </select>
+
+          
         </div>
       </div>
 
@@ -82,7 +106,7 @@ const handleBoardChangeMP = async () => {
           <thead>
             <tr class="bg-gray-600 text-white uppercase">
               <th class="px-3 py-2 w-1/3">Winner</th>
-              <th class="px-3 py-2 w-1/3">Time</th>
+              <th class="px-3 py-2 w-1/3">{{ sortBy === 'total_time' ? 'Time' : 'Turns' }}</th>
               <th class="px-3 py-2 w-1/3">Board</th>
             </tr>
           </thead>
@@ -101,7 +125,7 @@ const handleBoardChangeMP = async () => {
                 <span v-else-if="index === 2">🥉</span>
                 <span class="ml-1">{{ game.nickname }}</span>
               </td>
-              <td class="px-3 py-2 w-1/3">{{ game.total_time }}</td>
+              <td class="px-3 py-2 w-1/3">{{ game.value }}</td>
               <td class="px-3 py-2 w-1/3">{{ game.board }}</td>
             </tr>
           </tbody>

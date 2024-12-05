@@ -12,7 +12,7 @@ const props = defineProps({
 const emit = defineEmits([ 'viewTransactions','viewGames']);
 
 const currentPage = ref(1);
-const itemsPerPage = ref(10);
+const itemsPerPage = ref(8);
 
 const filterType = ref('');
 const filterBlocked = ref('');
@@ -86,7 +86,7 @@ const handleViewGame = (user) => {
         </select>
       </div>
     </div>
-
+    <div class="overflow-x-auto">
     <table class="w-full border-collapse border border-gray-300 text-sm">
       <thead class="bg-gray-200">
         <tr>
@@ -105,6 +105,7 @@ const handleViewGame = (user) => {
         </tr>
       </tbody>
     </table>
+  
 
     <div class="flex justify-center mt-4">
       <button class="px-4 py-2 mx-1 bg-gray-700 text-white rounded hover:bg-gray-600" @click="prevPage" :disabled="currentPage === 1">
@@ -116,6 +117,7 @@ const handleViewGame = (user) => {
       <button class="px-4 py-2 mx-1 bg-gray-700 text-white rounded hover:bg-gray-600" @click="nextPage" :disabled="currentPage === totalPages">
         Next
       </button>
+    </div>
     </div>
   </div>
 </template>

@@ -76,9 +76,8 @@ export const useGameStore = defineStore('game', () => {
         } catch (error) {
           console.error('Erro ao buscar top Single Player para a board:', error);
         }
-      };
+    };
     
-
     const fetchTopMultiplayerGames = async (boardId) => {
         try {
             const response = await axios.get('/games/topMultiplayer', {
