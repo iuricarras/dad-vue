@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useErrorStore } from '@/stores/error'
 import { useAuthStore } from '@/stores/auth'
+import { useUserStore } from '@/stores/user'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -18,30 +19,74 @@ import { Label } from '@/components/ui/label'
 const router = useRouter()
 const storeAuth = useAuthStore()
 const storeError = useErrorStore()
+const storeUser = useUserStore()
 
+// Valores a enviar
 const credentials = ref({
-    email: '',
-    nickname: '',
-    name: '',
-    photo: null,
-    password: ''
+  email: '',
+  nickname: '',
+  name: '',
+  photo: null,
+  password: ''
 })
 
 const cancel = () => {
     router.back()
 }
 
-const update = () => {
-  console.log("Brevemente")
+const update = async () => {
+  await storeUser.updateUser(storeAuth.id, credentials)
+  console.log("!!!!!!!!!!")
 }
+
+const update2 = () => {
+  //await storeUser.updateUser(storeAuth.id, credentials);
+  console.log("!!!!!!!", storeUser.updateUser(storeAuth.id, credentials))
+  console.log("!!!!!!!2", storeAuth.id, credentials)
+}
+
+
+// foto
+
+const imagePreview = ref(null)
+const fileInput = ref(null)
+
+const onFileChange = (event) => {
+  const file = event.target.files[0]
+  if (file) {
+    createPreview(file)
+  }
+}
+
+const onDrop = (event) => {
+  const file = event.dataTransfer.files[0]
+  if (file) {
+    createPreview(file)
+  }
+}
+
+const createPreview = (file) => {
+  const reader = new FileReader()
+  reader.onload = () => {
+    credentials.value.photo = reader.result // Guarda a imagem na variavel acima
+    imagePreview.value = reader.result // Atualiza o preview
+  }
+  reader.readAsDataURL(file)
+}
+
+const triggerFileInput = () => {
+  fileInput.value.click()
+}
+
+
 
 </script>
 
 <template>
-  <div v-if ="!storeAuth.user">
-    <h1> O utilizador deve autenticar-se! </h1>
+  <div v-if ="!storeAuth.user" class="flex justify-center items-center h-screen">
+    <h1 class="text-2xl font-bold text-center text-red-600 bg-red-100 px-4 py-2 rounded-md shadow-md">
+      O utilizador deve autenticar-se! </h1>
   </div>
-  <h1> email, nickname, name, photo , password </h1>
   <Card v-show="storeAuth.user" class="w-[450px] mx-auto my-8 p-4 px-8">
     <CardHeader>
       <CardTitle>Atualizar dados</CardTitle>
@@ -68,12 +113,31 @@ const update = () => {
           </div>
 
 
-          <div class="flex flex-col space-y-1.5">
-            <Label for="photo">Photo</Label>
-            <Input id="photo" type="photo" v-model="credentials.photo" />
-            <ErrorMessage :errorMessage="storeError.fieldMessage('photo')"></ErrorMessage>
+          <!-- upload e preview da foto -->
+          <Label for="photo">Photo</Label>
+          <div class="drag-and-drop flex flex-col space-y-1.5"
+          @dragover.prevent 
+          @dragleave.prevent 
+          @drop.prevent="onDrop">
+
+          <p>Arraste e solte uma imagem aqui, ou clique para selecionar</p>
+
+            <input
+            type="file"
+            accept="image/*"
+            @change="onFileChange"
+            ref="fileInput"
+            style="display: none;" />
+
+            <img v-if="imagePreview" :src="imagePreview" alt="Preview da imagem" />
+
+            <button type="button" @click="triggerFileInput" 
+            class="bg-black text-white py-2 px-4 rounded-md shadow-md hover:bg-gray-800">
+            Selecionar Arquivo</button>
           </div>
-          
+
+
+
           
           <div class="flex flex-col space-y-1.5">
             <Label for="password">Password</Label>
@@ -93,3 +157,19 @@ const update = () => {
     </CardFooter>
   </Card>
 </template>
+
+
+<style>
+
+.drag-and-drop {
+  border: 2px dashed #ccc;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.drag-and-drop img {
+  max-width: 100%;
+  margin-top: 10px;
+}
+</style>
