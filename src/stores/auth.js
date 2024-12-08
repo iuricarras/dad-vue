@@ -88,9 +88,6 @@ export const useAuthStore = defineStore('auth', () => {
             user.value = responseLogin.data.user
             socket.emit('login', user.value)
 
-            console.log("aaaaaaa",user.value.id)
-
-            console.log("!!!!!!!!!!!!!", user.value.blocked)
 
             // deteta se o utilizador esta bloqueado, melhorar a mensagem de erro
             if(user.value.blocked == 1){
