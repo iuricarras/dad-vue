@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router'
 import { useErrorStore } from '@/stores/error'
 import { useAuthStore } from '@/stores/auth'
 //import { useUserStore } from '@/stores/user'
-import { useUserStore2 } from '@/stores/userUpdate'
+import { useUserStore3 } from '@/stores/userCreate'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -22,7 +22,7 @@ const router = useRouter()
 const storeAuth = useAuthStore()
 const storeError = useErrorStore()
 //const storeUser = useUserStore()
-const storeUserUpdate = useUserStore2()
+const storeUserCreate = useUserStore3()
 
 // Valores a enviar
 const credentials = ref({
@@ -32,11 +32,12 @@ const cancel = () => {
     router.back()
 }
 
-const update = async () => {
+const create = async () => {
   const jsonToSend = credentials.value
-  await storeUserUpdate.updateUser(storeAuth.id, jsonToSend)
-  //await storeUser.updateAll(storeAuth.id, jsonToSend)
-  //refreshPage();
+  console.log("!!!JSON!!!", jsonToSend)
+  await storeUserCreate.createUser(jsonToSend)
+  //router.back()
+  //refreshPage()
 }
 
 
@@ -83,7 +84,7 @@ onMounted(() => {
 })
 
 function refreshPage() {
-  window.location.reload();
+  window.location.reload()
 }
 
 
@@ -91,14 +92,14 @@ function refreshPage() {
 
 
 <template>
-  <div v-if ="!storeAuth.user" class="flex justify-center items-center h-screen">
+  <div v-if ="storeAuth.user" class="flex justify-center items-center h-screen">
     <h1 class="text-2xl font-bold text-center text-red-600 bg-red-100 px-4 py-2 rounded-md shadow-md">
-      O utilizador deve autenticar-se! </h1>
+      O utilizador já se encontra registado! </h1>
   </div>
-  <Card v-show="storeAuth.user" class="w-[450px] mx-auto my-8 p-4 px-8">
+  <Card v-show="!storeAuth.user" class="w-[450px] mx-auto my-8 p-4 px-8">
     <CardHeader>
-      <CardTitle>Atualizar dados</CardTitle>
-      <CardDescription>Atulize os seus dados da sua conta.</CardDescription>
+      <CardTitle>Criar Utilizador</CardTitle>
+      <CardDescription>Insira os seus dados.</CardDescription>
     </CardHeader>
     <CardContent>
 
@@ -157,8 +158,8 @@ function refreshPage() {
         <Button variant="outline" @click="cancel">
             Cancel
         </Button>
-        <Button @click="update">
-            Update
+        <Button @click="create">
+            Register
         </Button>
     </CardFooter>
   </Card>

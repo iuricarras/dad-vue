@@ -2,13 +2,16 @@ import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
 import { useErrorStore } from '@/stores/error'
+import { useAuthStore } from '@/stores/auth'
 import { useRouter } from 'vue-router'
 import { useToast } from '@/components/ui/toast/use-toast'
 import { ToastAction } from '@/components/ui/toast'
 import { h } from 'vue'
 
+
 export const useUserStore2 = defineStore('user', () => {
   const router = useRouter()
+  const storeAuth = useAuthStore()
   const { toast } = useToast()
   const storeError = useErrorStore()
 
@@ -22,14 +25,15 @@ export const useUserStore2 = defineStore('user', () => {
             delete updatedData[key];
         }
       });
-      
-      console.log("JSON-update2", updatedData)
       const response = await axios.patch(`/users/${userId}`, updatedData);
       const updatedUser = response.data;
       toast({
         title: 'Success!',
         description: updatedUser.data.nickname + ' : updated successfully.',
       });
+      storeAuth.user = updatedUser.data
+      router.push({ name: 'home' })
+
       return updatedUser;
     } catch (e) {
         storeError.setErrorMessages(e.response?.data?.message, e.response?.data?.errors, e.response?.status, 'Error updating user!');

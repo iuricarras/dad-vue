@@ -12,7 +12,7 @@ import UserUpdate from '@/components/user/UserUpdate.vue'
 import { useAuthStore } from '@/stores/auth'
 import MultiPlayer from '@/components/multiplayer/MultiPlayer.vue'
 import LobbyRoom from '@/components/multiplayer/LobbyRoom.vue'
-import UserRegister from '@/components/user/UserRegister.vue'
+import UserCreate from '@/components/user/UserCreate.vue'
 
 
 
@@ -87,7 +87,7 @@ const router = createRouter({
     {
       path: '/register',
       name: 'register',
-      component: UserRegister,
+      component: UserCreate,
     },
 
   ]

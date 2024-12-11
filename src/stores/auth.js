@@ -184,7 +184,7 @@ export const useAuthStore = defineStore('auth', () => {
     }
 
     return {
-        userBlocked,brain_coins_balance,id,user, userName, userFirstLastName, userEmail, userType, userGender, userPhotoUrl, userNick,
+        userBlocked, brain_coins_balance, id, user, userName, userFirstLastName, userEmail, userType, userGender, userPhotoUrl, userNick,
         getFirstLastName, login, logout, restoreToken, canUpdateDeleteProject
     }
 })
