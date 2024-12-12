@@ -31,7 +31,18 @@ export const useUserStore2 = defineStore('user', () => {
         title: 'Success!',
         description: updatedUser.data.nickname + ' : updated successfully.',
       });
+
+
+
+      // fazer um teste no laravel na parte da foto
+
+
+      console.log("!!!StoreAuth!!!", storeAuth.user)
+      console.log("!!!UpdatedUser!!!", updatedUser.data)
+
       storeAuth.user = updatedUser.data
+      //storeAuth.user.photo_filename = updatedUser.data.photo_filename
+
       router.push({ name: 'home' })
 
       return updatedUser;

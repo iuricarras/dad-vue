@@ -7,6 +7,7 @@ import { useToast } from '@/components/ui/toast/use-toast'
 import { ToastAction } from '@/components/ui/toast'
 import { h } from 'vue'
 
+
 export const useUserStore3 = defineStore('user', () => {
   const router = useRouter()
   const { toast } = useToast()
@@ -30,6 +31,6 @@ export const useUserStore3 = defineStore('user', () => {
   };
 
   return {
-    createUser,
+    createUser
   }
 })
