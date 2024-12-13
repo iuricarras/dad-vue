@@ -3,8 +3,7 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useErrorStore } from '@/stores/error'
 import { useAuthStore } from '@/stores/auth'
-//import { useUserStore } from '@/stores/user'
-import { useUserStore3 } from '@/stores/userCreate'
+import { useUserStore } from '@/stores/user'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -21,8 +20,7 @@ import { Label } from '@/components/ui/label'
 const router = useRouter()
 const storeAuth = useAuthStore()
 const storeError = useErrorStore()
-//const storeUser = useUserStore()
-const storeUserCreate = useUserStore3()
+const storeUser = useUserStore()
 
 // Valores a enviar
 const credentials = ref({
@@ -32,16 +30,16 @@ const cancel = () => {
     router.back()
 }
 
+// cria o user para o servidor
 const create = async () => {
   const jsonToSend = credentials.value
   console.log("!!!JSON!!!", jsonToSend)
-  await storeUserCreate.createUser(jsonToSend)
-  //router.back()
-  //refreshPage()
+  await storeUser.createUser(jsonToSend)
+  router.back()
 }
 
 
-// foto
+// funções do drag-and-drop da foto, até ao comentário vazio
 const imagePreview = ref(null)
 const fileInput = ref(null)
 
@@ -62,8 +60,8 @@ const onDrop = (event) => {
 const createPreview = (file) => {
   const reader = new FileReader()
   reader.onload = () => {
-    credentials.value.photo = reader.result // Guarda a imagem na variavel acima
-    imagePreview.value = reader.result // Atualiza o preview
+    credentials.value.photo = reader.result // guarda a imagem no credentials acima
+    imagePreview.value = reader.result // atualiza o preview
   }
   reader.readAsDataURL(file)
 }
@@ -71,7 +69,7 @@ const createPreview = (file) => {
 const triggerFileInput = () => {
   fileInput.value.click()
 }
-
+//
 
 // desativa os Input's temporariamente para evitar o preenchimento automático
 // os browsers ignorão o (autocomplete="off")
@@ -82,10 +80,6 @@ onMounted(() => {
     disabled.value = false; // Ativa os campos após um curto intervalo
   }, 500); // 500ms é suficiente para evitar
 })
-
-function refreshPage() {
-  window.location.reload()
-}
 
 
 </script>
