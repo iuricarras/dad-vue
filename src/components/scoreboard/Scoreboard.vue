@@ -25,7 +25,7 @@ onMounted(async () => {
 
 <template>
   <div class="p-6 bg-gray-800 text-white rounded-lg mx-auto max-w-4xl mt-10">
-    <h2 class="text-xl mb-4">Personal Scoreboard</h2>
+    <h2 class="text-2xl font-bold text-white-800 mb-4">Personal Scoreboard</h2>
 
     <!-- Tabela Singleplayer -->
     <h3 class="text-lg mb-2">Singleplayer</h3>

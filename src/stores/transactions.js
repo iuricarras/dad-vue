@@ -37,22 +37,43 @@ export const useTransactionStore = defineStore('transaction', () => {
       };
       
 
-      const fetchTransaction = async (userId) => {
-        console.log(storeAuth.user.id)
+      const fetchTransaction = async (params) => {
+        const { page, itemsPerPage, type } = params;
         try {
-          const response = await axios.get(`transactions/${storeAuth.user.id}`);
-          if (Array.isArray(response.data)) {
+          const response = await axios.get('/transactions', {
+            params: { page, itemsPerPage, type },
+          });
+          console.log(response.data);
+          if (response.data.transactions && Array.isArray(response.data.transactions)) {
             return response.data;
           } else {
-            console.warn('Resposta da API não é um array');
-            return []; 
+            console.warn('Resposta da API não é válida');
+            return { transactions: [], total: 0 };
           }
         } catch (e) {
-          storeError.setErrorMessages(e.response?.data?.message,e.response?.data?.errors,e.response?.status,'Error fetching user transactions!');
-          return []; 
+          console.error('Erro ao buscar transações:', e);
+          return { transactions: [], total: 0 };
         }
-      }
+      };
 
+      const fetchUserTransactions = async (params) => {
+        const { page, itemsPerPage, type, userId } = params;
+        try {
+            const response = await axios.get(`/users/${userId}/transactions`, {
+                params: { page, itemsPerPage, type, userId },
+            });
+            if (response.status === 200) {
+                return response.data;
+            } else {
+                console.warn('Erro inesperado na resposta da API');
+                return [];
+            }
+        } catch (error) {
+            console.error('Erro ao buscar transações do usuário:', error);
+            throw error;
+        }
+      };
+      
       const insertTransaction = async (transaction) => {
         // Reiniciar mensagens de erro
         storeError.resetMessages();
@@ -80,6 +101,6 @@ export const useTransactionStore = defineStore('transaction', () => {
     return {
         transactions, totalTransactions,
         fetchTransactions, fetchTransaction,
-        insertTransaction,
+        insertTransaction,fetchUserTransactions,
     }
 })
