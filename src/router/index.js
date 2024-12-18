@@ -12,6 +12,10 @@ import UserUpdate from '@/components/user/UserUpdate.vue'
 import { useAuthStore } from '@/stores/auth'
 import MultiPlayer from '@/components/multiplayer/MultiPlayer.vue'
 import LobbyRoom from '@/components/multiplayer/LobbyRoom.vue'
+import UserCreate from '@/components/user/UserCreate.vue'
+
+
+
 
 
 const router = createRouter({
@@ -79,6 +83,11 @@ const router = createRouter({
       path: '/lobby',
       name: 'Lobby',
       component: LobbyRoom,
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: UserCreate,
     },
 
   ]
