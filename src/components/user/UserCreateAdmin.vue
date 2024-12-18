@@ -36,7 +36,7 @@ const create = async () => {
   const jsonToSend = credentials.value
   console.log("!!!JSON!!!", jsonToSend)
   await storeUser.createAdmin(jsonToSend)
-  router.back()
+  router.push('/users')
 }
 
 
