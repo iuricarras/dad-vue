@@ -68,6 +68,25 @@ export const useUserStore = defineStore('user', () => {
   };
 
 
+
+
+  const createAdmin = async (createData) => {
+    try {
+      console.log("JSON-create2", createData)
+      const response = await axios.post(`/users/admin`, createData);
+      const createdUser = response.data;
+      toast({
+        title: 'Success!',
+        description: createdUser.data.nickname + ' : created successfully.',
+      });
+      return createdUser;
+    } catch (e) {
+        storeError.setErrorMessages(e.response?.data?.message, e.response?.data?.errors, e.response?.status, 'Error creating user!');
+        return null;
+    }
+  };
+
+
   const updateUserAll = async (userId, updatedData) => {
     try {
       // Remove campos vazios do objeto JSON
@@ -304,6 +323,7 @@ export const useUserStore = defineStore('user', () => {
     fetchUserSingleplayerGames,
     fetchUserMultiplayerGames,
     createUser,
+    createAdmin,
     updateUserAll,
     updateUser,
     toggleBlockStatus,
