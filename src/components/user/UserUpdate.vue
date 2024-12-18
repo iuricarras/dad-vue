@@ -28,17 +28,17 @@ const showDeleteForm_View = () =>{
 }
 
 
-// Valores a enviar
+// valores a enviar
 const credentials = ref({
   })
 const credentials_delete = ref({
   })
 
 const cancel = () => {
-    router.back()
+  router.push('/home')
 }
 
-// atualiza o user para o servidor
+// atualiza o user no servidor
 const update = async () => {
   const jsonToSend = credentials.value
   console.log("!!!JSON!!!", storeAuth.id, jsonToSend)
@@ -50,7 +50,6 @@ const deleteUser = async () => {
   const jsonToSend = credentials_delete.value
   await storeUser.checkBeforeDelete(storeAuth.id, jsonToSend)
   storeAuth.clearUser()
-  router.push('/home')
 }
 
 
@@ -92,11 +91,9 @@ const disabled = ref(true);
 
 onMounted(() => {
   setTimeout(() => {
-    disabled.value = false; // Ativa os campos após um curto intervalo
+    disabled.value = false; // ativa os campos após um curto intervalo
   }, 500); // 500ms é suficiente para evitar
 })
-
-
 </script>
 
 

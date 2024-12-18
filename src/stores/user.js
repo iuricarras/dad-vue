@@ -59,11 +59,11 @@ export const useUserStore = defineStore('user', () => {
       router.push({ name: 'login' });
       return createdUser;
     } catch (e) {
-       if(e.response?.status === 422){
-          storeError.setErrorMessages(e.response?.data?.message, e.response?.data?.errors, e.response?.status, 'Error creating user!');
-       }else{
-          toast({ title: 'Email or Nickname already exists, please change it', variant: 'destructive' });
-       }
+      if(e.response?.status === 422){
+        storeError.setErrorMessages(e.response?.data?.message, e.response?.data?.errors, e.response?.status, 'Error creating user!');
+      }else{
+        toast({ title: 'Email or Nickname already exists, please change it', variant: 'destructive' });
+      }
         return null;
     }
   };
@@ -73,16 +73,21 @@ export const useUserStore = defineStore('user', () => {
 
   const createAdmin = async (createData) => {
     try {
-      console.log("JSON-create2", createData)
+      console.log("JSON-createAdmin", createData)
       const response = await axios.post(`/users/admin`, createData);
-      const createdUser = response.data;
+      const createdAdmin = response.data;
       toast({
         title: 'Success!',
-        description: createdUser.data.nickname + ' : created successfully.',
+        description: createdAdmin.data.nickname + ' : created successfully.',
       });
-      return createdUser;
+      router.push({ name: 'users' });
+      return createdAdmin;
     } catch (e) {
+      if(e.response?.status === 422){
         storeError.setErrorMessages(e.response?.data?.message, e.response?.data?.errors, e.response?.status, 'Error creating user!');
+      }else{
+        toast({ title: 'Email or Nickname already exists, please change it', variant: 'destructive' });
+      }
         return null;
     }
   };
@@ -243,6 +248,7 @@ export const useUserStore = defineStore('user', () => {
           status: 'sucess'
         });
       }
+      router.push({ name: 'home' })
       return true
     } catch (e) {
       const statusCode = e.response?.status;
