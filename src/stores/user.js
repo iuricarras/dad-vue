@@ -20,18 +20,20 @@ export const useUserStore = defineStore('user', () => {
   })
 
 
-  const fetchUsers = async () => {
+  const fetchUsers = async (page, itemsPerPage, filterType = '', filterBlocked = '') => {
     storeError.resetMessages();
+    console.log(filterType, filterBlocked)
     try {
-      const response = await axios.get('users');
-      if (Array.isArray(response.data)) {
-        users.value = response.data; 
-      } else if (response.data?.data && Array.isArray(response.data.data)) {
-        users.value = response.data.data;
-      } else {
-        console.error('Invalid data format:', response.data);
-        users.value = []; 
-      }
+      const response = await axios.get('users', {
+        params: {
+          page,
+          itemsPerPage,
+          blocked: filterBlocked,
+          type: filterType,
+        },
+      });
+      users.value = response.data.users
+      return response.data;
     } catch (e) {
       storeError.setErrorMessages(
         e.response?.data?.message,
@@ -76,39 +78,23 @@ export const useUserStore = defineStore('user', () => {
     }
   }
 
-
-  const fetchUserTransactions = async (userId) => {
-    storeError.resetMessages()
+  const fetchUserGames = async (userId, page = 1, itemsPerPage = 10, type = '', status = '') => {
+    storeError.resetMessages();
     try {
-      const response = await axios.get(`/users/${userId}/transactions`)
-      return response.data 
+        const response = await axios.get(`/users/${userId}/games`, {
+            params: { page, itemsPerPage, type, status },
+        });
+        return response.data;
     } catch (e) {
-      storeError.setErrorMessages(
-        e.response?.data?.message,
-        e.response?.data?.errors,
-        e.response?.status,
-        'Error fetching user transactions!'
-      )
-      return []
+        storeError.setErrorMessages(
+            e.response?.data?.message,
+            e.response?.data?.errors,
+            e.response?.status,
+            'Error fetching user games!'
+        );
+        return { games: [], total: 0 };
     }
-  }
-  const fetchUserGames = async (userId) => {
-    storeError.resetMessages()
-    try {
-      const response = await axios.get(`/users/${userId}/games`)
-      console.log(response.data)
-      return response.data 
-    } catch (e) {
-      storeError.setErrorMessages(
-        e.response?.data?.message,
-        e.response?.data?.errors,
-        e.response?.status,
-        'Error fetching user transactions!'
-      )
-      return []
-    }
-  }
-
+};
 
   const fetchUserSingleplayerGames = async (userId) => {
     storeError.resetMessages()
@@ -202,15 +188,15 @@ export const useUserStore = defineStore('user', () => {
     }
   };
 
-  const fetchAuthenticatedGameHistory = async () => {
-    try {
-        const response = await axios.get('/games-history'); 
-        return response.data;
-    } catch (error) {
-        console.error('Error fetching authenticated game history:', error);
-        return [];
-    }
-};
+  const fetchAuthenticatedGameHistory = async (params) => {
+    const { page, itemsPerPage, type, board } = params;
+    const response = await axios.get('/games-history', {
+      params: { page, itemsPerPage, type, board },
+    });
+    return response.data;
+  };
+  
+  
   
   return {
     users,
@@ -218,7 +204,6 @@ export const useUserStore = defineStore('user', () => {
     totalUsers,
     fetchUsers,
     fetchUser,
-    fetchUserTransactions,
     fetchUserSingleplayerGames,
     fetchUserMultiplayerGames,
     updateUser,

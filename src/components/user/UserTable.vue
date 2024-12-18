@@ -7,71 +7,69 @@ const props = defineProps({
     type: Array,
     required: true,
   },
+  total: {
+    type: Number,
+    required: true,
+  },
+  currentPage: {
+    type: Number,
+    required: true,
+  },
+  itemsPerPage: {
+    type: Number,
+    required: true,
+  },
 });
 
-const emit = defineEmits([ 'viewTransactions','viewGames']);
+const filterType = ref('All');
+const filterBlocked = ref('All');
 
-const currentPage = ref(1);
-const itemsPerPage = ref(8);
 
-const filterType = ref('');
-const filterBlocked = ref('');
+const emit = defineEmits(['fetchUsers', 'viewTransactions', 'viewGames']);
 
-const filteredUsers = computed(() => {
-  return props.users.filter((user) => {
-    const matchesType = filterType.value ? user.type === filterType.value : true;
-    const matchesBlocked = filterBlocked.value
-      ? filterBlocked.value === 'Yes'
-        ? user.blocked
-        : !user.blocked
-      : true;
-    return matchesType && matchesBlocked;
-  });
-});
 
-const paginatedUsers = computed(() => {
-  const start = (currentPage.value - 1) * itemsPerPage.value;
-  const end = start + itemsPerPage.value;
-  return filteredUsers.value.slice(start, end);
-});
-
-const totalPages = computed(() => {
-  const total = filteredUsers.value.length;
-  return Math.ceil(total / itemsPerPage.value);
-});
-
-watch([filterType, filterBlocked], () => {
-  currentPage.value = 1; // Reinicia para a primeira página ao alterar os filtros
-});
-
-const nextPage = () => {
-  if (currentPage.value < totalPages.value) {
-    currentPage.value++;
-  }
-};
-
-const prevPage = () => {
-  if (currentPage.value > 1) {
-    currentPage.value--;
-  }
+const updateFilters = () => {
+  console.log("TESTE",filterBlocked.value);
+  console.log("TESTE",filterType.value);
+  emit('fetchUsers',
+    1, // Reinicia na primeira página ao aplicar filtros
+    props.itemsPerPage,
+    filterType.value,
+    filterBlocked.value,
+  );
 };
 
 const handleViewTransactions = (user) => {
   emit('viewTransactions', user);
 };
+
 const handleViewGame = (user) => {
   emit('viewGames', user);
 };
+
+const nextPage = () => {
+  if (props.currentPage < Math.ceil(props.total / props.itemsPerPage)) {
+    emit('fetchUsers', props.currentPage + 1, props.itemsPerPage, filterType.value, filterBlocked.value);  
+  }
+  console.log(props.currentPage);
+};
+
+const prevPage = () => {
+  if (props.currentPage > 1) {
+    emit('fetchUsers', props.currentPage - 1, props.itemsPerPage, filterType.value, filterBlocked.value);  
+  }
+};
+
+
 </script>
 
 <template>
   <div class="bg-gray-800 text-black p-4 rounded-lg w-full max-w-screen-lg shadow-lg">
-
     <div class="mb-2 flex justify-between items-center">
       <div>
         <label for="filterType" class="block text-white mb-1">User Type</label>
-        <select id="filterType" v-model="filterType" class="px-3 py-2 border rounded-lg" >
-          <option value="">All</option>
+        <select id="filterType" v-model="filterType" @change="updateFilters" class="px-3 py-2 border rounded-lg">
+          <option value="All">All</option>
           <option value="A">Administrator</option>
           <option value="P">Player</option>
         </select>
@@ -79,8 +77,8 @@ const handleViewGame = (user) => {
       <h2 class="text-xl text-center font-semibold text-white">Users</h2>
       <div>
         <label for="filterBlocked" class="block text-white mb-1">Blocked</label>
-        <select id="filterBlocked" v-model="filterBlocked" class="px-3 py-2 border rounded-lg" >
-          <option value="">All</option>
+        <select id="filterBlocked" v-model="filterBlocked" @change="updateFilters" class="px-3 py-2 border rounded-lg">
+          <option value="All">All</option>
           <option value="Yes">Yes</option>
           <option value="No">No</option>
         </select>
@@ -99,22 +97,21 @@ const handleViewGame = (user) => {
         </tr>
       </thead>
       <tbody>
-        <User v-for="user in paginatedUsers" :key="user.nickname" :user="user" @viewTransactions="handleViewTransactions" @viewGames="handleViewGame"/>
-        <tr v-if="paginatedUsers.length === 0">
+        <User v-for="user in props.users" :key="user.nickname" :user="user" @viewTransactions="handleViewTransactions" @viewGames="handleViewGame"/>
+        <tr v-if="props.users.length === 0">
           <td colspan="6" class="text-center text-gray-500 p-4">No users found.</td>
         </tr>
       </tbody>
     </table>
-  
-
     <div class="flex justify-center mt-4">
-      <button class="px-4 py-2 mx-1 bg-gray-700 text-white rounded hover:bg-gray-600" @click="prevPage" :disabled="currentPage === 1">
+      <button class="px-4 py-2 mx-1 bg-gray-700 text-white rounded hover:bg-gray-600" @click="prevPage">
         Prev
       </button>
       <span class="px-3 py-2 mx-1 text-white">
-        Page {{ currentPage }} of {{ totalPages }}
+        Page {{ currentPage }} of {{ Math.ceil(total / itemsPerPage) }}
       </span>
-      <button class="px-4 py-2 mx-1 bg-gray-700 text-white rounded hover:bg-gray-600" @click="nextPage" :disabled="currentPage === totalPages">
+
+      <button class="px-4 py-2 mx-1 bg-gray-700 text-white rounded hover:bg-gray-600" @click="nextPage">
         Next
       </button>
     </div>

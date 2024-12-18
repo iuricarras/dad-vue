@@ -11,50 +11,58 @@ const props = defineProps({
 
 const userStore = useUserStore();
 const games = ref([]);
-const filteredGames = ref([]);
+const totalGames = ref(0);
 const currentPage = ref(1);
 const itemsPerPage = ref(10);
 const selectedType = ref('');
 const selectedStatus = ref('');
 
-
-
 const totalPages = computed(() => {
-  return Math.ceil(filteredGames.value.length / itemsPerPage.value);
+  return Math.ceil(totalGames.value / itemsPerPage.value);
 });
 
-const paginatedGames = computed(() => {
-  const start = (currentPage.value - 1) * itemsPerPage.value;
-  const end = start + itemsPerPage.value;
-  return filteredGames.value.slice(start, end);
-});
 
-const filterGames = () => {
-  currentPage.value = 1;
-
-  filteredGames.value = games.value.filter((game) => {
-    const matchesType = selectedType.value ? game.type === selectedType.value : true;
-    const matchesStatus = selectedStatus.value ? game.status === selectedStatus.value : true;
-    return matchesType && matchesStatus;
-  });
+const fetchGames = async () => {
+  try {
+    const { games: fetchedGames, total } = await userStore.fetchUserGames(
+      props.id,
+      currentPage.value,
+      itemsPerPage.value,
+      selectedType.value,
+      selectedStatus.value
+    );
+    games.value = fetchedGames;
+    totalGames.value = total;
+  } catch (error) {
+    console.error("Error fetching games:", error);
+  }
 };
 
-onMounted(async () => {
-  games.value = await userStore.fetchUserGames(props.id);
-  filteredGames.value = games.value;
-});
 
-const prevPage = () => {
+const filterGames = async () => {
+  currentPage.value = 1;
+  await fetchGames();
+};
+
+
+const prevPage = async () => {
   if (currentPage.value > 1) {
     currentPage.value--;
+    await fetchGames();
   }
 };
 
-const nextPage = () => {
+const nextPage = async () => {
   if (currentPage.value < totalPages.value) {
     currentPage.value++;
+    await fetchGames();
   }
 };
+
+
+onMounted(async () => {
+  await fetchGames();
+});
 </script>
 
 <template>
@@ -106,7 +114,7 @@ const nextPage = () => {
       </thead>
       <tbody>
         <tr
-          v-for="game in paginatedGames"
+          v-for="game in games"
           :key="game.id"
           class="odd:bg-gray-800 even:bg-gray-700"
         >
@@ -132,7 +140,7 @@ const nextPage = () => {
           <td class="border border-gray-700 px-2 py-2 text-xs">{{ game.total_time || 'N/A' }}</td>
           <td class="border border-gray-700 px-2 py-2 text-xs">{{ game.board.board_cols+'x'+ game.board.board_rows}}</td>
         </tr>
-        <tr v-if="filteredGames.length === 0">
+        <tr v-if="games.length === 0">
           <td colspan="8" class="text-center text-gray-500 p-4">
             No games found for this user.
           </td>
@@ -140,7 +148,6 @@ const nextPage = () => {
       </tbody>
     </table>
 
-    <!-- Paginação -->
     <div class="flex justify-center mt-4">
       <button
         class="px-4 py-2 mx-1 bg-gray-700 text-white rounded hover:bg-gray-600 text-xs"
@@ -162,4 +169,5 @@ const nextPage = () => {
     </div>
   </div>
 </template>
+
 

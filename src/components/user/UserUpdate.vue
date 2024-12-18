@@ -36,7 +36,7 @@ const update = async () => {
   const jsonToSend = credentials.value
   console.log("!!!JSON!!!", storeAuth.id, jsonToSend)
   await storeUserUpdate.updateUser(storeAuth.id, jsonToSend)
-  refreshPage();
+  //refreshPage();
 }
 
 
