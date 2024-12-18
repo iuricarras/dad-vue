@@ -22,13 +22,12 @@ const storeAuth = useAuthStore()
 const storeError = useErrorStore()
 const storeUser = useUserStore()
 
-// Valores a enviar
+// valores a enviar
 const credentials = ref({
   })
 
 const cancel = () => {
-    //router.back()
-    router.push('/users')
+  router.push('/users')
 }
 
 // cria o user para o servidor
@@ -36,7 +35,6 @@ const create = async () => {
   const jsonToSend = credentials.value
   console.log("!!!JSON!!!", jsonToSend)
   await storeUser.createAdmin(jsonToSend)
-  router.push('/users')
 }
 
 
@@ -78,11 +76,9 @@ const disabled = ref(true);
 
 onMounted(() => {
   setTimeout(() => {
-    disabled.value = false; // Ativa os campos após um curto intervalo
+    disabled.value = false; // ativa os campos após um curto intervalo
   }, 500); // 500ms é suficiente para evitar
 })
-
-
 </script>
 
 
