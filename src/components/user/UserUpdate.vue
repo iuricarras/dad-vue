@@ -43,7 +43,6 @@ const update = async () => {
   const jsonToSend = credentials.value
   console.log("!!!JSON!!!", storeAuth.id, jsonToSend)
   await storeUser.updateUserAll(storeAuth.id, jsonToSend)
-  router.back()
 }
 
 // apagar o user no servidor
