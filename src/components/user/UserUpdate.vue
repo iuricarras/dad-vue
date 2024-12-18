@@ -49,7 +49,9 @@ const update = async () => {
 // apagar o user no servidor
 const deleteUser = async () => {
   const jsonToSend = credentials_delete.value
-  storeAuth.logout()
+  await storeUser.checkBeforeDelete(storeAuth.id, jsonToSend)
+  storeAuth.clearUser()
+  router.push('/home')
 }
 
 

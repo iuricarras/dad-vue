@@ -222,6 +222,30 @@ export const useUserStore = defineStore('user', () => {
     }
   }
 
+
+
+
+  const checkBeforeDelete = async (userId, updatedData) => {
+    storeError.resetMessages(); 
+    try {
+      const response = await axios.post(`/users/${userId}/delete`, updatedData);
+      const message = response.status === 204 
+        ? 'User permanently deleted successfully.' 
+        : 'User has transactions or games, soft deleted.';
+        
+      toast({
+        title: 'Success!',
+        description: message,
+      });
+      return true;
+    } catch (e) {
+      storeError.setErrorMessages(e.response?.data?.message, e.response?.data?.errors, e.response?.status,"Error deleting user account!");
+      return false;
+    }
+  };
+
+
+
   const deleteUser = async (userId) => {
     storeError.resetMessages(); 
     try {
@@ -285,6 +309,7 @@ export const useUserStore = defineStore('user', () => {
     toggleBlockStatus,
     fetchPersonalScoreboard,
     fetchAuthenticatedGameHistory,
+    checkBeforeDelete,
     deleteUser,
     fetchUserGames,
   }
