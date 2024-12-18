@@ -46,12 +46,8 @@ export const useUserStore = defineStore('user', () => {
     }
   };
 
-
-
-
-
-
   const createUser = async (createData) => {
+    storeError.resetMessages();
     try {
       console.log("JSON-create2", createData)
       const response = await axios.post(`/users`, createData);
@@ -60,9 +56,14 @@ export const useUserStore = defineStore('user', () => {
         title: 'Success!',
         description: createdUser.data.nickname + ' : created successfully.',
       });
+      router.push({ name: 'login' });
       return createdUser;
     } catch (e) {
-        storeError.setErrorMessages(e.response?.data?.message, e.response?.data?.errors, e.response?.status, 'Error creating user!');
+       if(e.response?.status === 422){
+          storeError.setErrorMessages(e.response?.data?.message, e.response?.data?.errors, e.response?.status, 'Error creating user!');
+       }else{
+          toast({ title: 'Email or Nickname already exists, please change it', variant: 'destructive' });
+       }
         return null;
     }
   };

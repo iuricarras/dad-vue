@@ -33,9 +33,7 @@ const cancel = () => {
 // cria o user para o servidor
 const create = async () => {
   const jsonToSend = credentials.value
-  console.log("!!!JSON!!!", jsonToSend)
   await storeUser.createUser(jsonToSend)
-  router.back()
 }
 
 
