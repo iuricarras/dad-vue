@@ -48,7 +48,7 @@ const buyItem = (item) => {
 
 <template>
   <div class="max-w-7xl mx-auto p-6">
-    <h1 class="text-3xl font-semibold text-center mb-8">Welcome to the Coin Shop</h1>
+    <h1 class="text-3xl font-semibold text-white text-center mb-8">Welcome to the Coin Shop</h1>
 
     <div class="mt-20 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
       <div 
@@ -60,7 +60,7 @@ const buyItem = (item) => {
           'rounded-lg shadow-md p-4 hover:shadow-lg transition-all': true
         }">
         <h2 class="text-xl font-semibold mb-2">{{ item.name }}</h2>
-        <p class="text-gray-700 mb-4">{{ item.description }}</p>
+        <p class="text-black mb-4">{{ item.description }}</p>
         <div class="flex justify-between items-center">
           <span class="text-lg font-semibold">{{ item.price }} $</span>
           <button v-if="storeAuth.user?storeAuth.user.type=='P': false"

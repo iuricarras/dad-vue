@@ -13,9 +13,8 @@ import { useAuthStore } from '@/stores/auth'
 import MultiPlayer from '@/components/multiplayer/MultiPlayer.vue'
 import LobbyRoom from '@/components/multiplayer/LobbyRoom.vue'
 import Game from '@/components/multiplayer/Game.vue'
-
-
-
+import UserCreate from '@/components/user/UserCreate.vue'
+import UserCreateAdmin from '@/components/user/UserCreateAdmin.vue'
 
 
 const router = createRouter({
@@ -89,6 +88,16 @@ const router = createRouter({
       name: 'Game',
       component: Game,
     },
+    {
+      path: '/register',
+      name: 'register',
+      component: UserCreate,
+    },
+    {
+      path: '/registerAdmin',
+      name: 'registerAdmin',
+      component: UserCreateAdmin,
+    },
 
   ]
 })
@@ -102,11 +111,12 @@ router.beforeEach(async (to, from, next) => {
       await storeAuth.restoreToken()
   }
   
-  const requiresAuth = ['users', 'Transactions', 'Scoreboard', 'GameHistory', 'MultiPlayer'];
+  const requiresAuth = ['users', 'Transactions', 'Scoreboard', 'GameHistory', 'MultiPlayer','update'];
   const admin = ['users'];
   const player = ['Scoreboard','Transactions','GameHistory']; 
-  const adminRestricted = ['SinglePlayer'];
   const notAccessible = ['Game']
+  const adminRestricted = ['SinglePlayer', 'MultiPlayer', 'register'];
+  const user = ['register'];
   
   if(notAccessible.includes(to.name) && from.name != 'Lobby'){
     next({ name: 'home' });
@@ -135,6 +145,11 @@ router.beforeEach(async (to, from, next) => {
   }
 
   if (adminRestricted.includes(to.name) && storeAuth.user && storeAuth.user.type === 'A') {
+    next({ name: 'home' });
+    return;
+  }
+  
+  if (user.includes(to.name) && storeAuth.user) {
     next({ name: 'home' });
     return;
   }

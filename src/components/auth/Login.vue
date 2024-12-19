@@ -50,7 +50,7 @@ const login = () => {
           </div>
           <div class="flex flex-col space-y-1.5">
             <Label for="password">Password</Label>
-            <Input id="password" type="password" v-model="credentials.password" />
+            <Input id="password" type="password" placeholder="Password" v-model="credentials.password" />
             <ErrorMessage :errorMessage="storeError.fieldMessage('password')"></ErrorMessage>
           </div>
         </div>

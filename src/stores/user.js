@@ -2,6 +2,7 @@ import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
 import { useErrorStore } from '@/stores/error'
+import { useAuthStore } from '@/stores/auth'
 import { useRouter } from 'vue-router'
 import { useToast } from '@/components/ui/toast/use-toast'
 import { ToastAction } from '@/components/ui/toast'
@@ -9,6 +10,7 @@ import { h } from 'vue'
 
 export const useUserStore = defineStore('user', () => {
   const router = useRouter()
+  const storeAuth = useAuthStore()
   const { toast } = useToast()
   const storeError = useErrorStore()
 
@@ -20,18 +22,20 @@ export const useUserStore = defineStore('user', () => {
   })
 
 
-  const fetchUsers = async () => {
+  const fetchUsers = async (page, itemsPerPage, filterType = '', filterBlocked = '') => {
     storeError.resetMessages();
+    console.log(filterType, filterBlocked)
     try {
-      const response = await axios.get('users');
-      if (Array.isArray(response.data)) {
-        users.value = response.data; 
-      } else if (response.data?.data && Array.isArray(response.data.data)) {
-        users.value = response.data.data;
-      } else {
-        console.error('Invalid data format:', response.data);
-        users.value = []; 
-      }
+      const response = await axios.get('users', {
+        params: {
+          page,
+          itemsPerPage,
+          blocked: filterBlocked,
+          type: filterType,
+        },
+      });
+      users.value = response.data.users
+      return response.data;
     } catch (e) {
       storeError.setErrorMessages(
         e.response?.data?.message,
@@ -41,6 +45,87 @@ export const useUserStore = defineStore('user', () => {
       );
     }
   };
+
+  const createUser = async (createData) => {
+    storeError.resetMessages();
+    try {
+      console.log("JSON-create2", createData)
+      const response = await axios.post(`/users`, createData);
+      const createdUser = response.data;
+      toast({
+        title: 'Success!',
+        description: createdUser.data.nickname + ' : created successfully.',
+      });
+      router.push({ name: 'login' });
+      return createdUser;
+    } catch (e) {
+      if(e.response?.status === 422){
+        storeError.setErrorMessages(e.response?.data?.message, e.response?.data?.errors, e.response?.status, 'Error creating user!');
+      }else{
+        toast({ title: 'Email or Nickname already exists, please change it', variant: 'destructive' });
+      }
+        return null;
+    }
+  };
+
+
+
+
+  const createAdmin = async (createData) => {
+    try {
+      console.log("JSON-createAdmin", createData)
+      const response = await axios.post(`/users/admin`, createData);
+      const createdAdmin = response.data;
+      toast({
+        title: 'Success!',
+        description: createdAdmin.data.nickname + ' : created successfully.',
+      });
+      router.push({ name: 'users' });
+      return createdAdmin;
+    } catch (e) {
+      if(e.response?.status === 422){
+        storeError.setErrorMessages(e.response?.data?.message, e.response?.data?.errors, e.response?.status, 'Error creating user!');
+      }else{
+        toast({ title: 'Email or Nickname already exists, please change it', variant: 'destructive' });
+      }
+        return null;
+    }
+  };
+
+
+  const updateUserAll = async (userId, updatedData) => {
+    try {
+      // Remove campos vazios do objeto JSON
+      Object.keys(updatedData).forEach((key) => {
+        if (updatedData[key] === '' || updatedData[key] === null || 
+          updatedData[key] === undefined) {
+            delete updatedData[key];
+        }
+      });
+      const response = await axios.patch(`/users/${userId}`, updatedData);
+      const updatedUser = response.data;
+      toast({
+        title: 'Success!',
+        description: updatedUser.data.nickname + ' : updated successfully.',
+      });
+      console.log("!!!StoreAuth!!!", storeAuth.user)
+      console.log("!!!UpdatedUser!!!", updatedUser.data)
+
+      storeAuth.user = updatedUser.data
+      //storeAuth.user.photo_filename = updatedUser.data.photo_filename
+
+      router.push({ name: 'home' })
+
+      return updatedUser;
+    } catch (e) {
+        storeError.setErrorMessages(e.response?.data?.message, e.response?.data?.errors, e.response?.status, 'Error updating user!');
+        return null;
+    }
+  };
+
+
+
+
   
   const updateUser = async (userId, updatedData) => {
     try {
@@ -76,39 +161,23 @@ export const useUserStore = defineStore('user', () => {
     }
   }
 
-
-  const fetchUserTransactions = async (userId) => {
-    storeError.resetMessages()
+  const fetchUserGames = async (userId, page = 1, itemsPerPage = 10, type = '', status = '') => {
+    storeError.resetMessages();
     try {
-      const response = await axios.get(`/users/${userId}/transactions`)
-      return response.data 
+        const response = await axios.get(`/users/${userId}/games`, {
+            params: { page, itemsPerPage, type, status },
+        });
+        return response.data;
     } catch (e) {
-      storeError.setErrorMessages(
-        e.response?.data?.message,
-        e.response?.data?.errors,
-        e.response?.status,
-        'Error fetching user transactions!'
-      )
-      return []
+        storeError.setErrorMessages(
+            e.response?.data?.message,
+            e.response?.data?.errors,
+            e.response?.status,
+            'Error fetching user games!'
+        );
+        return { games: [], total: 0 };
     }
-  }
-  const fetchUserGames = async (userId) => {
-    storeError.resetMessages()
-    try {
-      const response = await axios.get(`/users/${userId}/games`)
-      console.log(response.data)
-      return response.data 
-    } catch (e) {
-      storeError.setErrorMessages(
-        e.response?.data?.message,
-        e.response?.data?.errors,
-        e.response?.status,
-        'Error fetching user transactions!'
-      )
-      return []
-    }
-  }
-
+};
 
   const fetchUserSingleplayerGames = async (userId) => {
     storeError.resetMessages()
@@ -164,6 +233,46 @@ export const useUserStore = defineStore('user', () => {
     }
   }
 
+
+
+
+  const checkBeforeDelete = async (userId, updatedData) => {
+    storeError.resetMessages(); 
+    try {
+      const response = await axios.post(`/users/${userId}/delete`, updatedData);
+      const message = response.status
+      if (message === 200 || 204){
+        toast({
+          title: 'Success!',
+          description: 'Conta apagada com sucesso.',
+          status: 'sucess'
+        });
+      }
+      router.push({ name: 'home' })
+      return true
+    } catch (e) {
+      const statusCode = e.response?.status;
+      if (statusCode === 403) {
+        toast({
+          title: 'Erro!',
+          description: 'Senha incorreta! Tente novamente.',
+          status: 'error',
+          variant: 'destructive',
+        });
+      } else{
+        toast({
+          title: 'Erro!',
+          description: e.response?.data?.message || 'Erro ao apagar a conta. Tente novamente mais tarde.',
+          status: 'error',
+          variant: 'destructive',
+        });
+      }
+      return false;
+    }
+  };
+
+
+
   const deleteUser = async (userId) => {
     storeError.resetMessages(); 
     try {
@@ -202,15 +311,15 @@ export const useUserStore = defineStore('user', () => {
     }
   };
 
-  const fetchAuthenticatedGameHistory = async () => {
-    try {
-        const response = await axios.get('/games-history'); 
-        return response.data;
-    } catch (error) {
-        console.error('Error fetching authenticated game history:', error);
-        return [];
-    }
-};
+  const fetchAuthenticatedGameHistory = async (params) => {
+    const { page, itemsPerPage, type, board } = params;
+    const response = await axios.get('/games-history', {
+      params: { page, itemsPerPage, type, board },
+    });
+    return response.data;
+  };
+  
+  
   
   return {
     users,
@@ -218,13 +327,16 @@ export const useUserStore = defineStore('user', () => {
     totalUsers,
     fetchUsers,
     fetchUser,
-    fetchUserTransactions,
     fetchUserSingleplayerGames,
     fetchUserMultiplayerGames,
+    createUser,
+    createAdmin,
+    updateUserAll,
     updateUser,
     toggleBlockStatus,
     fetchPersonalScoreboard,
     fetchAuthenticatedGameHistory,
+    checkBeforeDelete,
     deleteUser,
     fetchUserGames,
   }

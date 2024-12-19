@@ -7,24 +7,40 @@ const userStore = useUserStore();
 const gameStore = useGameStore();
 
 const gameHistory = ref([]);
-const filteredGameHistory = ref([]);
 const isLoading = ref(false);
 const errorMessage = ref('');
 const currentPage = ref(1);
 const itemsPerPage = ref(10);
+const filteredGameHistory = ref([]);
 const selectedType = ref('');
 const selectedBoard = ref('');
 const boards = ref([]);
+const totalPages = ref(1);
 
 const fetchGameHistory = async () => {
+  isLoading.value = true;
+  errorMessage.value = ''; 
   try {
-    const response = await userStore.fetchAuthenticatedGameHistory();
-    gameHistory.value = response;
-    filteredGameHistory.value = response;
-  } catch {
-    console.error('Failed to fetch game history.');
+    const response = await userStore.fetchAuthenticatedGameHistory({
+      page: currentPage.value,
+      itemsPerPage: itemsPerPage.value,
+      type: selectedType.value || null,
+      board: selectedBoard.value || null,
+    });
+    gameHistory.value = response.games;
+    filteredGameHistory.value = response.games;
+
+    if (response.total) {
+      totalPages.value = Math.ceil(response.total / itemsPerPage.value);
+    }
+  } catch (error) {
+    console.error('Failed to load game history.', error);
+    errorMessage.value = 'Failed to load game history.';
+  } finally {
+    isLoading.value = false;
   }
 };
+
 
 const fetchBoards = async () => {
   try {
@@ -35,35 +51,23 @@ const fetchBoards = async () => {
   }
 };
 
-const filterGames = () => {
-  currentPage.value = 1;
-
-  filteredGameHistory.value = gameHistory.value.filter((game) => {
-    const matchesType = selectedType.value ? game.type === selectedType.value : true;
-    const matchesBoard = selectedBoard.value ? game.board.id === parseInt(selectedBoard.value) : true;
-    return matchesType && matchesBoard;
-  });
+const filterGames = async () => {
+  currentPage.value = 1; // Reinicia para a primeira página
+  await fetchGameHistory(); // Faz um novo pedido à API com os filtros atualizados
 };
 
-const paginatedGameHistory = computed(() => {
-  const start = (currentPage.value - 1) * itemsPerPage.value;
-  const end = start + itemsPerPage.value;
-  return filteredGameHistory.value.slice(start, end);
-});
 
-const totalPages = computed(() => {
-  return Math.ceil(filteredGameHistory.value.length / itemsPerPage.value);
-});
-
-const nextPage = () => {
+const nextPage = async () => {
   if (currentPage.value < totalPages.value) {
     currentPage.value++;
+    await fetchGameHistory();
   }
 };
 
-const prevPage = () => {
+const prevPage = async () => {
   if (currentPage.value > 1) {
     currentPage.value--;
+    await fetchGameHistory();
   }
 };
 
@@ -74,9 +78,8 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="p-6 bg-gray-800 text-white rounded-lg mx-auto max-w-6xl mt-10">
-    <h2 class="text-xl mb-4">Game History</h2>
-
+  <h2 class="text-2xl font-bold text-white mb-4 p-4">Game History</h2>
+  <div class="p-6 bg-gray-800 text-white rounded-lg mx-auto max-w-6xl mt-1">
     <div class="flex space-x-4 mb-4">
       <div>
         <label for="game-type" class="block text-sm mb-1">Filter by Game Type:</label>
@@ -93,7 +96,7 @@ onMounted(async () => {
       </div>
 
       <div>
-        <label for="board-filter" class="block text-sm mb-1">Filter by Board:</label>
+        <label for="board-filter" class="block text-sm mb-1 ">Filter by Board:</label>
         <select
           id="board-filter"
           v-model="selectedBoard"
@@ -107,16 +110,13 @@ onMounted(async () => {
         </select>
       </div>
     </div>
-
-    <div v-if="isLoading" class="text-center text-gray-500 p-4">
-      Loading...
-    </div>
+    
     <div v-if="errorMessage" class="text-center text-red-500 p-4">
       {{ errorMessage }}
     </div>
 
     <div v-else class="overflow-x-auto">
-      <table class="w-full text-left border-collapse border border-gray-700  mb-4 ">
+      <table class="w-full text-left border-collapse border border-gray-700 mb-4">
         <thead>
           <tr>
             <th class="border border-gray-700 px-2 py-2">Created By</th>
@@ -131,7 +131,7 @@ onMounted(async () => {
         </thead>
         <tbody>
           <tr
-            v-for="game in paginatedGameHistory"
+            v-for="game in filteredGameHistory"
             :key="game.id"
             class="odd:bg-gray-700 even:bg-gray-600"
           >
@@ -160,7 +160,7 @@ onMounted(async () => {
               {{ game.type === 'S' ? 'Single-Player' : 'Multiplayer' }}
             </td>
           </tr>
-          <tr v-if="paginatedGameHistory.length === 0">
+          <tr v-if="gameHistory.length === 0">
             <td colspan="7" class="text-center text-gray-500 p-4">
               No games found for this user.
             </td>
