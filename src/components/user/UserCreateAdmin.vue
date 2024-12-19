@@ -74,7 +74,7 @@ onMounted(() => {
 <template>
   <Card
     v-show="storeAuth.user.type === 'A'"
-    class="w-[450px] mx-auto my-8 p-4 px-8 bg-gray-800 text-white rounded-md shadow-md border-0"
+    class="w-[450px] mx-auto my-8 p-4 px-8 bg-gray-800 text-white rounded-md shadow-md border-0 fade-in"
   >
     <CardHeader>
       <CardTitle>Create Administrator</CardTitle>
@@ -183,7 +183,29 @@ onMounted(() => {
   </Card>
 </template>
 
-<style>
+<style scoped>
+/* Animação fade-in para o conteúdo */
+.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeIn 1s forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Animação de fade-in para os modais */
+.fade-in:nth-child(1) {
+  animation-delay: 0.2s;
+}
+.fade-in:nth-child(2) {
+  animation-delay: 0.4s;
+}
+
 .drag-and-drop {
   border: 2px dashed #555;
   padding: 20px;
@@ -196,3 +218,4 @@ onMounted(() => {
   margin-top: 10px;
 }
 </style>
+

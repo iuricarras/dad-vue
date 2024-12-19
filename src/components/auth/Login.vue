@@ -34,7 +34,9 @@ const login = () => {
 
 </script>
 <template>
-  <Card class="w-[450px] mx-auto my-8 p-4 px-8 bg-gray-800 text-white rounded-md shadow-md border-0">
+  <Card
+    class="w-[450px] mx-auto my-8 p-4 px-8 bg-gray-800 text-white rounded-md shadow-md border-0 fade-in"
+  >
     <CardHeader>
       <CardTitle>Login</CardTitle>
       <CardDescription class="text-gray-400">
@@ -85,3 +87,26 @@ const login = () => {
     </CardFooter>
   </Card>
 </template>
+
+<style scoped>
+.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeIn 1s forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in:nth-child(1) {
+  animation-delay: 0.2s;
+}
+.fade-in:nth-child(2) {
+  animation-delay: 0.4s;
+}
+</style>
+
