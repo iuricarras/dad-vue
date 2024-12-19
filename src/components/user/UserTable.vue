@@ -74,6 +74,23 @@ const prevPage = () => {
       </div>
       <h2 class="text-xl text-center font-semibold text-white">Users</h2>
       <div>
+        <RouterLink
+        to="/registerAdmin"
+        class="text-sm font-medium hover:text-blue-500 px-3 py-2 rounded-md transition-colors"
+        v-slot="{ isActive }">
+
+
+        <button
+          :class="{ 'bg-blue-600 text-white': isActive }"
+          class="bg-blue-500 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-600
+          focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all">
+          Register Admin
+        </button>
+      </RouterLink>
+      </div>
+      
+      
+      <div>
         <label for="filterBlocked" class="block text-white mb-1">Blocked</label>
         <select id="filterBlocked" v-model="filterBlocked" @change="updateFilters" class="px-3 py-2 border rounded-lg">
           <option value="All">All</option>

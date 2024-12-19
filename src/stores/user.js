@@ -46,12 +46,8 @@ export const useUserStore = defineStore('user', () => {
     }
   };
 
-
-
-
-
-
   const createUser = async (createData) => {
+    storeError.resetMessages();
     try {
       console.log("JSON-create2", createData)
       const response = await axios.post(`/users`, createData);
@@ -60,9 +56,38 @@ export const useUserStore = defineStore('user', () => {
         title: 'Success!',
         description: createdUser.data.nickname + ' : created successfully.',
       });
+      router.push({ name: 'login' });
       return createdUser;
     } catch (e) {
+      if(e.response?.status === 422){
         storeError.setErrorMessages(e.response?.data?.message, e.response?.data?.errors, e.response?.status, 'Error creating user!');
+      }else{
+        toast({ title: 'Email or Nickname already exists, please change it', variant: 'destructive' });
+      }
+        return null;
+    }
+  };
+
+
+
+
+  const createAdmin = async (createData) => {
+    try {
+      console.log("JSON-createAdmin", createData)
+      const response = await axios.post(`/users/admin`, createData);
+      const createdAdmin = response.data;
+      toast({
+        title: 'Success!',
+        description: createdAdmin.data.nickname + ' : created successfully.',
+      });
+      router.push({ name: 'users' });
+      return createdAdmin;
+    } catch (e) {
+      if(e.response?.status === 422){
+        storeError.setErrorMessages(e.response?.data?.message, e.response?.data?.errors, e.response?.status, 'Error creating user!');
+      }else{
+        toast({ title: 'Email or Nickname already exists, please change it', variant: 'destructive' });
+      }
         return null;
     }
   };
@@ -215,17 +240,33 @@ export const useUserStore = defineStore('user', () => {
     storeError.resetMessages(); 
     try {
       const response = await axios.post(`/users/${userId}/delete`, updatedData);
-      const message = response.status === 204 
-        ? 'User permanently deleted successfully.' 
-        : 'User has transactions or games, soft deleted.';
-        
-      toast({
-        title: 'Success!',
-        description: message,
-      });
-      return true;
+      const message = response.status
+      if (message === 200 || 204){
+        toast({
+          title: 'Success!',
+          description: 'Conta apagada com sucesso.',
+          status: 'sucess'
+        });
+      }
+      router.push({ name: 'home' })
+      return true
     } catch (e) {
-      storeError.setErrorMessages(e.response?.data?.message, e.response?.data?.errors, e.response?.status,"Error deleting user account!");
+      const statusCode = e.response?.status;
+      if (statusCode === 403) {
+        toast({
+          title: 'Erro!',
+          description: 'Senha incorreta! Tente novamente.',
+          status: 'error',
+          variant: 'destructive',
+        });
+      } else{
+        toast({
+          title: 'Erro!',
+          description: e.response?.data?.message || 'Erro ao apagar a conta. Tente novamente mais tarde.',
+          status: 'error',
+          variant: 'destructive',
+        });
+      }
       return false;
     }
   };
@@ -289,6 +330,7 @@ export const useUserStore = defineStore('user', () => {
     fetchUserSingleplayerGames,
     fetchUserMultiplayerGames,
     createUser,
+    createAdmin,
     updateUserAll,
     updateUser,
     toggleBlockStatus,

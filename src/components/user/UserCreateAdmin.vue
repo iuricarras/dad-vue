@@ -27,13 +27,14 @@ const credentials = ref({
   })
 
 const cancel = () => {
-  router.push('/home')
+  router.push('/users')
 }
 
-// cria o user no servidor
+// cria o user para o servidor
 const create = async () => {
   const jsonToSend = credentials.value
-  await storeUser.createUser(jsonToSend)
+  console.log("!!!JSON!!!", jsonToSend)
+  await storeUser.createAdmin(jsonToSend)
 }
 
 
@@ -82,9 +83,9 @@ onMounted(() => {
 
 
 <template>
-  <Card v-show="!storeAuth.user" class="w-[450px] mx-auto my-8 p-4 px-8">
+  <Card v-show="storeAuth.user.type === 'A'" class="w-[450px] mx-auto my-8 p-4 px-8">
     <CardHeader>
-      <CardTitle>Criar Utilizador</CardTitle>
+      <CardTitle>Criar Administrador</CardTitle>
       <CardDescription>Insira os seus dados.</CardDescription>
     </CardHeader>
     <CardContent>
