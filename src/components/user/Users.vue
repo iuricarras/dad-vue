@@ -107,7 +107,6 @@ const closeModal = () => {
       </div>
     </div>
 
-    <!-- Modal para jogos -->
     <div 
       v-if="activeModal === 'games'" 
       class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 fade-in"
@@ -131,7 +130,6 @@ const closeModal = () => {
 </template>
 
 <style scoped>
-/* Animação fade-in para o conteúdo */
 .fade-in {
   opacity: 0;
   transform: translateY(20px);
@@ -145,7 +143,6 @@ const closeModal = () => {
   }
 }
 
-/* Animação de fade-in para os modais */
 .fade-in:nth-child(1) {
   animation-delay: 0.2s;
 }
