@@ -19,11 +19,11 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="p-6 bg-gray-800 text-white rounded-lg mx-auto max-w-4xl mt-10">
-    <h2 class="text-2xl font-bold text-white-800 mb-4">Personal Scoreboard</h2>
+  <div class="p-6 bg-gray-800 text-white rounded-lg mx-auto max-w-4xl mt-10 fade-in">
+    <h2 class="text-2xl font-bold text-white mb-4 fade-in">Personal Scoreboard</h2>
 
-    <h3 class="text-lg mb-2">Singleplayer</h3>
-    <table class="w-full text-left border-collapse border border-gray-700 table-fixed mb-4">
+    <h3 class="text-lg mb-2 fade-in">Singleplayer</h3>
+    <table class="w-full text-left border-collapse border border-gray-700 table-fixed mb-4 fade-in">
       <thead>
         <tr>
           <th class="border border-gray-700 px-4 py-2">Board</th>
@@ -35,7 +35,7 @@ onMounted(async () => {
         <tr
           v-for="data in scoreboard.single_player"
           :key="data.board.id"
-          class="odd:bg-gray-700 even:bg-gray-600"
+          class="odd:bg-gray-700 even:bg-gray-600 fade-in"
         >
           <td class="border border-gray-700 px-4 py-2">
             {{ data.board.board_cols }}x{{ data.board.board_rows }}
@@ -43,7 +43,7 @@ onMounted(async () => {
           <td class="border border-gray-700 px-4 py-2">{{ data.best_time }}s</td>
           <td class="border border-gray-700 px-4 py-2">{{ data.min_turns || 'N/A' }}</td>
         </tr>
-        <tr v-if="scoreboard.single_player.length === 0">
+        <tr v-if="scoreboard.single_player.length === 0" class="fade-in">
           <td colspan="3" class="text-center text-gray-500 p-4">
             No singleplayer games found.
           </td>
@@ -51,8 +51,8 @@ onMounted(async () => {
       </tbody>
     </table>
 
-    <h3 class="text-lg mb-2">Multiplayer</h3>
-    <table class="w-full text-left border-collapse border border-gray-700 table-fixed">
+    <h3 class="text-lg mb-2 fade-in">Multiplayer</h3>
+    <table class="w-full text-left border-collapse border border-gray-700 table-fixed fade-in">
       <thead>
         <tr>
           <th class="border border-gray-700 px-4 py-2">Total Victories</th>
@@ -60,7 +60,7 @@ onMounted(async () => {
         </tr>
       </thead>
       <tbody>
-        <tr class="odd:bg-gray-700 even:bg-gray-600">
+        <tr class="odd:bg-gray-700 even:bg-gray-600 fade-in">
           <td class="border border-gray-700 px-4 py-2">{{ scoreboard.multiplayer.total_victories }}</td>
           <td class="border border-gray-700 px-4 py-2">{{ scoreboard.multiplayer.total_losses }}</td>
         </tr>
@@ -68,3 +68,18 @@ onMounted(async () => {
     </table>
   </div>
 </template>
+
+<style scoped>
+.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeIn 1s forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+</style>
