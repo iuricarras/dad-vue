@@ -1,5 +1,5 @@
 <script setup>
-import { ref, useTemplateRef, provide, onMounted } from 'vue';
+import { ref, useTemplateRef, provide, onMounted, onUnmounted } from 'vue';
 import { RouterView } from 'vue-router';
 import Toaster from '@/components/ui/toast/Toaster.vue';
 import { useAuthStore } from '@/stores/auth.js';
@@ -13,7 +13,7 @@ const storeAuth = useAuthStore();
 const showDropdown = ref(false);
 
 const audioRef = ref(null);
-const isMuted = ref(true); // Começa desligado (mutado)
+const isMuted = ref(true);
 
 const toggleDropdown = () => {
   showDropdown.value = !showDropdown.value;
@@ -23,21 +23,38 @@ const closeDropdown = () => {
   showDropdown.value = false;
 };
 
+const handleClickOutside = (event) => {
+  const dropdownElement = document.querySelector('.dropdown-menu');
+  const toggleElement = document.querySelector('.dropdown-toggle');
+  if (
+    dropdownElement &&
+    toggleElement &&
+    !dropdownElement.contains(event.target) &&
+    !toggleElement.contains(event.target)
+  ) {
+    closeDropdown();
+  }
+};
+
 onMounted(() => {
   if (audioRef.value) {
-    audioRef.value.volume = 0.05; // Diminui o volume para 5% (ajuste conforme necessário)
+    audioRef.value.volume = 0.05;
   }
+  document.addEventListener('click', handleClickOutside);
 });
 
+onUnmounted(() => {
+  document.removeEventListener('click', handleClickOutside);
+});
 
 const toggleMute = () => {
   if (audioRef.value) {
     if (isMuted.value) {
-      audioRef.value.play(); // Toca a música
+      audioRef.value.play();
     } else {
-      audioRef.value.pause(); // Pausa a música
+      audioRef.value.pause();
     }
-    isMuted.value = !isMuted.value; // Atualiza o estado
+    isMuted.value = !isMuted.value;
   }
 };
 
@@ -57,6 +74,7 @@ const logout = () => {
     `Are you sure you want to log out? You can still access your account later with your credentials.`
   );
 };
+
 </script>
 
 <template>
@@ -74,10 +92,8 @@ const logout = () => {
 
   <Toaster />
   
-  <!-- Áudio -->
   <audio ref="audioRef" :src="musica" loop></audio>
 
-  <!-- Botão de Ligar/Desligar Música -->
   <div 
   class="fixed bottom-4 right-4 rounded-lg shadow-lg z-[1]"
 >
@@ -231,7 +247,7 @@ const logout = () => {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  z-index: -1; /* Coloca o vídeo atrás do conteúdo */
+  z-index: -1;
 }
 
 .background-video {
@@ -240,13 +256,13 @@ const logout = () => {
   left: 50%;
   width: 100%;
   height: 100%;
-  object-fit: cover; /* Garante que o vídeo cubra todo o fundo */
+  object-fit: cover;
   transform: translate(-50%, -50%);
 }
 
 .content {
-  position: relative; /* Garante que o conteúdo principal fique acima do vídeo */
-  z-index: 1; /* Coloca o conteúdo acima do vídeo */
+  position: relative;
+  z-index: 1;
 }
 
 @keyframes shake {
