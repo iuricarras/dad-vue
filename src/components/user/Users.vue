@@ -73,7 +73,7 @@ const closeModal = () => {
 </script>
 
 <template>
-  <div class="flex items-center justify-center min-h-screen bg-gray-100">
+  <div class="flex items-center justify-center min-h-screen ">
     <UserTable 
       :users="userStore.users" 
       :total="total" 

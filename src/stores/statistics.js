@@ -13,6 +13,8 @@ export const useStatisticsStore = defineStore('statistics', () => {
     const gamesPerWeekData = ref([]);
     const purchasesPerWeekData = ref([]);
     const playerPurchases = ref(null);
+    const paymentTypeData = ref([]);
+    const paymentValuesData = ref([]);
 
     const statisticsLoaded = computed(() => {
         return totalUsers.value > 0 && totalGames.value > 0;
@@ -68,15 +70,33 @@ export const useStatisticsStore = defineStore('statistics', () => {
 
     const fetchPurchasesByPlayer = async (nickname) => {
         try {
-          const response = await axios.get('/statistics/purchases-by-player', {
-            params: { nickname },
-          });
-          playerPurchases.value = response.data.total_purchases;
+            const response = await axios.get('/statistics/purchases-by-player', {
+                params: { nickname },
+            });
+            playerPurchases.value = response.data.total_purchases;
         } catch (error) {
-          console.error('Erro ao buscar compras por jogador:', error);
-          playerPurchases.value = null;
+            console.error('Erro ao buscar compras por jogador:', error);
+            playerPurchases.value = null;
         }
-      };
+    };
+
+    const fetchPaymentTypes = async () => {
+        try {
+            const response = await axios.get('/statistics/payment-types');
+            paymentTypeData.value = response.data;
+        } catch (error) {
+            console.error('Erro ao buscar tipos de pagamento:', error);
+        }
+    };
+
+    const fetchPaymentValues = async () => {
+        try {
+            const response = await axios.get('/statistics/payment-value');
+            paymentValuesData.value = response.data;
+        } catch (error) {
+            console.error('Erro ao buscar valores de pagamento:', error);
+        }
+    }
 
     return {
         totalUsers,
@@ -87,13 +107,17 @@ export const useStatisticsStore = defineStore('statistics', () => {
         purchasesPerMonthData,
         gamesPerWeekData,
         purchasesPerWeekData,
+        playerPurchases,
+        paymentTypeData,
         statisticsLoaded,
-        playerPurchases, 
+        paymentValuesData,
         fetchStatistics,
         fetchGamesPerMonth,
         fetchPurchasesPerMonth,
         fetchGamesPerWeek,
         fetchPurchasesPerWeek,
         fetchPurchasesByPlayer,
+        fetchPaymentTypes,
+        fetchPaymentValues,
     };
 });

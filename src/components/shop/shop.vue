@@ -48,7 +48,7 @@ const buyItem = (item) => {
 
 <template>
   <div class="max-w-7xl mx-auto p-6">
-    <h1 class="text-3xl font-semibold text-center mb-8">Welcome to the Coin Shop</h1>
+    <h1 class="text-3xl font-semibold text-white text-center mb-8">Welcome to the Coin Shop</h1>
 
     <div class="mt-20 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
       <div 

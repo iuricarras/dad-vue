@@ -86,10 +86,6 @@ onMounted(() => {
 
 
 <template>
-  <div v-if ="storeAuth.user" class="flex justify-center items-center h-screen">
-    <h1 class="text-2xl font-bold text-center text-red-600 bg-red-100 px-4 py-2 rounded-md shadow-md">
-      O utilizador já se encontra registado! </h1>
-  </div>
   <Card v-show="!storeAuth.user" class="w-[450px] mx-auto my-8 p-4 px-8">
     <CardHeader>
       <CardTitle>Criar Utilizador</CardTitle>

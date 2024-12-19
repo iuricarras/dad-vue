@@ -15,9 +15,6 @@ import LobbyRoom from '@/components/multiplayer/LobbyRoom.vue'
 import UserCreate from '@/components/user/UserCreate.vue'
 
 
-
-
-
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -102,10 +99,11 @@ router.beforeEach(async (to, from, next) => {
       await storeAuth.restoreToken()
   }
   
-  const requiresAuth = ['users', 'Transactions', 'Scoreboard', 'GameHistory', 'MultiPlayer'];
+  const requiresAuth = ['users', 'Transactions', 'Scoreboard', 'GameHistory', 'MultiPlayer','update'];
   const admin = ['users'];
   const player = ['Scoreboard','Transactions','GameHistory']; 
-  const adminRestricted = ['SinglePlayer'];
+  const adminRestricted = ['SinglePlayer', 'MultiPlayer', 'register'];
+  const user = ['register'];
   
 
   if (requiresAuth.includes(to.name) && !storeAuth.user) {
@@ -124,6 +122,11 @@ router.beforeEach(async (to, from, next) => {
   }
 
   if (adminRestricted.includes(to.name) && storeAuth.user && storeAuth.user.type === 'A') {
+    next({ name: 'home' });
+    return;
+  }
+  
+  if (user.includes(to.name) && storeAuth.user) {
     next({ name: 'home' });
     return;
   }

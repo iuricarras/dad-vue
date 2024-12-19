@@ -17,7 +17,7 @@ const fetchTransaction = async (params) => {
 </script>
 
 <template>
-  <h2 class="text-2xl font-bold text-white-800 mb-4 p-4">Your Transactions</h2>
+  <h2 class="text-2xl font-bold text-white mb-4 p-4">Your Transactions</h2>
   <UserTransactions :fetchFn="fetchTransaction" />
 </template>
 

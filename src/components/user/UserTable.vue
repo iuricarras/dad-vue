@@ -29,10 +29,8 @@ const emit = defineEmits(['fetchUsers', 'viewTransactions', 'viewGames']);
 
 
 const updateFilters = () => {
-  console.log("TESTE",filterBlocked.value);
-  console.log("TESTE",filterType.value);
   emit('fetchUsers',
-    1, // Reinicia na primeira página ao aplicar filtros
+    1,
     props.itemsPerPage,
     filterType.value,
     filterBlocked.value,

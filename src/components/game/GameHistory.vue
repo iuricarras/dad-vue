@@ -78,7 +78,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <h2 class="text-2xl font-bold text-white-800 mb-4 p-4">Game History</h2>
+  <h2 class="text-2xl font-bold text-white mb-4 p-4">Game History</h2>
   <div class="p-6 bg-gray-800 text-white rounded-lg mx-auto max-w-6xl mt-1">
     <div class="flex space-x-4 mb-4">
       <div>

@@ -41,7 +41,6 @@ const cancel = () => {
 // atualiza o user para o servidor
 const update = async () => {
   const jsonToSend = credentials.value
-  console.log("!!!JSON!!!", storeAuth.id, jsonToSend)
   await storeUser.updateUserAll(storeAuth.id, jsonToSend)
   router.back()
 }
@@ -102,10 +101,6 @@ onMounted(() => {
 
 
 <template>
-  <div v-if="!storeAuth.user" class="flex justify-center items-center h-screen">
-    <h1 class="text-2xl font-bold text-center text-red-600 bg-red-100 px-4 py-2 rounded-md shadow-md">
-      O utilizador deve autenticar-se! </h1>
-  </div>
   <Card v-show="storeAuth.user" class="w-[450px] mx-auto my-8 p-4 px-8">
     <CardHeader>
       <CardTitle>Atualizar dados</CardTitle>

@@ -9,8 +9,20 @@ Chart.register(...registerables);
 const statisticsStore = useStatisticsStore();
 const storeAuth = useAuthStore();
 
+const gamesDisplayType = ref('month');
+const purchasesDisplayType = ref('month');
+
 const nickname = ref('');
 const playerPurchases = ref(null);
+
+let gamesChartInstance = null;
+let purchasesChartInstance = null;
+
+let paymentChartInstance = null;
+
+let spendingChartInstance = null;
+let gamesMonthChartInstance = null;
+let gamesWeekChartInstance = null;
 
 onMounted(async () => {
   await statisticsStore.fetchStatistics();
@@ -18,11 +30,16 @@ onMounted(async () => {
   await statisticsStore.fetchPurchasesPerMonth();
   await statisticsStore.fetchGamesPerWeek();
   await statisticsStore.fetchPurchasesPerWeek();
-  renderGamesByWeekChart();
-  renderGamesChart();
-  if (storeAuth.user?.type == 'A') {
+  if (storeAuth.user?.type === 'A') {
+    await statisticsStore.fetchPaymentTypes();
+    await statisticsStore.fetchPaymentValues();
+    renderPaymentChart();
+    renderGamesChart();
     renderPurchasesChart();
-    renderPurchasesByWeekChart();
+    renderSpendingChart(); 
+  }else {
+    renderGamesMonthChart();
+    renderGamesWeekChart();
   }
 });
 
@@ -35,111 +52,277 @@ const searchPlayerPurchases = async () => {
   playerPurchases.value = statisticsStore.playerPurchases;
 };
 
+
 const renderGamesChart = () => {
   const ctx = document.getElementById('gamesChart').getContext('2d');
-  const labels = statisticsStore.gamesPerMonthData.map(
-    (item) => `${item.year}-${item.month.toString().padStart(2, '0')}`
-  );
+
+  const labels =
+    gamesDisplayType.value === 'month'
+      ? statisticsStore.gamesPerMonthData.map((item) => `${item.year}-${item.month.toString().padStart(2, '0')}`)
+      : statisticsStore.gamesPerWeekData.map((item) => `${item.week} of ${item.year}`);
+
+  const data =
+    gamesDisplayType.value === 'month'
+      ? statisticsStore.gamesPerMonthData.map((item) => item.total_games)
+      : statisticsStore.gamesPerWeekData.map((item) => item.total_games);
+
+  if (gamesChartInstance) gamesChartInstance.destroy();
+
+  gamesChartInstance = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        {
+          label: `Jogos Jogados por ${gamesDisplayType.value === 'month' ? 'Mês' : 'Semana'}`,
+          data,
+          borderColor: 'rgba(54, 162, 235, 1)',
+          backgroundColor: 'rgba(54, 162, 235, 0.2)',
+          borderWidth: 2,
+          fill: true,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        title: {
+          display: true,
+          text: 'Jogos Jogados',
+        },
+        legend: {
+          display: false,
+        },
+      },
+    },
+  });
+};
+
+const renderGamesMonthChart = () => {
+  const ctx = document.getElementById('gamesMonthChart').getContext('2d');
+
+  const labels = statisticsStore.gamesPerMonthData.map((item) => `${item.year}-${item.month.toString().padStart(2, '0')}`);
   const data = statisticsStore.gamesPerMonthData.map((item) => item.total_games);
 
-  new Chart(ctx, {
+  if (gamesMonthChartInstance) gamesMonthChartInstance.destroy();
+
+  gamesMonthChartInstance = new Chart(ctx, {
     type: 'line',
     data: {
       labels,
       datasets: [
         {
-          label: 'Jogos por Mês',
+          label: 'Jogos Jogados por Mês',
           data,
-          borderColor: 'rgba(54, 162, 235, 1)',
-          backgroundColor: 'rgba(54, 162, 235, 0.2)',
+          backgroundColor: 'rgba(75, 192, 192, 0.2)',
+          borderColor: 'rgba(75, 192, 192, 1)',
           borderWidth: 2,
           fill: true,
         },
       ],
     },
-  });
-};
-
-const renderPurchasesChart = () => {
-  const ctx = document.getElementById('purchasesChart').getContext('2d');
-  const labels = statisticsStore.purchasesPerMonthData.map(
-    (item) => `${item.year}-${item.month.toString().padStart(2, '0')}`
-  );
-  const data = statisticsStore.purchasesPerMonthData.map((item) => item.total_purchases);
-
-  new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels,
-      datasets: [
-        {
-          label: 'Compras por Mês',
-          data,
-          borderColor: 'rgba(54, 162, 235, 1)',
-          backgroundColor: 'rgba(54, 162, 235, 0.2)',
-          borderWidth: 2,
-          fill: true,
+    options: {
+      responsive: true,
+      plugins: {
+        title: {
+          display: true,
+          text: 'Jogos Jogados por Mês',
         },
-      ],
+        legend: {
+          display: false,
+        },
+      },
     },
   });
 };
 
-const renderGamesByWeekChart = () => {
-  const ctx = document.getElementById('gamesByWeekChart').getContext('2d');
-  const labels = statisticsStore.gamesPerWeekData.map(
-    (item) => `Week ${item.week} of ${item.year}`
-  );
+const renderGamesWeekChart = () => {
+  const ctx = document.getElementById('gamesWeekChart').getContext('2d');
+
+  const labels = statisticsStore.gamesPerWeekData.map((item) => `${item.week} of ${item.year}`);
   const data = statisticsStore.gamesPerWeekData.map((item) => item.total_games);
 
-  new Chart(ctx, {
-    type: 'line', 
-    data: {
-      labels,
-      datasets: [
-        {
-          label: 'Jogos por Semana',
-          data,
-          borderColor: 'rgba(75, 192, 192, 1)',
-          backgroundColor: 'rgba(75, 192, 192, 0.2)',
-          borderWidth: 2,
-          fill: true,
-        },
-      ],
-    },
-  });
-};
+  if (gamesWeekChartInstance) gamesWeekChartInstance.destroy();
 
-const renderPurchasesByWeekChart = () => {
-  const ctx = document.getElementById('purchasesByWeekChart').getContext('2d');
-  const labels = statisticsStore.purchasesPerWeekData.map(
-    (item) => `Week ${item.week} of ${item.year}`
-  );
-  const data = statisticsStore.purchasesPerWeekData.map((item) => item.total_purchases);
-
-  new Chart(ctx, {
+  gamesWeekChartInstance = new Chart(ctx, {
     type: 'line',
     data: {
       labels,
       datasets: [
         {
-          label: 'Compras por Semana',
+          label: 'Jogos Jogados por Semana',
           data,
-          borderColor: 'rgba(75, 192, 192, 1)',
-          backgroundColor: 'rgba(75, 192, 192, 0.2)',
+          borderColor: 'rgba(153, 102, 255, 1)',
+          backgroundColor: 'rgba(153, 102, 255, 0.2)',
           borderWidth: 2,
           fill: true,
         },
       ],
     },
+    options: {
+      responsive: true,
+      plugins: {
+        title: {
+          display: true,
+          text: 'Jogos Jogados por Semana',
+        },
+        legend: {
+          display: false,
+        },
+      },
+    },
   });
 };
-</script>
 
+  const renderPurchasesChart = () => {
+    const ctx = document.getElementById('purchasesChart').getContext('2d');
+
+    const labels =
+      purchasesDisplayType.value === 'month'
+        ? statisticsStore.purchasesPerMonthData.map((item) => `${item.year}-${item.month.toString().padStart(2, '0')}`)
+        : statisticsStore.purchasesPerWeekData.map((item) => `${item.week} of ${item.year}`);
+
+    const data =
+      purchasesDisplayType.value === 'month'
+        ? statisticsStore.purchasesPerMonthData.map((item) => item.total_purchases)
+        : statisticsStore.purchasesPerWeekData.map((item) => item.total_purchases);
+
+    if (purchasesChartInstance) purchasesChartInstance.destroy();
+
+    purchasesChartInstance = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [
+          {
+            label: `Compras por ${purchasesDisplayType.value === 'month' ? 'Mês' : 'Semana'}`,
+            data,
+            borderColor: 'rgba(75, 192, 192, 1)',
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            borderWidth: 2,
+            fill: true,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          title: {
+            display: true,
+            text: 'Compras',
+          },
+          legend: {
+            display: false,
+          },
+        },
+      },
+    });
+  };
+
+  const renderPaymentChart = () => {
+    const ctx = document.getElementById('paymentChart').getContext('2d');
+
+    const labels = statisticsStore.paymentTypeData.map((item) => item.payment_type);
+    const data = statisticsStore.paymentTypeData.map((item) => item.total);
+
+    if (paymentChartInstance) paymentChartInstance.destroy(); // Corrigido
+
+    paymentChartInstance = new Chart(ctx, { // Corrigido
+      type: 'pie',
+      data: {
+        labels,
+        datasets: [
+          {
+            data,
+            backgroundColor: [
+              'rgba(54, 162, 235, 0.7)',
+              'rgba(255, 99, 132, 0.7)',
+              'rgba(255, 206, 86, 0.7)',
+              'rgba(75, 192, 192, 0.7)',
+              'rgba(153, 102, 255, 0.7)',
+            ],
+            borderWidth: 1,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false, // Permite ajustar o tamanho
+        plugins: {
+          title: {
+            display: true,
+            text: 'Método de Pagamento Mais Usado',
+          },
+          legend: {
+            position: 'top',
+          },
+        },
+      },
+    });
+  };
+
+
+const renderSpendingChart = () => {
+  const ctx = document.getElementById('spendingChart').getContext('2d');
+
+  const labels = statisticsStore.paymentValuesData.map(
+    (item) => `${item.year}-${item.month.toString().padStart(2, '0')}`
+  );
+  const data = statisticsStore.paymentValuesData.map((item) => item.total);
+
+  if (spendingChartInstance) spendingChartInstance.destroy();
+
+  spendingChartInstance = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [
+        {
+          label: 'Total Ganho (€)',
+          data,
+          backgroundColor: 'rgba(75, 192, 192, 0.7)',
+          borderColor: 'rgba(75, 192, 192, 1)',
+          borderWidth: 1,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        title: {
+          display: true,
+          text: 'Total Ganho por Mês',
+        },
+        legend: {
+          display: false,
+        },
+      },
+      scales: {
+        x: {
+          title: {
+            display: true,
+            text: 'Mês',
+          },
+        },
+        y: {
+          title: {
+            display: true,
+            text: 'Valor €',
+          },
+          beginAtZero: true,
+        },
+      },
+    },
+  });
+};
+
+</script>
 <template>
   <div class="p-6 bg-gray-800 text-white rounded-lg mx-auto max-w-6xl mt-12">
     <h2 class="text-2xl mb-6 text-center font-bold">Estatísticas</h2>
 
+    <!-- Estatísticas Principais -->
     <div class="grid grid-cols-1 sm:grid-cols-4 gap-6 mb-8">
       <div class="bg-gray-300 text-black rounded-lg p-6 flex flex-col justify-center items-center shadow-md">
         <h3 class="text-lg font-bold text-center">Total de Registos</h3>
@@ -153,51 +336,122 @@ const renderPurchasesByWeekChart = () => {
         <h3 class="text-lg font-bold text-center">Board Mais Jogada</h3>
         <p class="text-2xl font-semibold text-center mt-2">{{ statisticsStore.mostPlayedBoard }}</p>
       </div>
-      <div class="bg-gray-300 text-black rounded-lg p-6 flex flex-col justify-center items-center shadow-md" v-if="storeAuth.user?storeAuth.user.type=='A': false">
+      <div
+        v-if="storeAuth.user?.type === 'A'"
+        class="bg-gray-300 text-black rounded-lg p-6 flex flex-col justify-center items-center shadow-md"
+      >
         <h3 class="text-lg font-bold text-center">Total de Compras</h3>
         <p class="text-2xl font-semibold text-center mt-2">{{ statisticsStore.totalPurchases }}</p>
       </div>
     </div>
 
+    <!-- Gráfico de Método de Pagamento e Total Gasto -->
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-12">
-      <div class="bg-gray-300 text-black rounded-lg p-6 shadow-md mb-8">
-        <h3 class="text-lg font-bold text-center mb-4">Total de Jogos Jogados por Semana</h3>
-        <canvas id="gamesByWeekChart" width="400" height="200"></canvas>
+      <div
+        v-if="storeAuth.user?.type === 'A'"
+        class="bg-gray-300 text-black rounded-lg p-6 shadow-md"
+      >
+        <div class="w-full h-80">
+          <canvas id="paymentChart" class="w-full h-full"></canvas>
+        </div>
       </div>
-      <div v-if="storeAuth.user?storeAuth.user.type=='A': false"  class="bg-gray-300 text-black rounded-lg p-6 shadow-md mb-8">
-        <h3 class="text-lg font-bold text-center mb-4">Total de Compras por Semana</h3>
-        <canvas id="purchasesByWeekChart" width="400" height="200"></canvas>
+
+      <div
+        v-if="storeAuth.user?.type === 'A'"
+        class="bg-gray-300 text-black rounded-lg p-6 shadow-md"
+      >
+        <div class="w-full h-80">
+          <canvas id="spendingChart" class="w-full h-full"></canvas>
+        </div>
       </div>
-      <div class="bg-gray-300 text-black rounded-lg p-6 shadow-md mb-8">
-        <h3 class="text-lg font-bold text-center mb-4">Total de Jogos Jogados por Mês</h3>
+    </div>
+
+    <!-- Gráficos para Administradores -->
+    <div v-if="storeAuth.user?.type === 'A'" class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-12">
+      <!-- Gráfico de Jogos -->
+      <div class="bg-gray-300 text-black rounded-lg p-4 shadow-md">
+        <div class="text-center mb-4">
+          <button
+            @click="gamesDisplayType = 'month'; renderGamesChart()"
+            :class="{
+              'bg-blue-600 text-white border-blue-600': gamesDisplayType === 'month',
+              'bg-gray-300 text-black border-gray-500 hover:bg-gray-400': gamesDisplayType !== 'month'
+            }"
+            class="px-4 py-2 mx-2 rounded border-2 transition-colors"
+          >
+            Por Mês
+          </button>
+          <button
+            @click="gamesDisplayType = 'week'; renderGamesChart()"
+            :class="{
+              'bg-blue-600 text-white border-blue-600': gamesDisplayType === 'week',
+              'bg-gray-300 text-black border-gray-500 hover:bg-gray-400': gamesDisplayType !== 'week'
+            }"
+            class="px-4 py-2 mx-2 rounded border-2 transition-colors"
+          >
+            Por Semana
+          </button>
+        </div>
         <canvas id="gamesChart" width="400" height="200"></canvas>
       </div>
-      <div v-if="storeAuth.user?storeAuth.user.type=='A': false" class="bg-gray-300 text-black rounded-lg p-6 shadow-md" >
-        <h3 class="text-lg font-bold text-center mb-4">Total de Compras por Mês</h3>
+
+      <!-- Gráfico de Compras -->
+      <div class="bg-gray-300 text-black rounded-lg p-4 shadow-md">
+        <div class="text-center mb-4">
+          <button
+            @click="purchasesDisplayType = 'month'; renderPurchasesChart()"
+            :class="{
+              'bg-blue-600 text-white border-blue-600': purchasesDisplayType === 'month',
+              'bg-gray-300 text-black border-gray-500 hover:bg-gray-400': purchasesDisplayType !== 'month'
+            }"
+            class="px-4 py-2 mx-2 rounded border-2 transition-colors"
+          >
+            Por Mês
+          </button>
+          <button
+            @click="purchasesDisplayType = 'week'; renderPurchasesChart()"
+            :class="{
+              'bg-blue-600 text-white border-blue-600': purchasesDisplayType === 'week',
+              'bg-gray-300 text-black border-gray-500 hover:bg-gray-400': purchasesDisplayType !== 'week'
+            }"
+            class="px-4 py-2 mx-2 rounded border-2 transition-colors"
+          >
+            Por Semana
+          </button>
+        </div>
         <canvas id="purchasesChart" width="400" height="200"></canvas>
       </div>
     </div>
-  <div v-if="storeAuth.user?storeAuth.user.type=='A': false" class="bg-gray-300 text-black rounded-lg p-6 shadow-md mb-8">
-    <h3  class="text-lg font-bold text-center mb-4">Pesquisar Compras por Jogador</h3>
-      <div  class="flex items-center space-x-4">
+
+    <!-- Gráficos para Usuários Não Administradores -->
+    <div v-else class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-12">
+      <div class="bg-gray-300 text-black rounded-lg p-6 shadow-md">
+        <canvas id="gamesMonthChart" width="400" height="200"></canvas>
+      </div>
+      <div class="bg-gray-300 text-black rounded-lg p-6 shadow-md">
+        <canvas id="gamesWeekChart" width="400" height="200"></canvas>
+      </div>
+    </div>
+
+    <!-- Pesquisar Compras -->
+    <div v-if="storeAuth.user?.type === 'A'" class="bg-gray-300 text-black rounded-lg p-6 shadow-md">
+      <h3 class="text-lg font-bold text-center mb-4">Pesquisar Compras por Jogador</h3>
+      <div class="flex items-center space-x-4">
         <input
           v-model="nickname"
           @input="searchPlayerPurchases"
           type="text"
-          placeholder="Escreva  o nickname"
+          placeholder="Escreva o nickname"
           class="px-4 py-2 border border-gray-400 rounded-lg w-full"
         />
       </div>
       <div v-if="playerPurchases !== null" class="mt-4 text-center">
         <p class="text-xl font-bold">
-          Total de Compras "{{ nickname }}": 
+          Total de Compras "{{ nickname }}":
           <span class="text-green-600">{{ playerPurchases }} €</span>
         </p>
       </div>
-      <div v-else class="mt-4 text-center text-gray-500">
-        Escreva um nickname válido para pesquisar.
-      </div>
-  </div>
-
+      <div v-else class="mt-4 text-center text-gray-500">Escreva um nickname válido para pesquisar.</div>
+    </div>
   </div>
 </template>
