@@ -35,8 +35,8 @@ const storeAuth = useAuthStore();
       <!-- Multiplayer Button -->
       <RouterLink to="/multiplayer" class="block text-center">
         <div 
-          v-if="!storeAuth.user || (storeAuth.user && storeAuth.user.type !== 'A')" 
-          class="bg-gray-600 text-white p-6 rounded w-full cursor-not-allowed transform hover:scale-105 button-animate">
+          v-if="storeAuth.user && storeAuth.user.type !== 'A'"
+          class="bg-gray-600 text-white p-6 rounded w-full cursor-pointer transform hover:scale-105 button-animate">
           <div class="flex items-center justify-center space-x-2">
             <p class="text-2xl lg:text-3xl font-bold">Multiplayer</p>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" class="w-6 h-6 lg:w-8 lg:h-8">
