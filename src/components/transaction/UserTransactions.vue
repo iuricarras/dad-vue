@@ -1,9 +1,9 @@
 <script setup>
-import { onMounted, ref, computed, watch } from 'vue';
+import { onMounted, ref, computed} from 'vue';
 
 const props = defineProps({
-  fetchFn: Function, // Função de fetch passada como prop
-  userId: Number, // ID do usuário, se necessário
+  fetchFn: Function, 
+  userId: Number, 
 });
 
 const transactions = ref([]);
@@ -28,9 +28,9 @@ const fetchTransactions = async () => {
       page: currentPage.value,
       itemsPerPage: itemsPerPage.value,
       type: selectedType.value,
-      userId: props.userId, // Passa o userId se necessário
+      userId: props.userId, 
     };
-    const response = await props.fetchFn(params); // Usa a função de fetch passada como prop
+    const response = await props.fetchFn(params); 
     transactions.value = response.transactions;
     totalTransactions.value = response.total;
   } catch (error) {
@@ -41,8 +41,8 @@ const fetchTransactions = async () => {
 };
 
 const filterTransactions = async () => {
-  currentPage.value = 1; // Volta para a primeira página ao filtrar
-  await fetchTransactions(); // Atualiza os dados
+  currentPage.value = 1; 
+  await fetchTransactions(); 
 };
 
 const nextPage = async () => {

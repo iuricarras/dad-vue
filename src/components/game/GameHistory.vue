@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useUserStore } from '@/stores/user';
 import { useGameStore } from '@/stores/games';
 
@@ -52,8 +52,8 @@ const fetchBoards = async () => {
 };
 
 const filterGames = async () => {
-  currentPage.value = 1; // Reinicia para a primeira página
-  await fetchGameHistory(); // Faz um novo pedido à API com os filtros atualizados
+  currentPage.value = 1; 
+  await fetchGameHistory(); 
 };
 
 

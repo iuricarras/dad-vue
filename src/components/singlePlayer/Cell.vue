@@ -11,16 +11,8 @@ const emit = defineEmits(['card'])
 
 const clicked = () => {
     if(!props.matched && !props.cell.isRevealed){
-        console.log('clicked')
-        console.log(props.matched)
         emit('card', props.cell)
     }
-    // props.cell.isRevealed = true
-    // setTimeout(() => {
-    //     props.cell.isMatched = true
-    // }, 2000);
-
-    //w-32
 }
 
 const srcImg = computed(() => {

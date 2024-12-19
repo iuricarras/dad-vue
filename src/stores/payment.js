@@ -3,12 +3,10 @@ import { useToast } from '@/components/ui/toast/use-toast'
 import { useErrorStore } from '@/stores/error'
 import { useTransactionStore } from '@/stores/transactions';
 import { useAuthStore } from '@/stores/auth';
-import { useUserStore } from '@/stores/user';
 import { useRouter } from 'vue-router'
-import User from '@/components/user/User.vue';
+
 
 export const usePaymentStore = defineStore('payment', () => {
-  const useUser=useUserStore()
   const storeAuth = useAuthStore()
   const router = useRouter()
   const useTransaction=useTransactionStore()
@@ -21,7 +19,6 @@ export const usePaymentStore = defineStore('payment', () => {
       reference: info.value.reference,
       value: info.value.value,
     }
-    console.log(amount)
     if (!validatePayment(paymentPayload)) return
     try {
       const response = await sendPaymentRequest(paymentPayload)
@@ -86,7 +83,6 @@ export const usePaymentStore = defineStore('payment', () => {
 
   const validatePayment = (paymentInfo) => {
     const validTypes = ["MBWAY", "PAYPAL", "IBAN", "MB", "VISA"];
-    console.log(paymentInfo)
     if (!validTypes.includes(paymentInfo.type)) {
       toast({
         title: 'Fill in the fields',

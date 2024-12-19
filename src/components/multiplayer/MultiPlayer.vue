@@ -4,7 +4,6 @@ import Chat from '../chat/Chat.vue';
 import Lobby from './Lobby.vue';
 
 const storeAuth = useAuthStore()
-
 </script>
 
 <template>

@@ -1,8 +1,7 @@
 <script setup>
-import { inject } from 'vue'
 import { useMemoryGame } from '@/composable/memoryGame.js'
 import Cell from './Cell.vue'
-import { computed, onMounted, ref } from 'vue';
+import { computed, ref } from 'vue';
 import { useGameStore } from '@/stores/games';
 import { useAuthStore } from '@/stores/auth';
 

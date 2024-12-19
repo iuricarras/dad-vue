@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, watch } from 'vue';
+import { ref} from 'vue';
 import User from '@/components/user/User.vue';
 
 const props = defineProps({
@@ -23,10 +23,7 @@ const props = defineProps({
 
 const filterType = ref('All');
 const filterBlocked = ref('All');
-
-
 const emit = defineEmits(['fetchUsers', 'viewTransactions', 'viewGames']);
-
 
 const updateFilters = () => {
   emit('fetchUsers',
@@ -49,7 +46,6 @@ const nextPage = () => {
   if (props.currentPage < Math.ceil(props.total / props.itemsPerPage)) {
     emit('fetchUsers', props.currentPage + 1, props.itemsPerPage, filterType.value, filterBlocked.value);  
   }
-  console.log(props.currentPage);
 };
 
 const prevPage = () => {
@@ -57,8 +53,6 @@ const prevPage = () => {
     emit('fetchUsers', props.currentPage - 1, props.itemsPerPage, filterType.value, filterBlocked.value);  
   }
 };
-
-
 </script>
 
 <template>
@@ -88,7 +82,6 @@ const prevPage = () => {
         </button>
       </RouterLink>
       </div>
-      
       
       <div>
         <label for="filterBlocked" class="block text-white mb-1">Blocked</label>

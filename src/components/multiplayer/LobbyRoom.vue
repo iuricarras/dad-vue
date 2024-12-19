@@ -29,8 +29,6 @@ const readyGame = async () => {
 onBeforeRouteLeave ((to, from) => {
     lobbyStore.leaveGame()
 })
-
-
 </script>
 
 <template>

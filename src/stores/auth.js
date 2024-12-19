@@ -10,7 +10,6 @@ export const useAuthStore = defineStore('auth', () => {
     const router = useRouter()
     const storeError = useErrorStore()
     const socket = inject('socket')
-
     const user = ref(null)
     const token = ref('')
     const id = computed(() => {
@@ -65,8 +64,6 @@ export const useAuthStore = defineStore('auth', () => {
         return (firstName + ' ' + lastName).trim()
     }
 
-
-    // This function is "private" - not exported by the store
     const clearUser = () => {
         resetIntervalToRefreshToken()
         if (user.value) {
@@ -88,8 +85,6 @@ export const useAuthStore = defineStore('auth', () => {
             user.value = responseLogin.data.user
             socket.emit('login', user.value)
 
-
-            // deteta se o utilizador esta bloqueado, melhorar a mensagem de erro
             if(user.value.blocked == 1){
                 toast({
                     title: 'User Blocked',
@@ -165,10 +160,6 @@ export const useAuthStore = defineStore('auth', () => {
                     const responseUser = await axios.get('users/me')
                     user.value = responseUser.data.data
                     socket.emit('login', user.value)
-                    //user.value = responseUser.data.user
-                    
-                    
-                    
                     repeatRefreshToken()
                     return true
                 } catch {

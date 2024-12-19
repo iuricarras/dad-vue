@@ -22,22 +22,17 @@ const storeAuth = useAuthStore()
 const storeError = useErrorStore()
 const storeUser = useUserStore()
 
-// valores a enviar
-const credentials = ref({
-  })
+const credentials = ref({})
 
 const cancel = () => {
   router.push('/home')
 }
 
-// cria o user no servidor
 const create = async () => {
   const jsonToSend = credentials.value
   await storeUser.createUser(jsonToSend)
 }
 
-
-// funções do drag-and-drop da foto, até ao comentário vazio
 const imagePreview = ref(null)
 const fileInput = ref(null)
 
@@ -58,8 +53,8 @@ const onDrop = (event) => {
 const createPreview = (file) => {
   const reader = new FileReader()
   reader.onload = () => {
-    credentials.value.photo = reader.result // guarda a imagem no credentials acima
-    imagePreview.value = reader.result // atualiza o preview
+    credentials.value.photo = reader.result 
+    imagePreview.value = reader.result 
   }
   reader.readAsDataURL(file)
 }
@@ -67,16 +62,12 @@ const createPreview = (file) => {
 const triggerFileInput = () => {
   fileInput.value.click()
 }
-//
-
-// desativa os Input's temporariamente para evitar o preenchimento automático
-// os browsers ignorão o (autocomplete="off")
 const disabled = ref(true);
 
 onMounted(() => {
   setTimeout(() => {
-    disabled.value = false; // ativa os campos após um curto intervalo
-  }, 500); // 500ms é suficiente para evitar
+    disabled.value = false; 
+  }, 500); 
 })
 </script>
 
@@ -107,8 +98,6 @@ onMounted(() => {
             <ErrorMessage :errorMessage="storeError.fieldMessage('name')"></ErrorMessage>
           </div>
 
-
-          <!-- upload e preview da foto -->
           <Label for="photo">Photo</Label>
           <div class="drag-and-drop flex flex-col space-y-1.5"
           @dragover.prevent 
@@ -130,7 +119,6 @@ onMounted(() => {
             class="bg-black text-white py-2 px-4 rounded-md shadow-md hover:bg-gray-800">
             Selecionar Imagem</button>
           </div>
-
 
           <div class="flex flex-col space-y-1.5">
             <Label for="password">Password</Label>

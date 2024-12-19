@@ -7,29 +7,12 @@ import Cell from '../singlePlayer/Cell.vue';
 import {
     Card,
     CardContent,
-    CardHeader,
-    CardDescription,
-    CardTitle,
 } from '@/components/ui/card'
 import { useAuthStore } from '@/stores/auth';
 import { onBeforeRouteLeave } from 'vue-router';
 
 const lobbyStore = useLobbyStore()
-const gameStore = useGameStore()
 const authStore = useAuthStore()
-const alertDialog = inject('alertDialog')
-
-const gameEnded = computed(() => {
-    return lobbyStore.game.status > 1;
-})
-
-
-const buttonClasses = computed(() => {
-    if (gameEnded.value) {
-        return 'bg-gray-700 text-gray-200 hover:text-gray-50'
-    }
-    return 'bg-gray-300 text-gray-700 hover:text-gray-200'
-})
 
 const statusMessageColor = computed(() => {
     switch (lobbyStore.gameStatus) {
@@ -46,8 +29,6 @@ const statusMessageColor = computed(() => {
             return 'text-slate-800'
     }
 })
-
-
 
 const statusGameMessage = computed(() => {
     switch (lobbyStore.gameStatus) {
@@ -74,27 +55,20 @@ const gridClass = computed(() => {
 
 });
 
-console.log(lobbyStore.game);
-
 const move = (cell) => {
     lobbyStore.move(cell.id);
 }
-
 
 onBeforeRouteLeave((to, from) => {
     if (lobbyStore.gameStatus != 2) {
         const answer = window.confirm(
             'Do you really want to leave? you have unsaved changes!'
         )
-        // cancel the navigation and stay on the same page
         if(answer){
             lobbyStore.quit()
         }else{
             return false
         }
-
-        // alertDialog.value.open(quit, 'Quit game', 'Cancel', `Yes, I want to quit`,
-        //     `Are you sure you want to quit the game? You'll lose the game!`)
     }
 })
 

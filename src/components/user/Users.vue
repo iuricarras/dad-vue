@@ -17,12 +17,8 @@ const filterType = ref('All');
 const filterBlocked = ref('All');
 
 
-
 const fetchUsers = async (pageNumber, itemsPerPageCount, type, blocked) => {
-  try {
-    console.log(`Fetching users - Page: ${pageNumber}, ItemsPerPage: ${itemsPerPageCount}`);
-    console.log(`Type: ${type}, Blocked: ${blocked}`);  
-    
+  try { 
     const response = await userStore.fetchUsers(pageNumber, itemsPerPageCount, type, blocked);
 
     if (response && Array.isArray(response.users)) {     

@@ -5,7 +5,6 @@ import { useErrorStore } from '@/stores/error';
 
 const storeError = useErrorStore();
 onMounted(() => {
-  console.log('PaymentForm mounted');
   storeError.resetMessages();
 });
 

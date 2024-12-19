@@ -8,7 +8,6 @@ import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -27,8 +26,6 @@ const showDeleteForm_View = () =>{
   showDeleteForm.value = !showDeleteForm.value;
 }
 
-
-// valores a enviar
 const credentials = ref({
   })
 const credentials_delete = ref({
@@ -38,21 +35,17 @@ const cancel = () => {
   router.push('/home')
 }
 
-// atualiza o user no servidor
 const update = async () => {
   const jsonToSend = credentials.value
   await storeUser.updateUserAll(storeAuth.id, jsonToSend)
 }
 
-// apagar o user no servidor
 const deleteUser = async () => {
   const jsonToSend = credentials_delete.value
   await storeUser.checkBeforeDelete(storeAuth.id, jsonToSend)
   storeAuth.clearUser()
 }
 
-
-// funções do drag-and-drop da foto, até ao comentário vazio
 const imagePreview = ref(null)
 const fileInput = ref(null)
 
@@ -73,8 +66,8 @@ const onDrop = (event) => {
 const createPreview = (file) => {
   const reader = new FileReader()
   reader.onload = () => {
-    credentials.value.photo = reader.result // guarda a imagem no credentials acima
-    imagePreview.value = reader.result // atualiza o preview
+    credentials.value.photo = reader.result 
+    imagePreview.value = reader.result 
   }
   reader.readAsDataURL(file)
 }
@@ -82,16 +75,13 @@ const createPreview = (file) => {
 const triggerFileInput = () => {
   fileInput.value.click()
 }
-//
 
-// desativa os Input's temporariamente para evitar o preenchimento automático
-// os browsers ignoram o (autocomplete="off")
 const disabled = ref(true);
 
 onMounted(() => {
   setTimeout(() => {
-    disabled.value = false; // ativa os campos após um curto intervalo
-  }, 500); // 500ms é suficiente para evitar
+    disabled.value = false; 
+  }, 500); 
 })
 </script>
 
@@ -122,8 +112,6 @@ onMounted(() => {
             <ErrorMessage :errorMessage="storeError.fieldMessage('name')"></ErrorMessage>
           </div>
 
-
-          <!-- upload e preview da foto -->
           <Label for="photo">Photo</Label>
           <div class="drag-and-drop flex flex-col space-y-1.5" @dragover.prevent @dragleave.prevent
             @drop.prevent="onDrop">
@@ -161,8 +149,6 @@ onMounted(() => {
     px-4 rounded-md shadow-md hover:bg-red-700 focus:ring-2 focus:ring-red-400 focus:outline-none flex items-center gap-2">
       🗑️ Delete account </button>
 
-
-    <!-- Confirma se o user quer apagar a conta -->
     <div v-if="showDeleteForm" class="fixed inset-0 bg-black bg-opacity-50
       flex items-center justify-center z-50" @click.self="showDeleteForm = false">
       <div class="bg-white p-6 rounded-lg w-3/4 max-w-4xl shadow-lg
@@ -176,7 +162,6 @@ onMounted(() => {
           </button>
         </div>
 
-        <!-- verificar password + botão apagar -->
         <div class="flex flex-col space-y-4">
           <div>
             <Label for="password">Password</Label>
@@ -201,7 +186,6 @@ onMounted(() => {
 
 
 <style>
-
 .drag-and-drop {
   border: 2px dashed #ccc;
   padding: 20px;

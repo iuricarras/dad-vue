@@ -1,13 +1,8 @@
 <script setup>
 import { ref, onMounted } from 'vue';
-import { useRoute } from 'vue-router';
 import { useUserStore } from '@/stores/user';
-import { useAuthStore } from '@/stores/auth';
 
-const route = useRoute(); 
 const userStore = useUserStore();
-const authStore = useAuthStore();
-const selectedUser = ref(null); 
 
 const scoreboard = ref({
   single_player: [],
@@ -27,7 +22,6 @@ onMounted(async () => {
   <div class="p-6 bg-gray-800 text-white rounded-lg mx-auto max-w-4xl mt-10">
     <h2 class="text-2xl font-bold text-white-800 mb-4">Personal Scoreboard</h2>
 
-    <!-- Tabela Singleplayer -->
     <h3 class="text-lg mb-2">Singleplayer</h3>
     <table class="w-full text-left border-collapse border border-gray-700 table-fixed mb-4">
       <thead>
@@ -57,7 +51,6 @@ onMounted(async () => {
       </tbody>
     </table>
 
-    <!-- Tabela Multiplayer -->
     <h3 class="text-lg mb-2">Multiplayer</h3>
     <table class="w-full text-left border-collapse border border-gray-700 table-fixed">
       <thead>

@@ -8,7 +8,6 @@ import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -22,22 +21,17 @@ const storeAuth = useAuthStore()
 const storeError = useErrorStore()
 const storeUser = useUserStore()
 
-// valores a enviar
-const credentials = ref({
-  })
+const credentials = ref({})
 
 const cancel = () => {
   router.push('/users')
 }
 
-// cria o user para o servidor
 const create = async () => {
   const jsonToSend = credentials.value
   await storeUser.createAdmin(jsonToSend)
 }
 
-
-// funções do drag-and-drop da foto, até ao comentário vazio
 const imagePreview = ref(null)
 const fileInput = ref(null)
 
@@ -58,8 +52,8 @@ const onDrop = (event) => {
 const createPreview = (file) => {
   const reader = new FileReader()
   reader.onload = () => {
-    credentials.value.photo = reader.result // guarda a imagem no credentials acima
-    imagePreview.value = reader.result // atualiza o preview
+    credentials.value.photo = reader.result 
+    imagePreview.value = reader.result 
   }
   reader.readAsDataURL(file)
 }
@@ -67,16 +61,13 @@ const createPreview = (file) => {
 const triggerFileInput = () => {
   fileInput.value.click()
 }
-//
 
-// desativa os Input's temporariamente para evitar o preenchimento automático
-// os browsers ignorão o (autocomplete="off")
 const disabled = ref(true);
 
 onMounted(() => {
   setTimeout(() => {
-    disabled.value = false; // ativa os campos após um curto intervalo
-  }, 500); // 500ms é suficiente para evitar
+    disabled.value = false; 
+  }, 500); 
 })
 </script>
 
@@ -106,8 +97,6 @@ onMounted(() => {
             <ErrorMessage :errorMessage="storeError.fieldMessage('name')"></ErrorMessage>
           </div>
 
-
-          <!-- upload e preview da foto -->
           <Label for="photo">Photo</Label>
           <div class="drag-and-drop flex flex-col space-y-1.5"
           @dragover.prevent 

@@ -65,9 +65,6 @@ export function useMemoryGame() {
         gameTimer.value = 0;
         id = null;
 
-        console.log(numCols.value);
-        console.log(numRows.value);
-        
         board.value = []
 
         let allCards = []
@@ -108,7 +105,6 @@ export function useMemoryGame() {
         game.value.type = "S";
         game.value.status = "PL"
         game.value.board_id = boardId.value
-        console.log(game.value.board_id)
     }
 
     const move = async (card) => {
@@ -117,7 +113,6 @@ export function useMemoryGame() {
             timer()
             if (authStore.user) {
                 await gameStore.insertGame(game.value)
-                console.log(gameStore.games)
             }
 
         }

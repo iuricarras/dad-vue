@@ -27,7 +27,6 @@ const items = ref([
     price: 15,
     amount: 300,
   },
-  // Novo item de Natal
   {
     id: 4,
     name: 'Christmas Special Pack of BrainCoins',

@@ -7,13 +7,12 @@ import GlobalAlertDialog from '@/components/common/GlobalAlertDialog.vue';
 import musica from '@/assets/natal.mp3';
 import soundIcon from '@/assets/volume.png';
 import muteIcon from '@/assets/mute.png';
-import back from '@/assets/video.mp4';
 
 const storeAuth = useAuthStore();
 const showDropdown = ref(false);
 
 const audioRef = ref(null);
-const isMuted = ref(true); // Começa desligado (mutado)
+const isMuted = ref(true); 
 
 const toggleDropdown = () => {
   showDropdown.value = !showDropdown.value;
@@ -25,7 +24,7 @@ const closeDropdown = () => {
 
 onMounted(() => {
   if (audioRef.value) {
-    audioRef.value.volume = 0.03; // Diminui o volume para 5% (ajuste conforme necessário)
+    audioRef.value.volume = 0.03; 
   }
 });
 
@@ -33,11 +32,11 @@ onMounted(() => {
 const toggleMute = () => {
   if (audioRef.value) {
     if (isMuted.value) {
-      audioRef.value.play(); // Toca a música
+      audioRef.value.play(); 
     } else {
-      audioRef.value.pause(); // Pausa a música
+      audioRef.value.pause(); 
     }
-    isMuted.value = !isMuted.value; // Atualiza o estado
+    isMuted.value = !isMuted.value; 
   }
 };
 
@@ -73,11 +72,7 @@ const logout = () => {
 
 
   <Toaster />
-  
-  <!-- Áudio -->
   <audio ref="audioRef" :src="musica" loop></audio>
-
-  <!-- Botão de Ligar/Desligar Música -->
   <div 
   class="fixed bottom-4 right-4 rounded-lg shadow-lg z-[1]"
 >
@@ -91,8 +86,6 @@ const logout = () => {
       class="w-6 h-6 inline-block mr-1"/>
   </button>
 </div>
-
-
   <nav class="relative flex justify-between items-center bg-gray-800 p-1 text-white">
     <GlobalAlertDialog ref="alert-dialog"></GlobalAlertDialog>
     <RouterLink
@@ -219,7 +212,7 @@ const logout = () => {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  z-index: -1; /* Coloca o vídeo atrás do conteúdo */
+  z-index: -1; 
 }
 
 .background-video {
@@ -228,12 +221,12 @@ const logout = () => {
   left: 50%;
   width: 100%;
   height: 100%;
-  object-fit: cover; /* Garante que o vídeo cubra todo o fundo */
+  object-fit: cover; 
   transform: translate(-50%, -50%);
 }
 
 .content {
-  position: relative; /* Garante que o conteúdo principal fique acima do vídeo */
-  z-index: 1; /* Coloca o conteúdo acima do vídeo */
+  position: relative; 
+  z-index: 1; 
 }
 </style>
