@@ -424,11 +424,11 @@ const renderSpendingChart = () => {
     </div>
 
     <!-- Gráficos para Usuários Não Administradores -->
-    <div v-else class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-12">
-      <div class="bg-gray-300 text-black rounded-lg p-6 shadow-md">
+    <div v-else class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
+      <div class="bg-gray-300 text-black rounded-lg p-6 shadow-md -mt-8">
         <canvas id="gamesMonthChart" width="400" height="200"></canvas>
       </div>
-      <div class="bg-gray-300 text-black rounded-lg p-6 shadow-md">
+      <div class="bg-gray-300 text-black rounded-lg p-6 shadow-md -mt-8">
         <canvas id="gamesWeekChart" width="400" height="200"></canvas>
       </div>
     </div>

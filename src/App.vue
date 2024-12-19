@@ -83,12 +83,12 @@ const logout = () => {
 >
   <button
     @click="toggleMute"
-    class="px-4 py-2 text-sm text-white rounded transition-colors"
+    class="px-2 py-2 text-sm text-white rounded transition-colors"
     :class="isMuted ? 'bg-red-500 hover:bg-red-600' : 'bg-green-500 hover:bg-green-600'">
     <img
       :src="isMuted ? muteIcon : soundIcon"
       alt="Sound Icon"
-      class="w-6 h-6 inline-block mr-2"/>
+      class="w-6 h-6 inline-block mr-1"/>
   </button>
 </div>
 
