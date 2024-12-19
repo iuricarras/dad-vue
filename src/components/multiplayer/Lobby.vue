@@ -6,7 +6,6 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card'
-import { Button } from '@/components/ui/button';
 import { onMounted } from 'vue'
 import ListGamesLobby from './ListGamesLobby.vue'
 import { useLobbyStore } from '@/stores/lobby'
@@ -15,7 +14,6 @@ import CreateLobby from './CreateLobby.vue';
 const storeLobby = useLobbyStore()
 
 const createLobby = (information) => {
-    console.log(information)
     storeLobby.addGame(information)
 }
 

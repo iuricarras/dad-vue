@@ -71,7 +71,7 @@ const handleBoardChangeMP = async () => {
 
 <template>
   <div class="p-8 text-white rounded-lg mx-auto w-full max-w-screen-2xl space-y-10 overflow-x-auto">
-    <div class="bg-gray-700 p-4 rounded-lg shadow-lg">
+    <div class="bg-gray-800 p-4 rounded-lg shadow-lg">
       <div class="flex justify-between items-center mb-4">
         <h2 class="text-lg font-bold">Top Single-Player</h2>
         <div class="flex items-center space-x-4">
@@ -133,7 +133,7 @@ const handleBoardChangeMP = async () => {
       </div>
     </div>
 
-    <div class="bg-gray-700 p-4 rounded-lg shadow-lg">
+    <div class="bg-gray-800 p-4 rounded-lg shadow-lg">
       <div class="flex justify-between items-center mb-4">
         <h2 class="text-lg font-bold">Top Multiplayer</h2>
         <select

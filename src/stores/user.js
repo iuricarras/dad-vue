@@ -5,8 +5,6 @@ import { useErrorStore } from '@/stores/error'
 import { useAuthStore } from '@/stores/auth'
 import { useRouter } from 'vue-router'
 import { useToast } from '@/components/ui/toast/use-toast'
-import { ToastAction } from '@/components/ui/toast'
-import { h } from 'vue'
 
 export const useUserStore = defineStore('user', () => {
   const router = useRouter()
@@ -21,10 +19,8 @@ export const useUserStore = defineStore('user', () => {
     return users.value.length
   })
 
-
   const fetchUsers = async (page, itemsPerPage, filterType = '', filterBlocked = '') => {
     storeError.resetMessages();
-    console.log(filterType, filterBlocked)
     try {
       const response = await axios.get('users', {
         params: {
@@ -49,7 +45,6 @@ export const useUserStore = defineStore('user', () => {
   const createUser = async (createData) => {
     storeError.resetMessages();
     try {
-      console.log("JSON-create2", createData)
       const response = await axios.post(`/users`, createData);
       const createdUser = response.data;
       toast({
@@ -68,12 +63,8 @@ export const useUserStore = defineStore('user', () => {
     }
   };
 
-
-
-
   const createAdmin = async (createData) => {
     try {
-      console.log("JSON-createAdmin", createData)
       const response = await axios.post(`/users/admin`, createData);
       const createdAdmin = response.data;
       toast({
@@ -92,10 +83,8 @@ export const useUserStore = defineStore('user', () => {
     }
   };
 
-
   const updateUserAll = async (userId, updatedData) => {
     try {
-      // Remove campos vazios do objeto JSON
       Object.keys(updatedData).forEach((key) => {
         if (updatedData[key] === '' || updatedData[key] === null || 
           updatedData[key] === undefined) {
@@ -108,14 +97,8 @@ export const useUserStore = defineStore('user', () => {
         title: 'Success!',
         description: updatedUser.data.nickname + ' : updated successfully.',
       });
-      console.log("!!!StoreAuth!!!", storeAuth.user)
-      console.log("!!!UpdatedUser!!!", updatedUser.data)
-
       storeAuth.user = updatedUser.data
-      //storeAuth.user.photo_filename = updatedUser.data.photo_filename
-
       router.push({ name: 'home' })
-
       return updatedUser;
     } catch (e) {
         storeError.setErrorMessages(e.response?.data?.message, e.response?.data?.errors, e.response?.status, 'Error updating user!');
@@ -123,10 +106,6 @@ export const useUserStore = defineStore('user', () => {
     }
   };
 
-
-
-
-  
   const updateUser = async (userId, updatedData) => {
     try {
       updatedData.blocked = updatedData.blocked === true || updatedData.blocked === 'true'; 
@@ -145,7 +124,6 @@ export const useUserStore = defineStore('user', () => {
   
   const fetchUser = async (userId) => {
     storeError.resetMessages()
-    
     try {
       const response = await axios.get(`/users/${userId}`)
       const userIndex = users.value.findIndex(user => user.id === userId);
@@ -233,9 +211,6 @@ export const useUserStore = defineStore('user', () => {
     }
   }
 
-
-
-
   const checkBeforeDelete = async (userId, updatedData) => {
     storeError.resetMessages(); 
     try {
@@ -270,8 +245,6 @@ export const useUserStore = defineStore('user', () => {
       return false;
     }
   };
-
-
 
   const deleteUser = async (userId) => {
     storeError.resetMessages(); 
@@ -318,8 +291,6 @@ export const useUserStore = defineStore('user', () => {
     });
     return response.data;
   };
-  
-  
   
   return {
     users,

@@ -18,7 +18,6 @@ app.use(router)
 
 app.provide('socket', io("http://localhost:8081"))
 
-// Default Axios configuration
 axios.defaults.baseURL = 'http://localhost/api'
 //axios.defaults.baseURL = 'http://dad-laravel.test:8080/api'
 

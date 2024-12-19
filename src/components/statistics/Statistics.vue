@@ -319,10 +319,8 @@ const renderSpendingChart = () => {
 
 </script>
 <template>
-  <div class="p-6 bg-gray-800 text-white rounded-lg mx-auto max-w-6xl mt-12">
+<div class="p-6 bg-gray-800 text-white rounded-lg mx-auto max-w-6xl mt-12 fade-in">
     <h2 class="text-2xl mb-6 text-center font-bold">Statistics</h2>
-
-    <!-- Estatísticas Principais -->
     <div class="grid grid-cols-1 sm:grid-cols-4 gap-6 mb-8">
       <div class="bg-gray-300 text-black rounded-lg p-6 flex flex-col justify-center items-center shadow-md">
         <h3 class="text-lg font-bold text-center">Total Number of Players Registered</h3>
@@ -345,7 +343,6 @@ const renderSpendingChart = () => {
       </div>
     </div>
 
-    <!-- Gráfico de Método de Pagamento e Total Gasto -->
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-12">
       <div
         v-if="storeAuth.user?.type === 'A'"
@@ -366,9 +363,8 @@ const renderSpendingChart = () => {
       </div>
     </div>
 
-    <!-- Gráficos para Administradores -->
     <div v-if="storeAuth.user?.type === 'A'" class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-12">
-      <!-- Gráfico de Jogos -->
+
       <div class="bg-gray-300 text-black rounded-lg p-4 shadow-md">
         <div class="text-center mb-4">
           <button
@@ -395,7 +391,6 @@ const renderSpendingChart = () => {
         <canvas id="gamesChart" width="400" height="200"></canvas>
       </div>
 
-      <!-- Gráfico de Compras -->
       <div class="bg-gray-300 text-black rounded-lg p-4 shadow-md">
         <div class="text-center mb-4">
           <button
@@ -423,7 +418,6 @@ const renderSpendingChart = () => {
       </div>
     </div>
 
-    <!-- Gráficos para Usuários Não Administradores -->
     <div v-else class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
       <div class="bg-gray-300 text-black rounded-lg p-6 shadow-md -mt-8">
         <canvas id="gamesMonthChart" width="400" height="200"></canvas>
@@ -433,7 +427,6 @@ const renderSpendingChart = () => {
       </div>
     </div>
 
-    <!-- Pesquisar Compras -->
     <div v-if="storeAuth.user?.type === 'A'" class="bg-gray-300 text-black rounded-lg p-6 shadow-md">
       <h3 class="text-lg font-bold text-center mb-4">Search Purchases by Player</h3>
       <div class="flex items-center space-x-4">
@@ -455,3 +448,17 @@ const renderSpendingChart = () => {
     </div>
   </div>
 </template>
+<style scoped>
+.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeIn 1s forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+</style>

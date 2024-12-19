@@ -1,5 +1,4 @@
 <script setup>
-import { onMounted } from 'vue';
 import TopList from '@/components/mainPage/TopList.vue';
 import { RouterLink } from 'vue-router';
 import { useAuthStore } from '@/stores/auth.js';
@@ -9,15 +8,12 @@ const storeAuth = useAuthStore();
 </script>
 
 <template>
-
-  <!-- Conteúdo Principal -->
   <div class="relative flex flex-col lg:flex-row items-center justify-center mt-1 space-y-5 lg:space-y-0 lg:space-x-10 fade-in">
     <div class="w-full lg:max-w-2xl lg:mr-10">
       <TopList />
     </div>
 
     <div class="flex flex-col space-y-5 w-full lg:w-1/4">
-      <!-- Single-Player Button -->
       <div 
         v-if="!storeAuth.user || storeAuth.user.type !== 'A'" 
         class="bg-blue-600 text-white p-6 rounded hover:bg-blue-500 transition-all w-full transform hover:scale-105 button-animate">
@@ -32,7 +28,6 @@ const storeAuth = useAuthStore();
         </RouterLink>
       </div>
 
-      <!-- Multiplayer Button -->
       <RouterLink to="/multiplayer" class="block text-center">
         <div 
           v-if="storeAuth.user && storeAuth.user.type !== 'A'"
@@ -48,7 +43,6 @@ const storeAuth = useAuthStore();
         </div>
       </RouterLink>
 
-      <!-- Multiplayer (Bloqueado) -->
       <div
         v-if="!storeAuth.user"
         class="bg-gray-600 text-white p-6 rounded w-full text-center cursor-not-allowed"
@@ -64,14 +58,12 @@ const storeAuth = useAuthStore();
         <p class="text-sm lg:text-lg text-center mt-2">Log in to unlock this game mode!!</p>
       </div>
 
-      <!-- Statistics -->
       <div class="bg-emerald-700 text-white p-4 rounded hover:bg-emerald-600 transition-all w-full transform hover:scale-105 button-animate">
         <RouterLink to="/statistics" class="block text-center">
           <p class="text-2xl lg:text-3xl font-bold">Statistics 📊</p>
         </RouterLink>
       </div>
 
-      <!-- Shop Button -->
       <div class="bg-yellow-600 text-white p-4 rounded hover:bg-yellow-500 transition-all w-full transform hover:scale-105 button-animate">
         <RouterLink to="/shop" class="block text-center">
           <p class="text-2xl lg:text-3xl font-bold">Shop 💰</p>

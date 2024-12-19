@@ -1,5 +1,5 @@
 <script setup>
-import { ref, useTemplateRef, provide, onMounted } from 'vue';
+import { ref, useTemplateRef, provide, onMounted, onUnmounted } from 'vue';
 import { RouterView } from 'vue-router';
 import Toaster from '@/components/ui/toast/Toaster.vue';
 import { useAuthStore } from '@/stores/auth.js';
@@ -13,7 +13,7 @@ const storeAuth = useAuthStore();
 const showDropdown = ref(false);
 
 const audioRef = ref(null);
-const isMuted = ref(true); // Começa desligado (mutado)
+const isMuted = ref(true);
 
 const toggleDropdown = () => {
   showDropdown.value = !showDropdown.value;
@@ -23,21 +23,38 @@ const closeDropdown = () => {
   showDropdown.value = false;
 };
 
+const handleClickOutside = (event) => {
+  const dropdownElement = document.querySelector('.dropdown-menu');
+  const toggleElement = document.querySelector('.dropdown-toggle');
+  if (
+    dropdownElement &&
+    toggleElement &&
+    !dropdownElement.contains(event.target) &&
+    !toggleElement.contains(event.target)
+  ) {
+    closeDropdown();
+  }
+};
+
 onMounted(() => {
   if (audioRef.value) {
-    audioRef.value.volume = 0.03; // Diminui o volume para 5% (ajuste conforme necessário)
+    audioRef.value.volume = 0.05;
   }
+  document.addEventListener('click', handleClickOutside);
 });
 
+onUnmounted(() => {
+  document.removeEventListener('click', handleClickOutside);
+});
 
 const toggleMute = () => {
   if (audioRef.value) {
     if (isMuted.value) {
-      audioRef.value.play(); // Toca a música
+      audioRef.value.play();
     } else {
-      audioRef.value.pause(); // Pausa a música
+      audioRef.value.pause();
     }
-    isMuted.value = !isMuted.value; // Atualiza o estado
+    isMuted.value = !isMuted.value;
   }
 };
 
@@ -57,6 +74,7 @@ const logout = () => {
     `Are you sure you want to log out? You can still access your account later with your credentials.`
   );
 };
+
 </script>
 
 <template>
@@ -74,10 +92,8 @@ const logout = () => {
 
   <Toaster />
   
-  <!-- Áudio -->
   <audio ref="audioRef" :src="musica" loop></audio>
 
-  <!-- Botão de Ligar/Desligar Música -->
   <div 
   class="fixed bottom-4 right-4 rounded-lg shadow-lg z-[1]"
 >
@@ -96,29 +112,33 @@ const logout = () => {
   <nav class="relative flex justify-between items-center bg-gray-800 p-1 text-white">
     <GlobalAlertDialog ref="alert-dialog"></GlobalAlertDialog>
     <RouterLink
-      to="/home"
-      class="flex items-center text-lg font-bold hover:text-blue-500 px-3 py-2 rounded-md transition-colors">
-      <span>Memory Game</span>
-      <img
-        src="/src/assets/memory.png" alt="Memory Game Icon" class="ml-2 w-10 h-10"/>
-    </RouterLink>
+  to="/home"
+  class="flex items-center text-lg font-bold hover:text-blue-500 px-3 py-2 rounded-md transition-colors hover:animate-shake"
+>
+  <span>Memory Game</span>
+  <img
+    src="/src/assets/memory.png"
+    alt="Memory Game Icon"
+    class="ml-2 w-10 h-10 hover:animate-shake"
+  />
+</RouterLink>
+
 
     <h1 class="flex-grow text-center font-bold">
       {{ storeAuth.userNick ? storeAuth.userNick : '' }}
     </h1>
 
     <div
-      v-if="storeAuth.user?.type === 'P'"
-      class="flex items-center mr-10 space-x-2 bg-gray-600 text-white px-4 py-2 rounded-full">
-      <span class="text-sm font-medium">
-        <span class="text-lg">{{ storeAuth.user.brain_coins_balance }} 💰</span>
-      </span>
-      <RouterLink to="/shop">
-        <button class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-3 rounded-full">
-          +
-        </button>
-      </RouterLink>
-    </div>
+  v-if="storeAuth.user?.type === 'P'"
+  class="flex items-center mr-10 space-x-2 bg-gray-600 text-white px-4 py-2 rounded-full"
+>
+  <RouterLink to="/shop" class="flex items-center">
+    <span class="text-lg font-bold cursor-pointer hover:scale-105 transition-transform">
+      {{ storeAuth.user.brain_coins_balance }} 💰
+    </span>
+  </RouterLink>
+</div>
+
 
     <div class="flex items-center space-x-1 ml-auto pr-10">
       <RouterLink
@@ -178,6 +198,14 @@ const logout = () => {
               @click="closeDropdown">
               Users
             </RouterLink>
+            <RouterLink 
+              v-show="storeAuth.user.type === 'A'"
+              to="/registerAdmin"
+              class="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+              @click="closeDropdown">
+              Register Admin
+            </RouterLink>
+
             <RouterLink
               v-show="storeAuth.user.type === 'P' || storeAuth.user.type === 'A'"
               to="/update"
@@ -219,7 +247,7 @@ const logout = () => {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  z-index: -1; /* Coloca o vídeo atrás do conteúdo */
+  z-index: -1;
 }
 
 .background-video {
@@ -228,12 +256,32 @@ const logout = () => {
   left: 50%;
   width: 100%;
   height: 100%;
-  object-fit: cover; /* Garante que o vídeo cubra todo o fundo */
+  object-fit: cover;
   transform: translate(-50%, -50%);
 }
 
 .content {
-  position: relative; /* Garante que o conteúdo principal fique acima do vídeo */
-  z-index: 1; /* Coloca o conteúdo acima do vídeo */
+  position: relative;
+  z-index: 1;
 }
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  50% {
+    transform: translateX(5px);
+  }
+  75% {
+    transform: translateX(-5px);
+  }
+}
+
+.hover\:animate-shake:hover {
+  animation: shake 0.5s ease-in-out;
+}
+
 </style>

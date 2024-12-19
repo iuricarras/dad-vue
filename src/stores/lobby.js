@@ -6,27 +6,21 @@ import { useToast } from '@/components/ui/toast/use-toast';
 import { useAuthStore } from '@/stores/auth'
 import { useRouter } from 'vue-router'
 
-
 export const useLobbyStore = defineStore('lobby', () => {
     const storeAuth = useAuthStore()
     const storeError = useErrorStore()
     const router = useRouter()
     const socket = inject('socket')
-
     const { toast } = useToast();
-
     const lobbyID = ref(-1)
     const boardId = ref(-1)
     const numberPlayers = ref(-1)
     const gameStatus = ref(-1)
     const matched = ref(false)
-
-
     const time = ref(20)
     const timerID = ref(null)
     const games = ref([])
     const game = ref(null)
-
     const totalGames = computed(() => games.value.length)
 
     const webSocketServerResponseHasError = (response) => {
@@ -39,9 +33,7 @@ export const useLobbyStore = defineStore('lobby', () => {
 
     const verifyTimer = async () => {
         const player = game.value.players.find(player => player.player.id == storeAuth.id)
-        console.log(game.value.currentPlayer)
-        if (game.value.currentPlayer == player.id && !game.value.firstCard) {
-            console.log("Player turn")
+        if(game.value.currentPlayer == player.id && !game.value.firstCard){
             clearInterval(timerID.value);
             time.value = 20;
             await timer();
@@ -54,15 +46,13 @@ export const useLobbyStore = defineStore('lobby', () => {
     const timer = async () => {
         timerID.value = setInterval(() => {
             time.value = time.value - 1;
-            console.log(time.value);
-            if (time.value == 0) {
+            if(time.value == 0){
                 clearInterval(timerID.value);
                 quit();
             }
         }, 1000);
 
     }
-    // when the lobby changes on the server, it is updated on the client
     socket.on('lobbyChanged', (lobbyGames) => {
         games.value = lobbyGames
     })
@@ -74,7 +64,6 @@ export const useLobbyStore = defineStore('lobby', () => {
     socket.on('gameStarted', (gameStarting) => {
         game.value = { ...gameStarting }
         gameStatus.value = gameStarting.status
-        console.log(game.value);
         router.push({ name: 'Game' })
 
     })
@@ -82,8 +71,7 @@ export const useLobbyStore = defineStore('lobby', () => {
     socket.on('gameChanged', (gameChanged) => {
         game.value = { ...gameChanged }
         gameStatus.value = gameChanged.status
-        console.log("Não devia estar aqui")
-        if (!gameChanged.firstCard) {
+        if(!gameChanged.firstCard){
             matched.value = false;
         }
         if (gameStatus != 2) {
@@ -94,7 +82,6 @@ export const useLobbyStore = defineStore('lobby', () => {
     socket.on('gameEnded', async (gameEnded) => {
         clearInterval(timerID.value);
         game.value = { ...gameEnded }
-        console.log(gameEnded)
         gameStatus.value = gameEnded.status
         if (gameEnded.playerWin == storeAuth.id) {
             toast({
@@ -123,7 +110,6 @@ export const useLobbyStore = defineStore('lobby', () => {
         }
     })
 
-    // fetch lobby games from the Websocket server
     const fetchGames = () => {
         storeError.resetMessages()
         socket.emit('fetchGames', (response) => {
@@ -134,7 +120,6 @@ export const useLobbyStore = defineStore('lobby', () => {
         })
     }
 
-    // add a game to the lobby
     const addGame = (information) => {
         storeError.resetMessages()
         if (storeAuth.brain_coins_balance < 5) {
@@ -153,7 +138,6 @@ export const useLobbyStore = defineStore('lobby', () => {
         })
     }
 
-    // remove a game from the lobby
     const removeGame = (id) => {
         storeError.resetMessages()
         socket.emit('removeGame', id, (response) => {
@@ -163,7 +147,6 @@ export const useLobbyStore = defineStore('lobby', () => {
         })
     }
 
-    // join a game of the lobby
     const joinGame = (id) => {
         storeError.resetMessages()
         if (storeAuth.brain_coins_balance < 5) {
@@ -171,23 +154,9 @@ export const useLobbyStore = defineStore('lobby', () => {
             return
         }
         socket.emit('joinGame', id, async (response) => {
-            // callback executed after the join is complete
             if (webSocketServerResponseHasError(response)) {
                 return
             }
-
-            // const APIresponse = await axios.post('games', {
-            //     player1_id: response.player1.id,
-            //     player2_id: response.player2.id,
-            // })
-            // const newGameOnDB = APIresponse.data.data
-            // newGameOnDB.player1SocketId = response.player1SocketId
-            // newGameOnDB.player2SocketId = response.player2SocketId
-            // // After adding the game to the DB emit a message to the server to start the game
-            // socket.emit('startGame', newGameOnDB, (startedGame) => {
-            //     console.log('Game has started', startedGame)
-            // })
-
             lobbyID.value = id;
             boardId.value = response.boardId
             numberPlayers.value = response.numberPlayers
@@ -235,8 +204,7 @@ export const useLobbyStore = defineStore('lobby', () => {
         if (matched.value) {
             return;
         }
-        if (game.value.firstCard) {
-            console.log("First card - matched a true")
+        if (game.value.firstCard){
             matched.value = true;
         }
 
@@ -247,21 +215,14 @@ export const useLobbyStore = defineStore('lobby', () => {
         })
     };
 
-    // Whether the current user can remove a specific game from the lobby
     const canRemoveGame = (game) => {
         return game.players[0].player.id === storeAuth.id
     }
 
     const canStartGame = computed(() => {
-        console.log("IM HERE")
-        console.log(`Value + ${game.value}`)
-        console.log(game.value.players[0].player.id)
-        console.log(storeAuth.id)
-        console.log("IM HERE")
         return game.value.players[0].player.id == storeAuth.id
     })
 
-    // Whether the current user can join a specific game from the lobby
     const canJoinGame = (game) => {
         return storeAuth.user && game.players[0].player.id !== storeAuth.id
     }
