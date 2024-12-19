@@ -74,7 +74,7 @@ const renderGamesChart = () => {
       labels,
       datasets: [
         {
-          label: `Jogos Jogados por ${gamesDisplayType.value === 'month' ? 'Mês' : 'Semana'}`,
+          label: `Games Played by ${gamesDisplayType.value === 'month' ? 'Month' : 'Week'}`,
           data,
           borderColor: 'rgba(54, 162, 235, 1)',
           backgroundColor: 'rgba(54, 162, 235, 0.2)',
@@ -88,7 +88,7 @@ const renderGamesChart = () => {
       plugins: {
         title: {
           display: true,
-          text: 'Jogos Jogados',
+          text: 'Games Played',
         },
         legend: {
           display: false,
@@ -112,7 +112,7 @@ const renderGamesMonthChart = () => {
       labels,
       datasets: [
         {
-          label: 'Jogos Jogados por Mês',
+          label: 'Games Played Per Month',
           data,
           backgroundColor: 'rgba(75, 192, 192, 0.2)',
           borderColor: 'rgba(75, 192, 192, 1)',
@@ -126,7 +126,7 @@ const renderGamesMonthChart = () => {
       plugins: {
         title: {
           display: true,
-          text: 'Jogos Jogados por Mês',
+          text: 'Games Played Per Month',
         },
         legend: {
           display: false,
@@ -150,7 +150,7 @@ const renderGamesWeekChart = () => {
       labels,
       datasets: [
         {
-          label: 'Jogos Jogados por Semana',
+          label: 'Games Played Per Week',
           data,
           borderColor: 'rgba(153, 102, 255, 1)',
           backgroundColor: 'rgba(153, 102, 255, 0.2)',
@@ -164,7 +164,7 @@ const renderGamesWeekChart = () => {
       plugins: {
         title: {
           display: true,
-          text: 'Jogos Jogados por Semana',
+          text: 'Games Played Per Week',
         },
         legend: {
           display: false,
@@ -195,7 +195,7 @@ const renderGamesWeekChart = () => {
         labels,
         datasets: [
           {
-            label: `Compras por ${purchasesDisplayType.value === 'month' ? 'Mês' : 'Semana'}`,
+            label: `Purchase by ${purchasesDisplayType.value === 'month' ? 'Month' : 'Week'}`,
             data,
             borderColor: 'rgba(75, 192, 192, 1)',
             backgroundColor: 'rgba(75, 192, 192, 0.2)',
@@ -209,7 +209,7 @@ const renderGamesWeekChart = () => {
         plugins: {
           title: {
             display: true,
-            text: 'Compras',
+            text: 'Purchases',
           },
           legend: {
             display: false,
@@ -225,9 +225,9 @@ const renderGamesWeekChart = () => {
     const labels = statisticsStore.paymentTypeData.map((item) => item.payment_type);
     const data = statisticsStore.paymentTypeData.map((item) => item.total);
 
-    if (paymentChartInstance) paymentChartInstance.destroy(); // Corrigido
+    if (paymentChartInstance) paymentChartInstance.destroy(); 
 
-    paymentChartInstance = new Chart(ctx, { // Corrigido
+    paymentChartInstance = new Chart(ctx, { 
       type: 'pie',
       data: {
         labels,
@@ -247,11 +247,11 @@ const renderGamesWeekChart = () => {
       },
       options: {
         responsive: true,
-        maintainAspectRatio: false, // Permite ajustar o tamanho
+        maintainAspectRatio: false,
         plugins: {
           title: {
             display: true,
-            text: 'Método de Pagamento Mais Usado',
+            text: 'Most Used Payment Method',
           },
           legend: {
             position: 'top',
@@ -278,7 +278,7 @@ const renderSpendingChart = () => {
       labels,
       datasets: [
         {
-          label: 'Total Ganho (€)',
+          label: 'Total Gain (€)',
           data,
           backgroundColor: 'rgba(75, 192, 192, 0.7)',
           borderColor: 'rgba(75, 192, 192, 1)',
@@ -292,7 +292,7 @@ const renderSpendingChart = () => {
       plugins: {
         title: {
           display: true,
-          text: 'Total Ganho por Mês',
+          text: 'Total Gain by Month',
         },
         legend: {
           display: false,
@@ -302,13 +302,13 @@ const renderSpendingChart = () => {
         x: {
           title: {
             display: true,
-            text: 'Mês',
+            text: 'Month',
           },
         },
         y: {
           title: {
             display: true,
-            text: 'Valor €',
+            text: 'Value €',
           },
           beginAtZero: true,
         },
@@ -319,33 +319,30 @@ const renderSpendingChart = () => {
 
 </script>
 <template>
-  <div class="p-6 bg-gray-800 text-white rounded-lg mx-auto max-w-6xl mt-12">
-    <h2 class="text-2xl mb-6 text-center font-bold">Estatísticas</h2>
-
-    <!-- Estatísticas Principais -->
+<div class="p-6 bg-gray-800 text-white rounded-lg mx-auto max-w-6xl mt-12 fade-in">
+    <h2 class="text-2xl mb-6 text-center font-bold">Statistics</h2>
     <div class="grid grid-cols-1 sm:grid-cols-4 gap-6 mb-8">
       <div class="bg-gray-300 text-black rounded-lg p-6 flex flex-col justify-center items-center shadow-md">
-        <h3 class="text-lg font-bold text-center">Total de Registos</h3>
+        <h3 class="text-lg font-bold text-center">Total Number of Players Registered</h3>
         <p class="text-2xl font-semibold text-center mt-2">{{ statisticsStore.totalUsers }}</p>
       </div>
       <div class="bg-gray-300 text-black rounded-lg p-6 flex flex-col justify-center items-center shadow-md">
-        <h3 class="text-lg font-bold text-center">Total de Jogos Jogados</h3>
+        <h3 class="text-lg font-bold text-center">Total Games Played</h3>
         <p class="text-2xl font-semibold text-center mt-2">{{ statisticsStore.totalGames }}</p>
       </div>
       <div class="bg-gray-300 text-black rounded-lg p-6 flex flex-col justify-center items-center shadow-md">
-        <h3 class="text-lg font-bold text-center">Board Mais Jogada</h3>
+        <h3 class="text-lg font-bold text-center">Most Played Board</h3>
         <p class="text-2xl font-semibold text-center mt-2">{{ statisticsStore.mostPlayedBoard }}</p>
       </div>
       <div
         v-if="storeAuth.user?.type === 'A'"
         class="bg-gray-300 text-black rounded-lg p-6 flex flex-col justify-center items-center shadow-md"
       >
-        <h3 class="text-lg font-bold text-center">Total de Compras</h3>
+        <h3 class="text-lg font-bold text-center">Total Purchases</h3>
         <p class="text-2xl font-semibold text-center mt-2">{{ statisticsStore.totalPurchases }}</p>
       </div>
     </div>
 
-    <!-- Gráfico de Método de Pagamento e Total Gasto -->
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-12">
       <div
         v-if="storeAuth.user?.type === 'A'"
@@ -366,9 +363,8 @@ const renderSpendingChart = () => {
       </div>
     </div>
 
-    <!-- Gráficos para Administradores -->
     <div v-if="storeAuth.user?.type === 'A'" class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-12">
-      <!-- Gráfico de Jogos -->
+
       <div class="bg-gray-300 text-black rounded-lg p-4 shadow-md">
         <div class="text-center mb-4">
           <button
@@ -379,7 +375,7 @@ const renderSpendingChart = () => {
             }"
             class="px-4 py-2 mx-2 rounded border-2 transition-colors"
           >
-            Por Mês
+            Month
           </button>
           <button
             @click="gamesDisplayType = 'week'; renderGamesChart()"
@@ -389,13 +385,12 @@ const renderSpendingChart = () => {
             }"
             class="px-4 py-2 mx-2 rounded border-2 transition-colors"
           >
-            Por Semana
+            Week
           </button>
         </div>
         <canvas id="gamesChart" width="400" height="200"></canvas>
       </div>
 
-      <!-- Gráfico de Compras -->
       <div class="bg-gray-300 text-black rounded-lg p-4 shadow-md">
         <div class="text-center mb-4">
           <button
@@ -406,7 +401,7 @@ const renderSpendingChart = () => {
             }"
             class="px-4 py-2 mx-2 rounded border-2 transition-colors"
           >
-            Por Mês
+            Month
           </button>
           <button
             @click="purchasesDisplayType = 'week'; renderPurchasesChart()"
@@ -416,42 +411,54 @@ const renderSpendingChart = () => {
             }"
             class="px-4 py-2 mx-2 rounded border-2 transition-colors"
           >
-            Por Semana
+          Week
           </button>
         </div>
         <canvas id="purchasesChart" width="400" height="200"></canvas>
       </div>
     </div>
 
-    <!-- Gráficos para Usuários Não Administradores -->
-    <div v-else class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-12">
-      <div class="bg-gray-300 text-black rounded-lg p-6 shadow-md">
+    <div v-else class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
+      <div class="bg-gray-300 text-black rounded-lg p-6 shadow-md -mt-8">
         <canvas id="gamesMonthChart" width="400" height="200"></canvas>
       </div>
-      <div class="bg-gray-300 text-black rounded-lg p-6 shadow-md">
+      <div class="bg-gray-300 text-black rounded-lg p-6 shadow-md -mt-8">
         <canvas id="gamesWeekChart" width="400" height="200"></canvas>
       </div>
     </div>
 
-    <!-- Pesquisar Compras -->
     <div v-if="storeAuth.user?.type === 'A'" class="bg-gray-300 text-black rounded-lg p-6 shadow-md">
-      <h3 class="text-lg font-bold text-center mb-4">Pesquisar Compras por Jogador</h3>
+      <h3 class="text-lg font-bold text-center mb-4">Search Purchases by Player</h3>
       <div class="flex items-center space-x-4">
         <input
           v-model="nickname"
           @input="searchPlayerPurchases"
           type="text"
-          placeholder="Escreva o nickname"
+          placeholder="Write nickname"
           class="px-4 py-2 border border-gray-400 rounded-lg w-full"
         />
       </div>
       <div v-if="playerPurchases !== null" class="mt-4 text-center">
         <p class="text-xl font-bold">
-          Total de Compras "{{ nickname }}":
+          Total Purchases "{{ nickname }}":
           <span class="text-green-600">{{ playerPurchases }} €</span>
         </p>
       </div>
-      <div v-else class="mt-4 text-center text-gray-500">Escreva um nickname válido para pesquisar.</div>
+      <div v-else class="mt-4 text-center text-gray-500">Enter a valid nickname to search.</div>
     </div>
   </div>
 </template>
+<style scoped>
+.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeIn 1s forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+</style>

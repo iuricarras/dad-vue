@@ -17,12 +17,8 @@ const filterType = ref('All');
 const filterBlocked = ref('All');
 
 
-
 const fetchUsers = async (pageNumber, itemsPerPageCount, type, blocked) => {
-  try {
-    console.log(`Fetching users - Page: ${pageNumber}, ItemsPerPage: ${itemsPerPageCount}`);
-    console.log(`Type: ${type}, Blocked: ${blocked}`);  
-    
+  try { 
     const response = await userStore.fetchUsers(pageNumber, itemsPerPageCount, type, blocked);
 
     if (response && Array.isArray(response.users)) {     
@@ -73,7 +69,7 @@ const closeModal = () => {
 </script>
 
 <template>
-  <div class="flex items-center justify-center min-h-screen ">
+  <div class="flex items-center justify-center min-h-screen fade-in">
     <UserTable 
       :users="userStore.users" 
       :total="total" 
@@ -86,9 +82,10 @@ const closeModal = () => {
       @viewGames="handleViewGames" 
     />
 
+    <!-- Modal para transações -->
     <div 
       v-if="activeModal === 'transactions'" 
-      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 fade-in"
     >
       <div 
         class="bg-white p-6 rounded-lg w-3/4 max-w-4xl shadow-lg overflow-hidden" 
@@ -112,7 +109,7 @@ const closeModal = () => {
 
     <div 
       v-if="activeModal === 'games'" 
-      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 fade-in"
     >
       <div 
         class="bg-white p-6 rounded-lg w-3/4 max-w-4xl shadow-lg overflow-hidden" 
@@ -131,3 +128,26 @@ const closeModal = () => {
     </div>
   </div>
 </template>
+
+<style scoped>
+.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeIn 1s forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in:nth-child(1) {
+  animation-delay: 0.2s;
+}
+.fade-in:nth-child(2) {
+  animation-delay: 0.4s;
+}
+</style>
+

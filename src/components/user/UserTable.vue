@@ -67,37 +67,14 @@ const nextPage = () => {
 
 
 
+
+
+// ir para a pagina anterior
 const prevPage = () => {
   if (props.currentPage > 1) {
-    goToPage(props.currentPage - 1);
+    emit('fetchUsers', props.currentPage - 1, props.itemsPerPage, filterType.value, filterBlocked.value);  
   }
 };
-
-
-
-// Computar o total de páginas
-const totalPages = computed(() => {
-  return Math.ceil(props.total / props.itemsPerPage);
-});
-
-
-
-
-// Método para ir para uma página específica
-const goToPage = (page) => {
-  if (page !== props.currentPage) {
-    emit('fetchUsers', page, props.itemsPerPage, filterType.value, filterBlocked.value);
-  }
-};
-
-// Função para ir para a página diretamente
-const goToPageDirectly = () => {
-  const page = parseInt(goToPageInput.value);
-  if (page >= 1 && page <= totalPages.value) {
-    goToPage(page);
-  }
-};
-
 
 
 </script>

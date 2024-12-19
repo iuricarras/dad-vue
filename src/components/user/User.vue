@@ -20,7 +20,6 @@ const userPhotoUrl = (user) => {
 };
 
 const toggleBlockStatus = () => {
-  console.log(props.user);
   if (props.user) {
     userStore.toggleBlockStatus(props.user);
   }

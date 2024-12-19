@@ -2,17 +2,9 @@ import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
 import { useErrorStore } from '@/stores/error'
-import { useRouter } from 'vue-router'
-import { useToast } from '@/components/ui/toast/use-toast'
-import { ToastAction } from '@/components/ui/toast'
-import { h } from 'vue'
-import { useAuthStore } from '@/stores/auth';
 
 export const useTransactionStore = defineStore('transaction', () => {
-    const router = useRouter()
-    const { toast } = useToast()
     const storeError = useErrorStore()
-    const storeAuth = useAuthStore()
     const transactions = ref([])
 
     const totalTransactions = computed(() => {
@@ -22,7 +14,6 @@ export const useTransactionStore = defineStore('transaction', () => {
     const fetchTransactions = async () => {
         storeError.resetMessages();
         try {
-          console.log('Fetching transactions...');
           const response = await axios.get('transactions');
       
           if (Array.isArray(response.data)) {
@@ -36,14 +27,12 @@ export const useTransactionStore = defineStore('transaction', () => {
         }
       };
       
-
       const fetchTransaction = async (params) => {
         const { page, itemsPerPage, type } = params;
         try {
           const response = await axios.get('/transactions', {
             params: { page, itemsPerPage, type },
           });
-          console.log(response.data);
           if (response.data.transactions && Array.isArray(response.data.transactions)) {
             return response.data;
           } else {
@@ -75,26 +64,18 @@ export const useTransactionStore = defineStore('transaction', () => {
       };
       
       const insertTransaction = async (transaction) => {
-        // Reiniciar mensagens de erro
         storeError.resetMessages();
-    
         try {
-            // Enviar transação para a API
             const response = await axios.post('/transactions', transaction);
-    
-            // Adicionar a nova transação ao estado local
             transactions.value.push(response.data.data);
             return response.data.data;
         } catch (e) {
-            // Capturar erros e configurar mensagens
             storeError.setErrorMessages(
                 e.response?.data?.message || 'An unexpected error occurred.',
                 e.response?.data?.errors || null,
                 e.response?.status || 500,
                 'Error creating transaction!'
             );
-    
-            // Retornar falso em caso de erro
             return false;
         }
     };

@@ -4,8 +4,6 @@ import axios from 'axios';
 import { useErrorStore } from '@/stores/error';
 import { useRouter } from 'vue-router';
 import { useToast } from '@/components/ui/toast/use-toast';
-import { ToastAction } from '@/components/ui/toast';
-import { h } from 'vue';
 
 export const useGameStore = defineStore('game', () => {
     const router = useRouter();
@@ -15,7 +13,7 @@ export const useGameStore = defineStore('game', () => {
     const games = ref([]);
     const gamesPlaying = ref([]);
     const boards = ref([]);
-    const minTurns = ref(null); // Novo estado para armazenar o mínimo de turnos
+    const minTurns = ref(null); 
 
     
 
@@ -32,12 +30,15 @@ export const useGameStore = defineStore('game', () => {
                 numCols: board.board_cols,
                 numRows: board.board_rows
             }));
-            console.log('Boards disponíveis:', boards.value);
         } catch (error) {
             console.error('Erro ao buscar boards:', error);
         }
     };
 
+    const getBoardById = (boardId) => {
+        return boards.value.find(board => board.id === boardId);
+    };
+    
     const fetchGames = async () => {
         storeError.resetMessages();
         try {
@@ -72,7 +73,6 @@ export const useGameStore = defineStore('game', () => {
           }));
       
           minTurns.value = response.data.min_turns;
-          console.log('Min Turns no fetchTopSinglePlayerGames:', minTurns.value);
         } catch (error) {
           console.error('Erro ao buscar top Single Player para a board:', error);
         }
@@ -88,7 +88,6 @@ export const useGameStore = defineStore('game', () => {
                 wins: game.wins,
                 board: `${game.board.board_cols}x${game.board.board_rows}`,
             }));
-            console.log('Top 5 Multiplayer Games for board:', boardId, games.value);
         } catch (error) {
             console.error('Erro ao buscar top Multiplayer para a board:', error);
         }
@@ -103,7 +102,6 @@ export const useGameStore = defineStore('game', () => {
                 total_time: game.total_time,
                 board: `${game.board.board_cols}x${game.board.board_rows}`,
             }));
-            console.log('All Multiplayer Games:', games.value);
         } catch (error) {
             console.error('Error fetching all multiplayer games:', error);
         }
@@ -137,7 +135,6 @@ export const useGameStore = defineStore('game', () => {
             return response.data.data;
         } catch (e) {
             storeError.setErrorMessages(e.response.data.message, e.response.data.errors, e.response.status, 'Error updating game!');
-            console.log(e.response.data);
             return false;
         }
     }
@@ -149,6 +146,7 @@ export const useGameStore = defineStore('game', () => {
         totalGames,
         minTurns,
         fetchBoards,
+        getBoardById,
         fetchGames,
         fetchGame,
         fetchTopSinglePlayerGames,

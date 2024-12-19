@@ -33,36 +33,80 @@ const login = () => {
 }
 
 </script>
-
 <template>
-  <Card class="w-[450px] mx-auto my-8 p-4 px-8">
+  <Card
+    class="w-[450px] mx-auto my-8 p-4 px-8 bg-gray-800 text-white rounded-md shadow-md border-0 fade-in"
+  >
     <CardHeader>
       <CardTitle>Login</CardTitle>
-      <CardDescription>Enter your credentials to access your account.</CardDescription>
+      <CardDescription class="text-gray-400">
+        Enter your credentials to access your account.
+      </CardDescription>
     </CardHeader>
     <CardContent>
       <form>
         <div class="grid items-center w-full gap-4">
           <div class="flex flex-col space-y-1.5">
             <Label for="email">Email</Label>
-            <Input id="email" type="email" placeholder="User Email" v-model="credentials.email" />
+            <Input
+              id="email"
+              type="email"
+              placeholder="User Email"
+              v-model="credentials.email"
+              class="bg-gray-700 text-white border-0"
+            />
             <ErrorMessage :errorMessage="storeError.fieldMessage('email')"></ErrorMessage>
           </div>
           <div class="flex flex-col space-y-1.5">
             <Label for="password">Password</Label>
-            <Input id="password" type="password" placeholder="Password" v-model="credentials.password" />
+            <Input
+              id="password"
+              type="password"
+              placeholder="Password"
+              v-model="credentials.password"
+              class="bg-gray-700 text-white border-0"
+            />
             <ErrorMessage :errorMessage="storeError.fieldMessage('password')"></ErrorMessage>
           </div>
         </div>
       </form>
     </CardContent>
     <CardFooter class="flex justify-between px-6 pb-6">
-        <Button variant="outline" @click="cancel">
-            Cancel
-        </Button>
-        <Button @click="login">
-            Login
-        </Button>
+      <Button
+        @click="cancel"
+        class="bg-gray-900 text-white py-2 px-4 rounded-md shadow-md hover:bg-gray-700"
+      >
+        Cancel
+      </Button>
+      <Button
+        @click="login"
+        class="bg-gray-900 text-white py-2 px-4 rounded-md shadow-md hover:bg-gray-700"
+      >
+        Login
+      </Button>
     </CardFooter>
   </Card>
 </template>
+
+<style scoped>
+.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeIn 1s forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in:nth-child(1) {
+  animation-delay: 0.2s;
+}
+.fade-in:nth-child(2) {
+  animation-delay: 0.4s;
+}
+</style>
+

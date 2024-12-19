@@ -1,11 +1,9 @@
 import { ref, computed, inject } from 'vue'
 import { defineStore } from 'pinia'
 import { useErrorStore } from '@/stores/error'
-import { useAuthStore } from '@/stores/auth'
 import { useLobbyStore } from '@/stores/lobby'
 
 export const useChatStore = defineStore('chat', () => {
-    const storeAuth = useAuthStore()
     const storeError = useErrorStore()
     const storeLobby = useLobbyStore()
 

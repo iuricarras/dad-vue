@@ -12,6 +12,7 @@ import UserUpdate from '@/components/user/UserUpdate.vue'
 import { useAuthStore } from '@/stores/auth'
 import MultiPlayer from '@/components/multiplayer/MultiPlayer.vue'
 import LobbyRoom from '@/components/multiplayer/LobbyRoom.vue'
+import Game from '@/components/multiplayer/Game.vue'
 import UserCreate from '@/components/user/UserCreate.vue'
 import UserCreateAdmin from '@/components/user/UserCreateAdmin.vue'
 
@@ -83,6 +84,11 @@ const router = createRouter({
       component: LobbyRoom,
     },
     {
+      path: '/game',
+      name: 'Game',
+      component: Game,
+    },
+    {
       path: '/register',
       name: 'register',
       component: UserCreate,
@@ -105,12 +111,23 @@ router.beforeEach(async (to, from, next) => {
       await storeAuth.restoreToken()
   }
   
-  const requiresAuth = ['users', 'Transactions', 'Scoreboard', 'GameHistory', 'MultiPlayer','update'];
-  const admin = ['users'];
+  const requiresAuth = ['users', 'Transactions', 'Scoreboard', 'GameHistory', 'MultiPlayer','update', 'registerAdmin'];
+  const admin = ['users', 'registerAdmin'];
   const player = ['Scoreboard','Transactions','GameHistory']; 
+  const notAccessible = ['Game']
   const adminRestricted = ['SinglePlayer', 'MultiPlayer', 'register'];
   const user = ['register'];
   
+  if(notAccessible.includes(to.name) && from.name != 'Lobby'){
+    next({ name: 'home' });
+    return;
+  }
+
+  if(to.name == "Lobby" && from.name != "MultiPlayer"){
+    next({ name: 'MultiPlayer' });
+    return;
+  }
+
 
   if (requiresAuth.includes(to.name) && !storeAuth.user) {
       next({ name: 'login' });
