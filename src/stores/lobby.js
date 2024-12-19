@@ -40,12 +40,12 @@ export const useLobbyStore = defineStore('lobby', () => {
     const verifyTimer = async () => {
         const player = game.value.players.find(player => player.player.id == storeAuth.id)
         console.log(game.value.currentPlayer)
-        if(game.value.currentPlayer == player.id && !game.value.firstCard){
+        if (game.value.currentPlayer == player.id && !game.value.firstCard) {
             console.log("Player turn")
             clearInterval(timerID.value);
             time.value = 20;
             await timer();
-        }else if(game.value.currentPlayer != player.id && !game.value.firstCard){
+        } else if (game.value.currentPlayer != player.id && !game.value.firstCard) {
             clearInterval(timerID.value);
             time.value = 20;
         }
@@ -55,11 +55,11 @@ export const useLobbyStore = defineStore('lobby', () => {
         timerID.value = setInterval(() => {
             time.value = time.value - 1;
             console.log(time.value);
-            if(time.value == 0){
+            if (time.value == 0) {
                 clearInterval(timerID.value);
                 quit();
             }
-        },1000);
+        }, 1000);
 
     }
     // when the lobby changes on the server, it is updated on the client
@@ -83,10 +83,10 @@ export const useLobbyStore = defineStore('lobby', () => {
         game.value = { ...gameChanged }
         gameStatus.value = gameChanged.status
         console.log("Não devia estar aqui")
-        if(!gameChanged.firstCard){
+        if (!gameChanged.firstCard) {
             matched.value = false;
         }
-        if(gameStatus != 2){
+        if (gameStatus != 2) {
             verifyTimer();
         }
     })
@@ -137,6 +137,10 @@ export const useLobbyStore = defineStore('lobby', () => {
     // add a game to the lobby
     const addGame = (information) => {
         storeError.resetMessages()
+        if (storeAuth.brain_coins_balance < 5) {
+            storeAuth.brainCoinsBalanceError(5);
+            return
+        }
         socket.emit('addGame', information, (response) => {
             if (webSocketServerResponseHasError(response)) {
                 return
@@ -162,6 +166,10 @@ export const useLobbyStore = defineStore('lobby', () => {
     // join a game of the lobby
     const joinGame = (id) => {
         storeError.resetMessages()
+        if (storeAuth.brain_coins_balance < 5) {
+            storeAuth.brainCoinsBalanceError(5);
+            return
+        }
         socket.emit('joinGame', id, async (response) => {
             // callback executed after the join is complete
             if (webSocketServerResponseHasError(response)) {
@@ -189,7 +197,7 @@ export const useLobbyStore = defineStore('lobby', () => {
         })
     }
 
-    const leaveGame = () => {   
+    const leaveGame = () => {
         storeError.resetMessages()
         socket.emit('leaveGame', game.value.id, (response) => {
             if (webSocketServerResponseHasError(response)) {
@@ -224,10 +232,10 @@ export const useLobbyStore = defineStore('lobby', () => {
     }
 
     const move = (cardID) => {
-        if(matched.value){
+        if (matched.value) {
             return;
         }
-        if (game.value.firstCard){
+        if (game.value.firstCard) {
             console.log("First card - matched a true")
             matched.value = true;
         }

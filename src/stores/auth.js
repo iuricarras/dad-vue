@@ -6,6 +6,8 @@ import { useRouter } from 'vue-router'
 import avatarNoneAssetURL from '@/assets/avatar-none.png'
 import { toast } from '@/components/ui/toast'
 
+const regex = /api$/gi;
+
 export const useAuthStore = defineStore('auth', () => {
     const router = useRouter()
     const storeError = useErrorStore()
@@ -53,10 +55,20 @@ export const useAuthStore = defineStore('auth', () => {
     const userPhotoUrl = computed(() => {
         const photoFile = user.value ? user.value.photo_filename ?? '' : ''
         if (photoFile) {
-            return axios.defaults.baseURL.replaceAll('/api', '/storage/photos/' + photoFile);
+            return axios.defaults.baseURL.replaceAll(regex, 'storage/photos/' + photoFile);
         }
         return avatarNoneAssetURL
     })
+
+    const getUserPhotoUrl = (photoFile) => {
+        return axios.defaults.baseURL.replaceAll(regex, 'storage/photos/' + photoFile);
+    }
+
+    const brainCoinsBalanceError = (value) => {
+        storeError.resetMessages()
+        storeError.setErrorMessages(`You don't have enough Brain Coins to play this game! You need ${value} Brain Coins`, [], 400, 'Error joining game!');
+    }
+
 
     const getFirstLastName = (fullName) => {
         const names = fullName.trim().split(' ')
@@ -185,6 +197,6 @@ export const useAuthStore = defineStore('auth', () => {
 
     return {
         userBlocked, brain_coins_balance, id, user, userName, userFirstLastName, userEmail, userType, userGender, userPhotoUrl, userNick,
-        getFirstLastName, login, logout, restoreToken, canUpdateDeleteProject, clearUser
+        getFirstLastName, login, logout, restoreToken, canUpdateDeleteProject, clearUser, brainCoinsBalanceError, getUserPhotoUrl
     }
 })
