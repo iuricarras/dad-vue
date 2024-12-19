@@ -64,7 +64,7 @@ const logout = () => {
   <div class="background-video-container">
     <video autoplay muted loop class="background-video">
       <source src="@/assets/video.mp4" type="video/mp4" />
-      Seu navegador não suporta vídeo HTML5.
+      Does not support HTML5.
     </video>
     <div class="content">
       <slot></slot>
@@ -78,18 +78,20 @@ const logout = () => {
   <audio ref="audioRef" :src="musica" loop></audio>
 
   <!-- Botão de Ligar/Desligar Música -->
-  <div class="fixed bottom-4 right-4 rounded-lg shadow-lg">
-    <button
-      @click="toggleMute"
-      class="px-4 py-2 text-sm text-white rounded transition-colors"
-      :class="isMuted ? 'bg-green-500 hover:bg-green-600' : 'bg-red-500 hover:bg-red-600'">
-      <img
-        :src="isMuted ? soundIcon : muteIcon"
-        alt="Sound Icon"
-        class="w-6 h-6 inline-block mr-2" />
-      {{ isMuted ? 'Ligar Música' : 'Desligar Música' }}
-    </button>
-  </div>
+  <div 
+  class="fixed bottom-4 right-4 rounded-lg shadow-lg z-[1]"
+>
+  <button
+    @click="toggleMute"
+    class="px-4 py-2 text-sm text-white rounded transition-colors"
+    :class="isMuted ? 'bg-red-500 hover:bg-red-600' : 'bg-green-500 hover:bg-green-600'">
+    <img
+      :src="isMuted ? muteIcon : soundIcon"
+      alt="Sound Icon"
+      class="w-6 h-6 inline-block mr-2"/>
+  </button>
+</div>
+
 
   <nav class="relative flex justify-between items-center bg-gray-800 p-1 text-white">
     <GlobalAlertDialog ref="alert-dialog"></GlobalAlertDialog>
@@ -181,7 +183,7 @@ const logout = () => {
               to="/update"
               class="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
               @click="closeDropdown">
-              User-Update
+              Edit Profile
             </RouterLink>
             <button
               class="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"

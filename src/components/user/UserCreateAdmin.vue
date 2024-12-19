@@ -33,7 +33,6 @@ const cancel = () => {
 // cria o user para o servidor
 const create = async () => {
   const jsonToSend = credentials.value
-  console.log("!!!JSON!!!", jsonToSend)
   await storeUser.createAdmin(jsonToSend)
 }
 
@@ -85,8 +84,7 @@ onMounted(() => {
 <template>
   <Card v-show="storeAuth.user.type === 'A'" class="w-[450px] mx-auto my-8 p-4 px-8">
     <CardHeader>
-      <CardTitle>Criar Administrador</CardTitle>
-      <CardDescription>Insira os seus dados.</CardDescription>
+      <CardTitle>Create Administrator</CardTitle>
     </CardHeader>
     <CardContent>
 
@@ -116,7 +114,7 @@ onMounted(() => {
           @dragleave.prevent 
           @drop.prevent="onDrop">
 
-          <p>Arraste e solte uma imagem aqui.</p>
+          <p>Drag-and-drop an image here</p>
             <input
             type="file"
             accept="image/*"
@@ -129,7 +127,7 @@ onMounted(() => {
 
             <button type="button" @click="triggerFileInput" 
             class="bg-black text-white py-2 px-4 rounded-md shadow-md hover:bg-gray-800">
-            Selecionar Imagem</button>
+            Select image</button>
           </div>
 
 

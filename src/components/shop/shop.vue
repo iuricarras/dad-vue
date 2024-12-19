@@ -60,7 +60,7 @@ const buyItem = (item) => {
           'rounded-lg shadow-md p-4 hover:shadow-lg transition-all': true
         }">
         <h2 class="text-xl font-semibold mb-2">{{ item.name }}</h2>
-        <p class="text-gray-700 mb-4">{{ item.description }}</p>
+        <p class="text-black mb-4">{{ item.description }}</p>
         <div class="flex justify-between items-center">
           <span class="text-lg font-semibold">{{ item.price }} $</span>
           <button v-if="storeAuth.user?storeAuth.user.type=='P': false"

@@ -99,8 +99,7 @@ onMounted(() => {
 <template>
   <Card v-show="storeAuth.user" class="w-[450px] mx-auto my-8 p-4 px-8">
     <CardHeader>
-      <CardTitle>Atualizar dados</CardTitle>
-      <CardDescription>Atulize os seus dados da sua conta.</CardDescription>
+      <CardTitle>Edit Profile</CardTitle>
     </CardHeader>
     <CardContent>
 
@@ -129,7 +128,7 @@ onMounted(() => {
           <div class="drag-and-drop flex flex-col space-y-1.5" @dragover.prevent @dragleave.prevent
             @drop.prevent="onDrop">
 
-            <p>Arraste e solte uma imagem aqui.</p>
+            <p>Drag-and-drop an image here</p>
             <input type="file" accept="image/*" @change="onFileChange" ref="fileInput" style="display: none;"
               :disabled="disabled" />
 
@@ -137,7 +136,7 @@ onMounted(() => {
 
             <button type="button" @click="triggerFileInput"
               class="bg-black text-white py-2 px-4 rounded-md shadow-md hover:bg-gray-800">
-              Selecionar Imagem</button>
+              Select image</button>
           </div>
 
 
@@ -160,7 +159,7 @@ onMounted(() => {
     </CardFooter>
     <button v-show="storeAuth.user.type === 'P' " type="button" @click="showDeleteForm_View" class="bg-red-600 text-white py-2
     px-4 rounded-md shadow-md hover:bg-red-700 focus:ring-2 focus:ring-red-400 focus:outline-none flex items-center gap-2">
-      🗑️ Apagar conta </button>
+      🗑️ Delete account </button>
 
 
     <!-- Confirma se o user quer apagar a conta -->
@@ -170,10 +169,10 @@ onMounted(() => {
       overflow-hidden" style="max-height: 90vh; overflow-y: auto;">
         <div class="flex justify-between items-center mb-4">
           <h3 class="text-lg font-bold">
-            Tens a certeza que queres continuar? (Esta ação é IRREVERSÍVEL) !!!!!!
+            Are you sure you want to continue? (This action is IRREVERSIBLE)!!!
           </h3>
           <button @click="showDeleteForm_View" class="text-red-500 font-bold">
-            Fechar
+            Close
           </button>
         </div>
 
@@ -181,7 +180,7 @@ onMounted(() => {
         <div class="flex flex-col space-y-4">
           <div>
             <Label for="password">Password</Label>
-            <input id="password" type="password" placeholder="Insira sua senha" v-model="credentials_delete.password"
+            <input id="password" type="password" placeholder="Write your password" v-model="credentials_delete.password"
               :disabled="disabled " autocomplete="new-password"
               class="mt-1 block w-full px-3 py-2 bg-yellow-100 border border-gray-300 rounded-md shadow-sm
               focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm" />
@@ -189,7 +188,7 @@ onMounted(() => {
           </div>
           <button @click="deleteUser"
             class="w-full bg-red-500 text-white py-2 px-4 rounded-md shadow-md hover:bg-red-600 font-bold">
-            Apagar conta - Faz LogOut por agora
+            Delete Account
           </button>
         </div>
 

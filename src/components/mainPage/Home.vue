@@ -28,7 +28,7 @@ const storeAuth = useAuthStore();
               <path d="M12 12c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm0 2c-3.31 0-10 1.67-10 5v2h20v-2c0-3.33-6.69-5-10-5z" />
             </svg>
           </div>
-          <p class="text-sm lg:text-lg mt-2">Joga agora e desafia a tua memória!</p>
+          <p class="text-sm lg:text-lg mt-2">Play now and challenge your memory!</p>
         </RouterLink>
       </div>
 
@@ -61,7 +61,7 @@ const storeAuth = useAuthStore();
             />
           </svg>
         </div>
-        <p class="text-sm lg:text-lg text-center mt-2">Faz login para desbloquear este modo de jogo!</p>
+        <p class="text-sm lg:text-lg text-center mt-2">Log in to unlock this game mode!!</p>
       </div>
 
       <!-- Statistics -->
