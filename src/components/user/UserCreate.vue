@@ -71,79 +71,121 @@ onMounted(() => {
 })
 </script>
 
-
 <template>
-  <Card v-show="!storeAuth.user" class="w-[450px] mx-auto my-8 p-4 px-8">
+  <Card
+    v-show="!storeAuth.user"
+    class="w-[450px] mx-auto my-8 p-4 px-8 bg-gray-800 text-white rounded-md shadow-md border-0"
+  >
     <CardHeader>
-      <CardTitle>Criar Utilizador</CardTitle>
-      <CardDescription>Insira os seus dados.</CardDescription>
+      <CardTitle>Create Account</CardTitle>
     </CardHeader>
     <CardContent>
-
       <form>
         <div class="grid items-center w-full gap-4">
           <div class="flex flex-col space-y-1.5">
             <Label for="email">Email</Label>
-            <Input id="email" type="email" placeholder="User Email" v-model="credentials.email" :disabled="disabled"/>
+            <Input
+              id="email"
+              type="email"
+              placeholder="User Email"
+              v-model="credentials.email"
+              :disabled="disabled"
+              class="bg-gray-700 text-white border-0"
+            />
             <ErrorMessage :errorMessage="storeError.fieldMessage('email')"></ErrorMessage>
           </div>
           <div class="flex flex-col space-y-1.5">
             <Label for="nickname">Nickname</Label>
-            <Input id="nickname" type="nickname" placeholder="Nickname" v-model="credentials.nickname" :disabled="disabled"/>
-            <ErrorMessage :errorMessage="storeError.fieldMessage('nickname')"></ErrorMessage>
+            <Input
+              id="nickname"
+              type="nickname"
+              placeholder="Nickname"
+              v-model="credentials.nickname"
+              :disabled="disabled"
+              class="bg-gray-700 text-white border-0"
+            />
+            <ErrorMessage
+              :errorMessage="storeError.fieldMessage('nickname')"
+            ></ErrorMessage>
           </div>
           <div class="flex flex-col space-y-1.5">
             <Label for="name">Name</Label>
-            <Input id="name" type="name" placeholder="Name" v-model="credentials.name" :disabled="disabled"/>
+            <Input
+              id="name"
+              type="name"
+              placeholder="Name"
+              v-model="credentials.name"
+              :disabled="disabled"
+              class="bg-gray-700 text-white border-0"
+            />
             <ErrorMessage :errorMessage="storeError.fieldMessage('name')"></ErrorMessage>
           </div>
 
           <Label for="photo">Photo</Label>
-          <div class="drag-and-drop flex flex-col space-y-1.5"
-          @dragover.prevent 
-          @dragleave.prevent 
-          @drop.prevent="onDrop">
-
-          <p>Arraste e solte uma imagem aqui.</p>
+          <div
+            class="drag-and-drop flex flex-col space-y-1.5 bg-gray-700 text-white rounded-md border-0"
+            @dragover.prevent
+            @dragleave.prevent
+            @drop.prevent="onDrop"
+          >
+            <p>Drag-and-drop an image here</p>
             <input
-            type="file"
-            accept="image/*"
-            @change="onFileChange"
-            ref="fileInput"
-            style="display: none;"
-            :disabled="disabled" />
-
-            <img v-if="imagePreview" :src="imagePreview" alt="Preview da imagem" />
-
-            <button type="button" @click="triggerFileInput" 
-            class="bg-black text-white py-2 px-4 rounded-md shadow-md hover:bg-gray-800">
-            Selecionar Imagem</button>
+              type="file"
+              accept="image/*"
+              @change="onFileChange"
+              ref="fileInput"
+              style="display: none;"
+              :disabled="disabled"
+            />
+            <img
+              v-if="imagePreview"
+              :src="imagePreview"
+              alt="Preview da imagem"
+            />
+            <button
+              type="button"
+              @click="triggerFileInput"
+              class="bg-gray-900 text-white py-2 px-4 rounded-md shadow-md hover:bg-gray-700"
+            >
+              Select image
+            </button>
           </div>
 
           <div class="flex flex-col space-y-1.5">
             <Label for="password">Password</Label>
-            <Input id="password" type="password" placeholder="Password" v-model="credentials.password" :disabled="disabled"/>
+            <Input
+              id="password"
+              type="password"
+              placeholder="Password"
+              v-model="credentials.password"
+              :disabled="disabled"
+              class="bg-gray-700 text-white border-0"
+            />
             <ErrorMessage :errorMessage="storeError.fieldMessage('password')"></ErrorMessage>
           </div>
         </div>
       </form>
     </CardContent>
     <CardFooter class="flex justify-between px-6 pb-6">
-        <Button variant="outline" @click="cancel">
-            Cancel
-        </Button>
-        <Button @click="create">
-            Register
-        </Button>
+      <Button
+        @click="cancel"
+        class="bg-gray-900 text-white py-2 px-4 rounded-md shadow-md hover:bg-gray-700"
+      >
+        Cancel
+      </Button>
+      <Button
+        @click="create"
+        class="bg-gray-900 text-white py-2 px-4 rounded-md shadow-md hover:bg-gray-700"
+      >
+        Register
+      </Button>
     </CardFooter>
   </Card>
 </template>
 
-
 <style>
-
 .drag-and-drop {
-  border: 2px dashed #ccc;
+  border: 2px dashed #555;
   padding: 20px;
   text-align: center;
   cursor: pointer;

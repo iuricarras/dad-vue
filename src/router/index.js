@@ -111,8 +111,8 @@ router.beforeEach(async (to, from, next) => {
       await storeAuth.restoreToken()
   }
   
-  const requiresAuth = ['users', 'Transactions', 'Scoreboard', 'GameHistory', 'MultiPlayer','update'];
-  const admin = ['users'];
+  const requiresAuth = ['users', 'Transactions', 'Scoreboard', 'GameHistory', 'MultiPlayer','update', 'registerAdmin'];
+  const admin = ['users', 'registerAdmin'];
   const player = ['Scoreboard','Transactions','GameHistory']; 
   const notAccessible = ['Game']
   const adminRestricted = ['SinglePlayer', 'MultiPlayer', 'register'];

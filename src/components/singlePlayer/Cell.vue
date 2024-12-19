@@ -25,7 +25,7 @@ const srcImg = computed(() => {
 </script>
 
 <template>
-    <div class="grow" :class="{'opacity-25': cell.isMatched}">
+    <div class="grow" :class="{'opacity-40': cell.isMatched}">
         <img :src="srcImg" alt="Tictactoe piece" @click="clicked" class="w-32"> 
     </div>
 </template>
