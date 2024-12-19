@@ -12,6 +12,7 @@ import UserUpdate from '@/components/user/UserUpdate.vue'
 import { useAuthStore } from '@/stores/auth'
 import MultiPlayer from '@/components/multiplayer/MultiPlayer.vue'
 import LobbyRoom from '@/components/multiplayer/LobbyRoom.vue'
+import Game from '@/components/multiplayer/Game.vue'
 
 
 
@@ -83,6 +84,11 @@ const router = createRouter({
       name: 'Lobby',
       component: LobbyRoom,
     },
+    {
+      path: '/game',
+      name: 'Game',
+      component: Game,
+    },
 
   ]
 })
@@ -100,7 +106,18 @@ router.beforeEach(async (to, from, next) => {
   const admin = ['users'];
   const player = ['Scoreboard','Transactions','GameHistory']; 
   const adminRestricted = ['SinglePlayer'];
+  const notAccessible = ['Game']
   
+  if(notAccessible.includes(to.name) && from.name != 'Lobby'){
+    next({ name: 'home' });
+    return;
+  }
+
+  if(to.name == "Lobby" && from.name != "MultiPlayer"){
+    next({ name: 'MultiPlayer' });
+    return;
+  }
+
 
   if (requiresAuth.includes(to.name) && !storeAuth.user) {
       next({ name: 'login' });

@@ -38,6 +38,10 @@ export const useGameStore = defineStore('game', () => {
         }
     };
 
+    const getBoardById = (boardId) => {
+        return boards.value.find(board => board.id === boardId);
+    };
+    
     const fetchGames = async () => {
         storeError.resetMessages();
         try {
@@ -149,6 +153,7 @@ export const useGameStore = defineStore('game', () => {
         totalGames,
         minTurns,
         fetchBoards,
+        getBoardById,
         fetchGames,
         fetchGame,
         fetchTopSinglePlayerGames,

@@ -10,8 +10,14 @@ import { Button } from '@/components/ui/button';
 import { onMounted } from 'vue'
 import ListGamesLobby from './ListGamesLobby.vue'
 import { useLobbyStore } from '@/stores/lobby'
+import CreateLobby from './CreateLobby.vue';
 
 const storeLobby = useLobbyStore()
+
+const createLobby = (information) => {
+    console.log(information)
+    storeLobby.addGame(information)
+}
 
 onMounted(() => {
     storeLobby.fetchGames()
@@ -26,9 +32,7 @@ onMounted(() => {
         </CardHeader>
         <CardContent class="p-4">
             <div class="py-2">
-                <Button @click="storeLobby.addGame">
-                    New Game
-                </Button>
+                <CreateLobby @createLobby="createLobby"></CreateLobby>
             </div>
             <div v-if="storeLobby.totalGames > 0">
                 <ListGamesLobby></ListGamesLobby>

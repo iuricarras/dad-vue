@@ -1,10 +1,18 @@
 <script setup>
 import { computed } from 'vue'
-const props = defineProps(['cell', 'matched'])
+const props = defineProps({
+    cell: Object,
+    matched: {
+        type: Boolean,
+        default: false
+    }
+})
 const emit = defineEmits(['card'])
 
 const clicked = () => {
     if(!props.matched && !props.cell.isRevealed){
+        console.log('clicked')
+        console.log(props.matched)
         emit('card', props.cell)
     }
     // props.cell.isRevealed = true
