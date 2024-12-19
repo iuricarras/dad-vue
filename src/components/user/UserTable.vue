@@ -32,13 +32,12 @@ const props = defineProps({
 });
 
 
-
 const filterType = ref('All');
 const filterBlocked = ref('All');
 
 const emit = defineEmits(['fetchUsers', 'viewTransactions', 'viewGames']);
 
-const goToPageInput = ref(props.currentPage); // Estado para o input de página
+const goToPageInput = ref(props.currentPage);
 
 
 const updateFilters = () => {
@@ -58,7 +57,8 @@ const handleViewGame = (user) => {
   emit('viewGames', user);
 };
 
-// Função para ir para a próxima página
+
+// ir para a proxima pagina
 const nextPage = () => {
   if (props.currentPage < totalPages.value) {
     goToPage(props.currentPage + 1);
@@ -67,14 +67,34 @@ const nextPage = () => {
 
 
 
-
-
 // ir para a pagina anterior
 const prevPage = () => {
   if (props.currentPage > 1) {
-    emit('fetchUsers', props.currentPage - 1, props.itemsPerPage, filterType.value, filterBlocked.value);  
+    goToPage(props.currentPage - 1);
   }
 };
+
+// calcular o total de paginas
+const totalPages = computed(() => {
+  return Math.ceil(props.total / props.itemsPerPage);
+});
+
+
+// função para ir a um pagina espeficica
+const goToPage = (page) => {
+  if (page !== props.currentPage) {
+    emit('fetchUsers', page, props.itemsPerPage, filterType.value, filterBlocked.value);
+  }
+};
+
+// função para ir para a página diretamente
+const goToPageDirectly = () => {
+  const page = parseInt(goToPageInput.value);
+  if (page >= 1 && page <= totalPages.value) {
+    goToPage(page);
+  }
+};
+
 
 
 </script>
@@ -91,23 +111,6 @@ const prevPage = () => {
         </select>
       </div>
       <h2 class="text-xl text-center font-semibold text-white">Users</h2>
-      <div>
-        <RouterLink
-        to="/registerAdmin"
-        class="text-sm font-medium hover:text-blue-500 px-3 py-2 rounded-md transition-colors"
-        v-slot="{ isActive }">
-
-
-        <button
-          :class="{ 'bg-blue-600 text-white': isActive }"
-          class="bg-blue-500 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-600
-          focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all">
-          Register Admin
-        </button>
-      </RouterLink>
-      </div>
-      
-      
       <div>
         <label for="filterBlocked" class="block text-white mb-1">Blocked</label>
         <select id="filterBlocked" v-model="filterBlocked" @change="updateFilters" class="px-3 py-2 border rounded-lg">
@@ -136,8 +139,6 @@ const prevPage = () => {
         </tr>
       </tbody>
     </table>
-
-<!-- Navegação de Páginas -->
 <div class="flex justify-center mt-4 space-x-4">
         <button 
           class="px-4 py-2 mx-1 bg-gray-700 text-white rounded hover:bg-gray-600" 
@@ -153,7 +154,6 @@ const prevPage = () => {
           Prev
         </button>
 
-        <!-- Exibição da página atual e campo para navegar diretamente -->
         <div class="flex items-center space-x-2">
           <span class="text-white">Page {{ props.currentPage }} of {{ totalPages }}</span>
           <input 
