@@ -1,19 +1,12 @@
 <script setup>
-import { ref, useTemplateRef, provide, onMounted } from 'vue';
+import { ref, useTemplateRef, provide, onMounted, onBeforeUnmount } from 'vue';
 import { RouterView } from 'vue-router';
 import Toaster from '@/components/ui/toast/Toaster.vue';
 import { useAuthStore } from '@/stores/auth.js';
 import GlobalAlertDialog from '@/components/common/GlobalAlertDialog.vue';
-import musica from '@/assets/natal.mp3';
-import soundIcon from '@/assets/volume.png';
-import muteIcon from '@/assets/mute.png';
-import back from '@/assets/video.mp4';
 
 const storeAuth = useAuthStore();
 const showDropdown = ref(false);
-
-const audioRef = ref(null);
-const isMuted = ref(true); // Começa desligado (mutado)
 
 const toggleDropdown = () => {
   showDropdown.value = !showDropdown.value;
@@ -23,23 +16,26 @@ const closeDropdown = () => {
   showDropdown.value = false;
 };
 
-onMounted(() => {
-  if (audioRef.value) {
-    audioRef.value.volume = 0.03; // Diminui o volume para 5% (ajuste conforme necessário)
-  }
-});
-
-
-const toggleMute = () => {
-  if (audioRef.value) {
-    if (isMuted.value) {
-      audioRef.value.play(); // Toca a música
-    } else {
-      audioRef.value.pause(); // Pausa a música
-    }
-    isMuted.value = !isMuted.value; // Atualiza o estado
+const handleClickOutside = (event) => {
+  const dropdown = document.querySelector('.dropdown-menu');
+  const avatar = document.querySelector('.dropdown-toggle');
+  if (
+    dropdown &&
+    !dropdown.contains(event.target) &&
+    avatar &&
+    !avatar.contains(event.target)
+  ) {
+    closeDropdown();
   }
 };
+
+onMounted(() => {
+  document.addEventListener('click', handleClickOutside);
+});
+
+onBeforeUnmount(() => {
+  document.removeEventListener('click', handleClickOutside);
+});
 
 const alertDialog = useTemplateRef('alert-dialog');
 provide('alertDialog', alertDialog);
@@ -60,37 +56,7 @@ const logout = () => {
 </script>
 
 <template>
-
-  <div class="background-video-container">
-    <video autoplay muted loop class="background-video">
-      <source src="@/assets/video.mp4" type="video/mp4" />
-      Seu navegador não suporta vídeo HTML5.
-    </video>
-    <div class="content">
-      <slot></slot>
-    </div>
-  </div>
-
-
   <Toaster />
-  
-  <!-- Áudio -->
-  <audio ref="audioRef" :src="musica" loop></audio>
-
-  <!-- Botão de Ligar/Desligar Música -->
-  <div class="fixed bottom-4 right-4 rounded-lg shadow-lg">
-    <button
-      @click="toggleMute"
-      class="px-4 py-2 text-sm text-white rounded transition-colors"
-      :class="isMuted ? 'bg-green-500 hover:bg-green-600' : 'bg-red-500 hover:bg-red-600'">
-      <img
-        :src="isMuted ? soundIcon : muteIcon"
-        alt="Sound Icon"
-        class="w-6 h-6 inline-block mr-2" />
-      {{ isMuted ? 'Ligar Música' : 'Desligar Música' }}
-    </button>
-  </div>
-
   <nav class="relative flex justify-between items-center bg-gray-800 p-1 text-white">
     <GlobalAlertDialog ref="alert-dialog"></GlobalAlertDialog>
     <RouterLink
@@ -100,6 +66,7 @@ const logout = () => {
       <img
         src="/src/assets/memory.png" alt="Memory Game Icon" class="ml-2 w-10 h-10"/>
     </RouterLink>
+
 
     <h1 class="flex-grow text-center font-bold">
       {{ storeAuth.userNick ? storeAuth.userNick : '' }}
@@ -122,7 +89,7 @@ const logout = () => {
       <RouterLink
         v-show="!storeAuth.user"
         to="/register"
-        class="text-2x1 font-medium hover:text-blue-500 px-3 py-2 rounded-md transition-colors"
+        class="text-sm font-medium hover:text-blue-500 px-3 py-2 rounded-md transition-colors"
         v-slot="{ isActive }">
         <span :class="{ 'text-blue-500': isActive }">Register</span>
       </RouterLink>
@@ -130,11 +97,10 @@ const logout = () => {
       <RouterLink
         v-show="!storeAuth.user"
         to="/login"
-        class="text-2x1 font-medium hover:text-blue-500 px-3 py-2 rounded-md transition-colors"
+        class="text-sm font-medium hover:text-blue-500 px-3 py-2 rounded-md transition-colors"
         v-slot="{ isActive }">
         <span :class="{ 'text-blue-500': isActive }">Login</span>
       </RouterLink>
-
 
       <div v-if="storeAuth.user" class="relative">
         <img
@@ -181,7 +147,7 @@ const logout = () => {
               to="/update"
               class="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
               @click="closeDropdown">
-              User-Update
+              Atualizar Dados
             </RouterLink>
             <button
               class="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
@@ -194,13 +160,10 @@ const logout = () => {
       </div>
     </div>
   </nav>
-
   <RouterView></RouterView>
 </template>
 
-
 <style scoped>
-
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.2s;
@@ -208,30 +171,5 @@ const logout = () => {
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
-}
-
-.background-video-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  z-index: -1; /* Coloca o vídeo atrás do conteúdo */
-}
-
-.background-video {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 100%;
-  height: 100%;
-  object-fit: cover; /* Garante que o vídeo cubra todo o fundo */
-  transform: translate(-50%, -50%);
-}
-
-.content {
-  position: relative; /* Garante que o conteúdo principal fique acima do vídeo */
-  z-index: 1; /* Coloca o conteúdo acima do vídeo */
 }
 </style>

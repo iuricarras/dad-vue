@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed, watch } from 'vue';
 import User from '@/components/user/User.vue';
+
 import {
   Pagination,
   PaginationEllipsis,
@@ -31,14 +32,11 @@ const props = defineProps({
   },
 });
 
-
-
 const filterType = ref('All');
 const filterBlocked = ref('All');
 
-const emit = defineEmits(['fetchUsers', 'viewTransactions', 'viewGames']);
 
-const goToPageInput = ref(props.currentPage); // Estado para o input de página
+const emit = defineEmits(['fetchUsers', 'viewTransactions', 'viewGames']);
 
 
 const updateFilters = () => {
@@ -58,46 +56,18 @@ const handleViewGame = (user) => {
   emit('viewGames', user);
 };
 
-// Função para ir para a próxima página
 const nextPage = () => {
-  if (props.currentPage < totalPages.value) {
-    goToPage(props.currentPage + 1);
+  if (props.currentPage < Math.ceil(props.total / props.itemsPerPage)) {
+    emit('fetchUsers', props.currentPage + 1, props.itemsPerPage, filterType.value, filterBlocked.value);  
   }
+  console.log(props.currentPage);
 };
-
-
 
 const prevPage = () => {
   if (props.currentPage > 1) {
-    goToPage(props.currentPage - 1);
+    emit('fetchUsers', props.currentPage - 1, props.itemsPerPage, filterType.value, filterBlocked.value);  
   }
 };
-
-
-
-// Computar o total de páginas
-const totalPages = computed(() => {
-  return Math.ceil(props.total / props.itemsPerPage);
-});
-
-
-
-
-// Método para ir para uma página específica
-const goToPage = (page) => {
-  if (page !== props.currentPage) {
-    emit('fetchUsers', page, props.itemsPerPage, filterType.value, filterBlocked.value);
-  }
-};
-
-// Função para ir para a página diretamente
-const goToPageDirectly = () => {
-  const page = parseInt(goToPageInput.value);
-  if (page >= 1 && page <= totalPages.value) {
-    goToPage(page);
-  }
-};
-
 
 
 </script>
@@ -160,50 +130,20 @@ const goToPageDirectly = () => {
       </tbody>
     </table>
 
-<!-- Navegação de Páginas -->
-<div class="flex justify-center mt-4 space-x-4">
-        <button 
-          class="px-4 py-2 mx-1 bg-gray-700 text-white rounded hover:bg-gray-600" 
-          @click="goToPage(1)"
-          :disabled="props.currentPage === 1">
-          First
-        </button>
 
-        <button 
-          class="px-4 py-2 mx-1 bg-gray-700 text-white rounded hover:bg-gray-600" 
-          @click="prevPage"
-          :disabled="props.currentPage === 1">
-          Prev
-        </button>
 
-        <!-- Exibição da página atual e campo para navegar diretamente -->
-        <div class="flex items-center space-x-2">
-          <span class="text-white">Page {{ props.currentPage }} of {{ totalPages }}</span>
-          <input 
-            type="number" 
-            min="1" 
-            :max="totalPages"
-            v-model="goToPageInput"
-            class="w-16 p-2 rounded border border-gray-300"
-            @blur="goToPageDirectly"
-            @input="goToPageInput = Math.min(Math.max(goToPageInput, 1), totalPages)"
-          />
-        </div>
+    <div class="flex justify-center mt-4">
+      <button class="px-4 py-2 mx-1 bg-gray-700 text-white rounded hover:bg-gray-600" @click="prevPage">
+        Prev
+      </button>
+      <span class="px-3 py-2 mx-1 text-white">
+        Page {{ currentPage }} of {{ Math.ceil(total / itemsPerPage) }}
+      </span>
 
-        <button 
-          class="px-4 py-2 mx-1 bg-gray-700 text-white rounded hover:bg-gray-600" 
-          @click="nextPage"
-          :disabled="props.currentPage === totalPages">
-          Next
-        </button>
-
-        <button 
-          class="px-4 py-2 mx-1 bg-gray-700 text-white rounded hover:bg-gray-600" 
-          @click="goToPage(totalPages)"
-          :disabled="props.currentPage === totalPages">
-          Last
-        </button>
-      </div>
+      <button class="px-4 py-2 mx-1 bg-gray-700 text-white rounded hover:bg-gray-600" @click="nextPage">
+        Next
+      </button>
+    </div>
     </div>
   </div>
 </template>
