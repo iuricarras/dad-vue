@@ -78,9 +78,9 @@ onMounted(async () => {
 </script>
 
 <template>
-  <h2 class="text-2xl font-bold text-white mb-4 p-4">Game History</h2>
-  <div class="p-6 bg-gray-800 text-white rounded-lg mx-auto max-w-6xl mt-1">
-    <div class="flex space-x-4 mb-4">
+  <h2 class="text-2xl font-bold text-white mb-4 p-4 fade-in">Game History</h2>
+  <div class="p-6 bg-gray-800 text-white rounded-lg mx-auto max-w-6xl mt-1 fade-in">
+    <div class="flex space-x-4 mb-4 fade-in">
       <div>
         <label for="game-type" class="block text-sm mb-1">Filter by Game Type:</label>
         <select
@@ -96,7 +96,7 @@ onMounted(async () => {
       </div>
 
       <div>
-        <label for="board-filter" class="block text-sm mb-1 ">Filter by Board:</label>
+        <label for="board-filter" class="block text-sm mb-1">Filter by Board:</label>
         <select
           id="board-filter"
           v-model="selectedBoard"
@@ -111,11 +111,11 @@ onMounted(async () => {
       </div>
     </div>
     
-    <div v-if="errorMessage" class="text-center text-red-500 p-4">
+    <div v-if="errorMessage" class="text-center text-red-500 p-4 fade-in">
       {{ errorMessage }}
     </div>
 
-    <div v-else class="overflow-x-auto">
+    <div v-else class="overflow-x-auto fade-in">
       <table class="w-full text-left border-collapse border border-gray-700 mb-4">
         <thead>
           <tr>
@@ -133,7 +133,7 @@ onMounted(async () => {
           <tr
             v-for="game in filteredGameHistory"
             :key="game.id"
-            class="odd:bg-gray-700 even:bg-gray-600"
+            class="odd:bg-gray-700 even:bg-gray-600 fade-in"
           >
             <td class="border border-gray-700 px-1 py-1">
               {{ game.creator ? game.creator.nickname : 'Unknown' }}
@@ -160,7 +160,7 @@ onMounted(async () => {
               {{ game.type === 'S' ? 'Single-Player' : 'Multiplayer' }}
             </td>
           </tr>
-          <tr v-if="gameHistory.length === 0">
+          <tr v-if="gameHistory.length === 0" class="fade-in">
             <td colspan="7" class="text-center text-gray-500 p-4">
               No games found for this user.
             </td>
@@ -168,7 +168,7 @@ onMounted(async () => {
         </tbody>
       </table>
 
-      <div class="flex justify-center mt-4">
+      <div class="flex justify-center mt-4 fade-in">
         <button
           class="px-1 py-1 mx-1 bg-gray-700 text-white rounded hover:bg-gray-600"
           :disabled="currentPage === 1"
@@ -190,3 +190,19 @@ onMounted(async () => {
     </div>
   </div>
 </template>
+
+<style scoped>
+.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeIn 1s forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+</style>
+

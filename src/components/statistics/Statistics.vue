@@ -319,7 +319,7 @@ const renderSpendingChart = () => {
 
 </script>
 <template>
-  <div class="p-6 bg-gray-800 text-white rounded-lg mx-auto max-w-6xl mt-12">
+<div class="p-6 bg-gray-800 text-white rounded-lg mx-auto max-w-6xl mt-12 fade-in">
     <h2 class="text-2xl mb-6 text-center font-bold">Statistics</h2>
     <div class="grid grid-cols-1 sm:grid-cols-4 gap-6 mb-8">
       <div class="bg-gray-300 text-black rounded-lg p-6 flex flex-col justify-center items-center shadow-md">
@@ -448,3 +448,17 @@ const renderSpendingChart = () => {
     </div>
   </div>
 </template>
+<style scoped>
+.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeIn 1s forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+</style>
