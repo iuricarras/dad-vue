@@ -7,7 +7,6 @@ import GlobalAlertDialog from '@/components/common/GlobalAlertDialog.vue';
 import musica from '@/assets/natal.mp3';
 import soundIcon from '@/assets/volume.png';
 import muteIcon from '@/assets/mute.png';
-import back from '@/assets/video.mp4';
 
 const storeAuth = useAuthStore();
 const showDropdown = ref(false);
@@ -124,6 +123,7 @@ const logout = () => {
 </RouterLink>
 
 
+
     <h1 class="flex-grow text-center font-bold">
       {{ storeAuth.userNick ? storeAuth.userNick : '' }}
     </h1>
@@ -144,7 +144,7 @@ const logout = () => {
       <RouterLink
         v-show="!storeAuth.user"
         to="/register"
-        class="text-2x1 font-medium hover:text-blue-500 px-3 py-2 rounded-md transition-colors"
+        class="text-sm font-medium hover:text-blue-500 px-3 py-2 rounded-md transition-colors"
         v-slot="{ isActive }">
         <span :class="{ 'text-blue-500': isActive }">Register</span>
       </RouterLink>
@@ -152,11 +152,10 @@ const logout = () => {
       <RouterLink
         v-show="!storeAuth.user"
         to="/login"
-        class="text-2x1 font-medium hover:text-blue-500 px-3 py-2 rounded-md transition-colors"
+        class="text-sm font-medium hover:text-blue-500 px-3 py-2 rounded-md transition-colors"
         v-slot="{ isActive }">
         <span :class="{ 'text-blue-500': isActive }">Login</span>
       </RouterLink>
-
 
       <div v-if="storeAuth.user" class="relative">
         <img
@@ -224,13 +223,10 @@ const logout = () => {
       </div>
     </div>
   </nav>
-
   <RouterView></RouterView>
 </template>
 
-
 <style scoped>
-
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.2s;
