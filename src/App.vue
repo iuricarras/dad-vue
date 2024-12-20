@@ -4,6 +4,9 @@ import { RouterView } from 'vue-router';
 import Toaster from '@/components/ui/toast/Toaster.vue';
 import { useAuthStore } from '@/stores/auth.js';
 import GlobalAlertDialog from '@/components/common/GlobalAlertDialog.vue';
+import musica from '@/assets/natal.mp3';
+import soundIcon from '@/assets/volume.png';
+import muteIcon from '@/assets/mute.png';
 
 const storeAuth = useAuthStore();
 const showDropdown = ref(false);
