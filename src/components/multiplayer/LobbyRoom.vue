@@ -10,12 +10,14 @@ import {
 import { useGameStore } from '@/stores/games';
 import Button from '../ui/button/Button.vue';
 import { onBeforeRouteLeave } from 'vue-router';
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useAuthStore } from '@/stores/auth';
+import { useChatStore } from '@/stores/chat';
 
 const lobbyStore = useLobbyStore()
 const gameStore = useGameStore()
 const authStore = useAuthStore()
+const chatStore = useChatStore()
 const readyStatus = ref(false)
 
 const startGame = async () => {
@@ -34,6 +36,9 @@ const readyGame = async () => {
 
 onBeforeRouteLeave((to, from) => {
     lobbyStore.leaveGame()
+})
+onMounted(() => {
+    chatStore.lobbyMessages = []
 })
 </script>
 
