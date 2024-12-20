@@ -13,8 +13,9 @@ const emit = defineEmits(['blockStatusChanged', 'viewTransactions', 'userDeleted
 
 const userPhotoUrl = (user) => {
   const photoFile = user?.photo_filename ?? '';
+  const regex = /api$/gi;
   if (photoFile) {
-    return axios.defaults.baseURL.replaceAll('/api', '/storage/photos/' + photoFile);
+    return axios.defaults.baseURL.replaceAll(regex, 'storage/photos/' + photoFile);
   }
   return avatarNoneAssetURL;
 };
