@@ -35,6 +35,8 @@ const props = defineProps({
 const filterType = ref('All');
 const filterBlocked = ref('All');
 
+const searchQuery = ref('');
+
 const emit = defineEmits(['fetchUsers', 'viewTransactions', 'viewGames']);
 
 const goToPageInput = ref(props.currentPage);
@@ -58,7 +60,6 @@ const handleViewGame = (user) => {
 };
 
 
-// ir para a proxima pagina
 const nextPage = () => {
   if (props.currentPage < totalPages.value) {
     goToPage(props.currentPage + 1);
@@ -66,28 +67,24 @@ const nextPage = () => {
 };
 
 
-
-// ir para a pagina anterior
 const prevPage = () => {
   if (props.currentPage > 1) {
     goToPage(props.currentPage - 1);
   }
 };
 
-// calcular o total de paginas
+
 const totalPages = computed(() => {
   return Math.ceil(props.total / props.itemsPerPage);
 });
 
 
-// função para ir a um pagina espeficica
 const goToPage = (page) => {
   if (page !== props.currentPage) {
     emit('fetchUsers', page, props.itemsPerPage, filterType.value, filterBlocked.value);
   }
 };
 
-// função para ir para a página diretamente
 const goToPageDirectly = () => {
   const page = parseInt(goToPageInput.value);
   if (page >= 1 && page <= totalPages.value) {
@@ -96,6 +93,9 @@ const goToPageDirectly = () => {
 };
 
 
+const searchByNickname = () => {
+  emit('fetchUsers',1, props.itemsPerPage, filterType.value, filterBlocked.value, searchQuery.value);
+};
 
 </script>
 
@@ -120,6 +120,19 @@ const goToPageDirectly = () => {
         </select>
       </div>
     </div>
+
+
+<div class="mb-4">
+  <label for="searchNickname" class="block text-white mb-1">Search by Nickname</label>
+  <input
+  id="searchNickname"
+  type="text"
+  v-model="searchQuery"
+  @input="searchByNickname"
+  class="px-3 py-2 border rounded-lg w-full"
+  placeholder="Type a nickname..."
+/>
+</div>
     <div class="overflow-x-auto">
     <table class="w-full border-collapse border border-gray-300 text-sm">
       <thead class="bg-gray-200">

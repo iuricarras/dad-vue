@@ -15,25 +15,25 @@ const page = ref(1);
 const itemsPerPage = ref(8);
 const filterType = ref('All');
 const filterBlocked = ref('All');
+const searchQueryValue = ref('');
 
 
-const fetchUsers = async (pageNumber, itemsPerPageCount, type, blocked) => {
-  try { 
-    const response = await userStore.fetchUsers(pageNumber, itemsPerPageCount, type, blocked);
+const fetchUsers = async (pageNumber, itemsPerPageCount, type, blocked, searchQuery = '') => {
+  const response = await userStore.fetchUsers(pageNumber, itemsPerPageCount, type, blocked, searchQuery);
 
-    if (response && Array.isArray(response.users)) {     
-      total.value = response.total;      
-      page.value = pageNumber;        
-      itemsPerPage.value = itemsPerPageCount; 
-      filterType.value = type;
-      filterBlocked.value = blocked; 
+  if (response && Array.isArray(response.users)) {     
+    total.value = response.total;      
+    page.value = pageNumber;        
+    itemsPerPage.value = itemsPerPageCount; 
+    filterType.value = type;
+    filterBlocked.value = blocked;
+    searchQueryValue.value = searchQuery; 
     } else {
-      console.error("Invalid data format:", response);
-    }
-  } catch (error) {
-    console.error('Erro ao buscar usuários:', error);
+    console.error("Invalid data format:", response);
   }
 };
+
+
 
 const fetchUserTransactions = async (params) => {
   const { userId, page, itemsPerPage, type } = params;

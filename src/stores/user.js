@@ -19,7 +19,7 @@ export const useUserStore = defineStore('user', () => {
     return users.value.length
   })
 
-  const fetchUsers = async (page, itemsPerPage, filterType = '', filterBlocked = '') => {
+  const fetchUsers = async (page, itemsPerPage, filterType = '', filterBlocked = '', searchQuery = '') => {
     storeError.resetMessages();
     try {
       const response = await axios.get('users', {
@@ -28,9 +28,10 @@ export const useUserStore = defineStore('user', () => {
           itemsPerPage,
           blocked: filterBlocked,
           type: filterType,
+          search: searchQuery,
         },
       });
-      users.value = response.data.users
+      users.value = response.data.users;
       return response.data;
     } catch (e) {
       storeError.setErrorMessages(
@@ -41,6 +42,7 @@ export const useUserStore = defineStore('user', () => {
       );
     }
   };
+  
 
   const createUser = async (createData) => {
     storeError.resetMessages();
