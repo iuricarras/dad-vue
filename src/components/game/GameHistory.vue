@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import { useUserStore } from '@/stores/user';
 import { useGameStore } from '@/stores/games';
 
@@ -16,6 +16,7 @@ const selectedType = ref('');
 const selectedBoard = ref('');
 const boards = ref([]);
 const totalPages = ref(1);
+const goToPageInput = ref(currentPage.value);
 
 const fetchGameHistory = async () => {
   isLoading.value = true;
@@ -41,7 +42,6 @@ const fetchGameHistory = async () => {
   }
 };
 
-
 const fetchBoards = async () => {
   try {
     await gameStore.fetchBoards();
@@ -56,6 +56,12 @@ const filterGames = async () => {
   await fetchGameHistory(); 
 };
 
+const prevPage = async () => {
+  if (currentPage.value > 1) {
+    currentPage.value--;
+    await fetchGameHistory();
+  }
+};
 
 const nextPage = async () => {
   if (currentPage.value < totalPages.value) {
@@ -64,12 +70,21 @@ const nextPage = async () => {
   }
 };
 
-const prevPage = async () => {
-  if (currentPage.value > 1) {
-    currentPage.value--;
-    await fetchGameHistory();
+const goToPage = (page) => {
+  if (page >= 1 && page <= totalPages.value) {
+    currentPage.value = page;
+    fetchGameHistory();
   }
 };
+
+const goToPageDirectly = () => {
+  const page = Math.min(Math.max(goToPageInput.value, 1), totalPages.value);
+  goToPage(page);
+};
+
+watch(currentPage, (newPage) => {
+  goToPageInput.value = newPage;
+});
 
 onMounted(async () => {
   await fetchBoards();
@@ -168,23 +183,47 @@ onMounted(async () => {
         </tbody>
       </table>
 
+      <!-- navigate buttons -->
       <div class="flex justify-center mt-4 fade-in">
         <button
-          class="px-1 py-1 mx-1 bg-gray-700 text-white rounded hover:bg-gray-600"
+          class="px-4 py-2 mx-1 bg-gray-700 text-white rounded hover:bg-gray-600"
+          :disabled="currentPage === 1"
+          @click="goToPage(1)"
+        >
+          First
+        </button>
+        <button
+          class="px-4 py-2 mx-1 bg-gray-700 text-white rounded hover:bg-gray-600"
           :disabled="currentPage === 1"
           @click="prevPage"
         >
           Prev
         </button>
-        <span class="px-1 py-1 mx-1 text-gray-300">
-          Page {{ currentPage }} of {{ totalPages }}
-        </span>
+        <div class="flex items-center space-x-2">
+          <span class="text-white">Page {{ currentPage }} of {{ totalPages }}</span>
+          <input
+            type="number"
+            min="1"
+            :max="totalPages"
+            v-model="goToPageInput"
+            class="w-16 p-2 rounded border border-gray-500 bg-gray-700 text-white text-center focus:outline-none focus:ring focus:ring-blue-500"
+            @input="goToPageDirectly"
+            placeholder="Go"
+          />
+        </div>
         <button
-          class="px-1 py-1 mx-1 bg-gray-700 text-white rounded hover:bg-gray-600"
+          class="px-4 py-2 mx-1 bg-gray-700 text-white rounded hover:bg-gray-600"
           :disabled="currentPage === totalPages"
           @click="nextPage"
         >
           Next
+        </button>
+        <button
+          class="px-4 py-2 mx-1 bg-gray-700 text-white rounded hover:bg-gray-600"
+          :disabled="currentPage === totalPages"
+          @click="goToPage(totalPages)"
+        >
+          Last
         </button>
       </div>
     </div>
@@ -205,4 +244,3 @@ onMounted(async () => {
   }
 }
 </style>
-

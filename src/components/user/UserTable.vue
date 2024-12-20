@@ -1,16 +1,6 @@
 <script setup>
 import { ref, computed, watch } from 'vue';
 import User from '@/components/user/User.vue';
-import {
-  Pagination,
-  PaginationEllipsis,
-  PaginationFirst,
-  PaginationLast,
-  PaginationList,
-  PaginationListItem,
-  PaginationNext,
-  PaginationPrev,
-} from '@/components/ui/pagination'
 
 const props = defineProps({
   users: {
@@ -36,7 +26,6 @@ const filterType = ref('All');
 const filterBlocked = ref('All');
 
 const emit = defineEmits(['fetchUsers', 'viewTransactions', 'viewGames']);
-
 const goToPageInput = ref(props.currentPage);
 
 
@@ -57,43 +46,38 @@ const handleViewGame = (user) => {
   emit('viewGames', user);
 };
 
-
-// ir para a proxima pagina
-const nextPage = () => {
-  if (props.currentPage < totalPages.value) {
-    goToPage(props.currentPage + 1);
-  }
-};
-
-
-
-// ir para a pagina anterior
 const prevPage = () => {
   if (props.currentPage > 1) {
     goToPage(props.currentPage - 1);
   }
 };
 
-// calcular o total de paginas
+const nextPage = () => {
+  if (props.currentPage < totalPages.value) {
+    goToPage(props.currentPage + 1);
+  }
+};
+
 const totalPages = computed(() => {
   return Math.ceil(props.total / props.itemsPerPage);
 });
 
-
-// função para ir a um pagina espeficica
 const goToPage = (page) => {
   if (page !== props.currentPage) {
     emit('fetchUsers', page, props.itemsPerPage, filterType.value, filterBlocked.value);
   }
 };
 
-// função para ir para a página diretamente
 const goToPageDirectly = () => {
   const page = parseInt(goToPageInput.value);
   if (page >= 1 && page <= totalPages.value) {
     goToPage(page);
   }
 };
+
+watch(props.currentPage, (newPage) => {
+  goToPageInput.value = newPage;
+});
 
 
 
@@ -121,62 +105,58 @@ const goToPageDirectly = () => {
       </div>
     </div>
     <div class="overflow-x-auto">
-    <table class="w-full border-collapse border border-gray-300 text-sm">
-      <thead class="bg-gray-200">
-        <tr>
-          <th class="border border-gray-400 px-4 py-2 text-left">Type</th>
-          <th class="border border-gray-400 px-4 py-2 text-left">Nickname</th>
-          <th class="border border-gray-400 px-4 py-2 text-left">Blocked</th>
-          <th class="border border-gray-400 px-4 py-2 text-left">Photo</th>
-          <th class="border border-gray-400 px-4 py-2 text-left">Brain Coins</th>
-          <th class="border border-gray-400 px-4 py-2 text-left">Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <User v-for="user in props.users" :key="user.nickname" :user="user" @viewTransactions="handleViewTransactions" @viewGames="handleViewGame"/>
-        <tr v-if="props.users.length === 0">
-          <td colspan="6" class="text-center text-gray-500 p-4">No users found.</td>
-        </tr>
-      </tbody>
-    </table>
-<div class="flex justify-center mt-4 space-x-4">
-        <button 
-          class="px-4 py-2 mx-1 bg-gray-700 text-white rounded hover:bg-gray-600" 
-          @click="goToPage(1)"
+      <table class="w-full border-collapse border border-gray-300 text-sm">
+        <thead class="bg-gray-200">
+          <tr>
+            <th class="border border-gray-400 px-4 py-2 text-left">Type</th>
+            <th class="border border-gray-400 px-4 py-2 text-left">Nickname</th>
+            <th class="border border-gray-400 px-4 py-2 text-left">Blocked</th>
+            <th class="border border-gray-400 px-4 py-2 text-left">Photo</th>
+            <th class="border border-gray-400 px-4 py-2 text-left">Brain Coins</th>
+            <th class="border border-gray-400 px-4 py-2 text-left">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <User v-for="user in props.users" :key="user.nickname" :user="user" @viewTransactions="handleViewTransactions"
+            @viewGames="handleViewGame" />
+          <tr v-if="props.users.length === 0">
+            <td colspan="6" class="text-center text-gray-500 p-4">No users found.</td>
+          </tr>
+        </tbody>
+      </table>
+
+
+      <!-- navigate buttons -->
+      <div class="flex justify-center mt-4 space-x-4">
+        <button class="px-4 py-2 mx-1 bg-gray-700 text-white rounded hover:bg-gray-600" @click="goToPage(1)"
           :disabled="props.currentPage === 1">
           First
         </button>
 
-        <button 
-          class="px-4 py-2 mx-1 bg-gray-700 text-white rounded hover:bg-gray-600" 
-          @click="prevPage"
+        <button class="px-4 py-2 mx-1 bg-gray-700 text-white rounded hover:bg-gray-600" @click="prevPage"
           :disabled="props.currentPage === 1">
           Prev
         </button>
 
         <div class="flex items-center space-x-2">
           <span class="text-white">Page {{ props.currentPage }} of {{ totalPages }}</span>
-          <input 
-            type="number" 
-            min="1" 
+          <input
+            type="number"
+            min="1"
             :max="totalPages"
             v-model="goToPageInput"
-            class="w-16 p-2 rounded border border-gray-300"
-            @blur="goToPageDirectly"
-            @input="goToPageInput = Math.min(Math.max(goToPageInput, 1), totalPages)"
-          />
+            class="w-16 p-2 rounded border border-gray-500 bg-gray-700 text-white text-center focus:outline-none focus:ring focus:ring-blue-500"
+            @input="goToPageDirectly"
+            placeholder="Go" />
         </div>
 
-        <button 
-          class="px-4 py-2 mx-1 bg-gray-700 text-white rounded hover:bg-gray-600" 
-          @click="nextPage"
+
+        <button class="px-4 py-2 mx-1 bg-gray-700 text-white rounded hover:bg-gray-600" @click="nextPage"
           :disabled="props.currentPage === totalPages">
           Next
         </button>
 
-        <button 
-          class="px-4 py-2 mx-1 bg-gray-700 text-white rounded hover:bg-gray-600" 
-          @click="goToPage(totalPages)"
+        <button class="px-4 py-2 mx-1 bg-gray-700 text-white rounded hover:bg-gray-600" @click="goToPage(totalPages)"
           :disabled="props.currentPage === totalPages">
           Last
         </button>
