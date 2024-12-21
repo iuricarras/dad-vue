@@ -105,7 +105,7 @@ const handleBoardChangeMP = async () => {
         <table class="w-full text-left border-collapse rounded-lg table-fixed text-sm">
           <thead>
             <tr class="bg-gray-600 text-white uppercase">
-              <th class="px-3 py-2 w-1/3">Winner</th>
+              <th class="px-3 py-2 w-1/3">Nickname</th>
               <th class="px-3 py-2 w-1/3">{{ sortBy === 'total_time' ? 'Time' : 'Turns' }}</th>
               <th class="px-3 py-2 w-1/3">Board</th>
             </tr>
@@ -155,7 +155,7 @@ const handleBoardChangeMP = async () => {
         <table class="w-full text-left border-collapse rounded-lg table-fixed text-sm">
           <thead>
             <tr class="bg-gray-600 text-white uppercase">
-              <th class="px-3 py-2 w-1/3">Winner</th>
+              <th class="px-3 py-2 w-1/3">Nickname</th>
               <th class="px-3 py-2 w-1/3">Wins</th>
               <th class="px-3 py-2 w-1/3">Board</th>
             </tr>
