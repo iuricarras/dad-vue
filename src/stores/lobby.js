@@ -83,6 +83,7 @@ export const useLobbyStore = defineStore('lobby', () => {
         clearInterval(timerID.value);
         game.value = { ...gameEnded }
         gameStatus.value = gameEnded.status
+        matched.value = true;
         if (gameEnded.playerWin == storeAuth.id) {
             toast({
                 description: `You won the game!`
@@ -177,6 +178,7 @@ export const useLobbyStore = defineStore('lobby', () => {
 
     const startGame = async () => {
         storeError.resetMessages()
+        matched.value = false;
         game.value.type = "M";
         game.value.status = "PL"
         game.value.board_id = boardId.value
